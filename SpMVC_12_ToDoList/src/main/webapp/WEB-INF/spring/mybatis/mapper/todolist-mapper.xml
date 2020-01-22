@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.todo.repository.ToDoListDao">
+	<select id="selectAll" resultType="todoDTO">
+		select * from tbl_todolist
+	</select>
+	<select id="selectBySeq" resultType="todoDTO">
+		select * from tbl_todolist where td_seq = #{tdSeq}
+	</select>
+	<insert id="insert">
+		insert into tbl_todolist(
+			TD_SEQ,
+			TD_DATE,
+			TD_TIME,
+			TD_SUB,
+			TD_TEXT,
+			TD_FLAG,
+			TD_COMPLETE,
+			TD_ALARM
+		) values (
+			SEQ_TODO.nextval,
+			#{tdDate,jdbcType=VARCHAR},
+			#{tdTime,jdbcType=VARCHAR},
+			#{tdSub,jdbcType=VARCHAR},
+			#{tdText,jdbcType=VARCHAR},
+			#{tdFlag,jdbcType=VARCHAR},
+			#{tdComplete,jdbcType=VARCHAR},
+			#{tdAlarm,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="complete">
+		update TBL_TODOLIST set
+			TD_COMPLETE = DECODE(td_complete,'Y','N','Y')
+		where TD_SEQ = #{tdSeq}
+	</update>
+	
+	<update id="alarm">
+		update TBL_TODOLIST set
+			TD_ALARM = DECODE(td_alarm,'Y','N','Y')
+		where TD_SEQ = #{tdSeq}
+	</update>
+	
+	<update id="update">
+		update tbl_todolist set
+			TD_DATE = #{tdDate,jdbcType=VARCHAR},
+			TD_TIME = #{tdTime,jdbcType=VARCHAR},
+			TD_SUB = #{tdSub,jdbcType=VARCHAR},
+			TD_TEXT = #{tdText,jdbcType=VARCHAR},
+			TD_FLAG = #{tdFlag,jdbcType=VARCHAR},
+			TD_COMPLETE = #{tdComplete,jdbcType=VARCHAR},
+			TD_ALARM = #{tdAlarm,jdbcType=VARCHAR}
+		where TD_SEQ = #{tdSeq,jdbcType=VARCHAR}
+	</update>
+	<delete id="delete">
+		delete from tbl_todolist
+		where TD_SEQ = #{tdSeq,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

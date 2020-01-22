@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- 선언문 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>[%level] %msg [%file:%line] [%logger{100}] %n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="myPattern" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg %n</pattern>
+		</encoder>
+	</appender>
+	
+	<!--
+	level 종류
+		TRACE : 모든 것을 보임
+		DEBUG : 일반적으로 개발할 때 디버그 용도, 레벨을 DEBUG로 해놓으면 TRACE가 나타나지 않음 
+		WARN : 레벨을 WARN으로 해놓으면 TRACE,DEBUG가 나타나지 않음
+		INFO : 레벨을 INFO로 해놓으면 TRACE,DEBUG,WARN이 나타나지 않음
+		ERROR : 
+	-->
+	
+	<logger name="com.biz.gdata.service" level="debug">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<logger name="com.biz.gdata.controller" level="debug">
+		<appender-ref ref="myPattern" />
+	</logger>
+	
+	<!-- Spring 실행 과정을 감시하라 -->
+	<root level="WARN">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

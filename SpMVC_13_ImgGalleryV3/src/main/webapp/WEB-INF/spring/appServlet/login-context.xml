@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+		
+	<!-- AuthIntercepter class의 preHandler()가 수행할 규칙 지정 -->
+	<bean class="com.biz.gallery.interceptor.AjaxInterceptor" id="ajax" />
+	<bean class="com.biz.gallery.interceptor.UploadInterceptor" id="upload" />
+	
+	<!--
+		AuthIntercepter 클래스의 preHandler()가 관리할 URI들은 mapping path="" 로 지정해주고
+		그럴 필요가 없는 URI들은 exclude-mapping에 지정한다
+	-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/image/upload"/>
+			<mvc:mapping path="/image/update/*"/>
+			<mvc:mapping path="/rest/upload" />
+			<ref bean="upload" />
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/image/delete" />
+			<ref bean="ajax" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+</beans>

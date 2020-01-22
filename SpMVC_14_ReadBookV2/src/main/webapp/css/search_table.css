@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+#search_table {
+	border-collapse: collapse;
+	border-bottom: 1px solid #ddd;
+	width: 90%;
+	height: 100%;
+	margin: 10px auto;
+	
+	background-color: white;
+}
+
+#search_table td, #search_table th {
+	white-space: nowrap;
+	text-align: left;
+	padding: 8px;
+	vertical-align: top;
+}
+
+#search_table tbody {
+	overflow: auto;
+	height: 100%;
+}

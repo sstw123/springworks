@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.product.persistence.ProductDao">
+	<select id="selectAll" resultType="ProductDTO">
+		select * from tbl_product order by p_code
+	</select>
+	
+	<select id="selectByPCode" resultType="ProductDTO">
+		select * from tbl_product where p_code = #{p_code}
+	</select>
+	
+	<select id="selectByPName" resultType="ProductDTO">
+		select * from TBL_PRODUCT where P_NAME like '%' || #{p_name} || '%'
+	</select>
+	
+	<insert id="insert" parameterType="ProductDTO">
+		
+	</insert>
+	
+	<update id="update" parameterType="ProductDTO">
+	
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_product where p_code = #{p_code}
+	</delete>
+</mapper>

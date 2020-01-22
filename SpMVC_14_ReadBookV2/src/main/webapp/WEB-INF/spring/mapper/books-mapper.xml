@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.biz.rbooks.repository.BookDao">
+	
+	
+	<select id="selectByBnameList" resultType="bookVO">
+		select * from tbl_books
+		<where>
+			<if test="#{bnameList != null}">
+			<foreach collection="bnameList" item="strName" separator="or">
+				b_name like '%' || #{strName} || '%'
+			</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 위의 코드와 아래의 코드는 같다 -->
+	
+	<select id="selectByBnameList2" resultType="bookVO">
+		select * from tbl_books
+			<foreach collection="bnameList" item="strName" open="where" separator="or">
+				b_name like '%' || #{strName} || '%'
+			</foreach>
+	</select>
+
+
+	<insert id="insert" parameterType="bookVO">
+		insert into tbl_books(
+			B_CODE,
+			B_NAME,
+			B_AUTHER,
+			B_COMP,
+			B_YEAR,
+			B_IPRICE
+		) values (
+			#{b_code,jdbcType=VARCHAR},
+			#{b_name,jdbcType=VARCHAR},
+			#{b_auther,jdbcType=VARCHAR},
+			#{b_comp,jdbcType=VARCHAR},
+			#{b_year,jdbcType=VARCHAR},
+			#{b_iprice,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="bookVO">
+		update tbl_books set
+			b_name = #{b_name,jdbcType=VARCHAR},
+			b_auther = #{b_auther,jdbcType=VARCHAR},
+			b_comp = #{b_comp,jdbcType=VARCHAR},
+			b_year = #{b_year,jdbcType=VARCHAR},
+			b_iprice =#{b_iprice,jdbcType=VARCHAR}
+		where b_code = #{b_code,jdbcType=VARCHAR}
+	</update>
+</mapper> 

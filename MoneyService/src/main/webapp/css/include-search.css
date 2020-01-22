@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+button.gender {
+	cursor:pointer;
+}
+
+button.gender[data-gender="1"] {
+	background-color: rgb(255,170,0);
+}
+
+span.star {
+	color: red;
+}
+
+fieldset {
+	width: 978px;
+	border: 1px solid blue;
+	border-radius: 10px;
+	margin: 10px auto;
+	padding: 20px;
+}
+
+fieldset div {
+	display: flex;
+	width:90%;
+	margin:0 auto;
+}
+
+fieldset div label {
+	display: inline-block;
+	width: 15%;
+	padding: 8px 10px;
+	margin: 2px;
+	margin-right: 5px;
+	text-align: right;
+	vertical-align: center;
+	color: blue;
+	font-weight: bold;
+}
+
+fieldset div input, fieldset div select {
+	display: inline-block;
+	width: 85%;
+	padding: 8px;
+	margin: 2px;
+	border: 1px solid #ddd;
+}
+
+div.birth {
+	justify-content: center;
+}
+
+input#birth {
+	width: 36%;
+}
+
+button.gender {
+	width: 17%;
+}
+
+p.more {
+	width: 50%;
+	color: white;
+	font-size: 16px;
+	padding: 10px;
+	background: #00B9FF;
+}
+
+p.more:hover {
+  cursor:pointer;
+}
+
+div.searchWord {
+	justify-content: center;
+}
+
+div.blind {
+	position: absolute;
+	overflow: hidden;
+	visibility: hidden;
+	clip: rect(0 0 0 0);
+	margin: -1px;
+	width: 1px;
+	height: 1px;
+}
+
+select#srchKeyCode {
+	width: 15%;
+}
+
+input#searchWrd {
+	width: 53%;
+}
+
+button#btn-search {
+	margin: 10px auto;
+	padding: 10px 60px;
+}
+
+button#btn-search:hover  {
+	color: #fff;
+	background-color: #0069d9;
+	border-color: #0062cc
+}
+
+button#btn-search.focus, button#btn-search:focus {
+	color: #fff;
+	background-color: #0069d9;
+	border-color: #0062cc;
+	box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .5)
+}

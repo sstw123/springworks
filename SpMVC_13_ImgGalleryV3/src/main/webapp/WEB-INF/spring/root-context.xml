@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- CommonsMultipartResolver는 id가 필요하다(multipartResolver) 앞의 Commons를 빼고 m만 소문자로 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="50000000" />
+		<property name="maxUploadSizePerFile" value="5000000" />
+	</bean>
+	
+	
+	<!--
+		일반통행식 암호화 알고리즘
+		평문을 암호화 시키는 메소드는 있지만 암호문을 복호화 하는 메소드는 없다
+		평문을 암호화하여 저장하고 평문과 암호문이 매칭되는지 확인하는 method를 사용하여 값이 일치하는지 검사
+		
+		BCryptPasswordEncoder는 최신버전에선 id가 필요없지만 구버전에선 id가 필요하다(p만 소문자로) 호환성을 위해 넣어준다
+	-->
+	<bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="passwordEncoder">
+		<constructor-arg index="0" value="4" />
+	</bean>
+		
+</beans>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- 1. dataSource 생성 -->
+	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="bds">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="iouser" />
+		<property name="password" value="iouser" />
+	</bean>
+	
+	<!-- SqlSession을 관리할 관리자 생성 -->
+	<!--
+		typeAliasesPackage
+		value로 설정된 모든 DTO, VO 클래스를 자동으로 Alias 등록
+		클래스 이름의 첫글자를 소문자로 하고 나머지는 그대로 사용한다(자바의 객체명명패턴에 따름)
+		
+		typeAlias
+		개별적으로 클래스들을 alias로 설정
+		
+		alias 이름을 별도로 설정하고 싶으면
+		mybatis-config.xml에 alias를 등록하고 config를 SqlSessionFactoryBean에 등록하여 사용하면 된다
+	-->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="ssfb">
+		<property name="dataSource" ref="bds" />
+		<property name="mapperLocations" value="/WEB-INF/spring/mybatis/mapper/*-mapper.xml" />
+		<property name="typeAliases" value="com.biz.product.domain.ProductDTO" />
+	</bean>
+	
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="bds" />
+	</bean>
+	
+	<!-- mapper.xml과 Dao와 연동하여 DBMS 연산을 수행 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="ssfb" />
+	</bean>
+</beans>

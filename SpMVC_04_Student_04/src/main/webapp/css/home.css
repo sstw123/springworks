@@ -1,0 +1,53 @@
+@charset "UTF-8";
+*,html,body {
+	margin:0;
+	padding:0;
+}
+
+html,body {
+	width: 100%;
+	height: 100%;
+}
+header {
+		background-color: blue;
+		color: white;
+		margin: 0;
+		padding: 0.5rem;
+	}
+	nav ul {
+		background-color: black;
+		color: white;
+		list-style: none;
+	}
+	
+	nav ul li {
+		display: flex;
+	}
+	
+	a {
+		text-decoration: none;
+	}
+	nav ul a {
+		/* a tag가 가지고 있는 기본 색상을 무시하고 현재 a tag를 감싸고 있는 box에 color가 설정되어 있으면 그대로 세팅 */
+		color: inherit;
+		
+		/* a tag는 inline 속성을 가지고 있어서 width등의 값을 설정해도 그 속성을 무시해 버린다
+		a tag를 block(box) 성질을 갖도록 만들기 */
+		display: block;
+		
+		/* padding, margin 설정하기
+		T(op),R(ight),B(ottom),L(eft) 인수는 위에서부터 시계방향 순서
+		인수를 2개만 썼을 때는 첫 번째 인수는 Top,Bottom을 똑같이 설정하고 두 번째 인수는 Right,Left를 똑같이 설정한다
+		인수를 1개만 썼을 때는 Top,Right,Bottom,Left를 똑같이 설정한다
+		 */
+		padding: 14px 16px 14px 16px;
+		padding: 14px 16px;
+		padding: 50px;
+		/* transparent : 투명한 색 */
+		border-bottom: 3px solid transparent;
+	}
+	nav ul a:hover {
+		background: #ddd; /* #ddd 이런식으로 3개만 쓰면 RGB 각자 dd, dd, dd로 인식 */
+		color: blue;
+		border-bottom: 3px solid blue;
+	}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+		
+	<bean id="envConfig" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+		<property name="algorithm" value="PBEWithMD5AndDES"/>
+		<property name="passwordEnvName" value="NAVER"/>
+	</bean>
+	
+	<bean id="configEnc" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config" ref="envConfig"/>
+	</bean>
+	
+	<bean class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configEnc"/>
+		<property name="location" value="/WEB-INF/spring/naver.email.secret.properties"/>
+	</bean>
+
+	<!-- mail을 보내기 위한 기본 설정 수행 -->
+	<!--
+	보내는 서버 : 메시징 중계 서버 / 별도의 어플리케이션 또는 웹페이지에서 메일을 보내는 서버에 저장 / 받을 서버를 찾아서 보내기 / 사용자는 로그인해서 받는 서버에서 자신의 메일을 가져옴
+	무료로 send mail, Qmail
+	-->
+	<bean class="org.springframework.mail.javamail.JavaMailSenderImpl" id="mailSender">
+		<property name="host" value="smtp.naver.com" />
+		<property name="port" value="465" />
+		<property name="username" value="${naver.username}" />
+		<property name="password" value="${naver.password}" />
+		
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.ssl.enable">true</prop>
+				<prop key="mail.smtp.trust">smtp.naver.com</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+</beans>

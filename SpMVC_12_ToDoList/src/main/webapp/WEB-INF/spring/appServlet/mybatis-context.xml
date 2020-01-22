@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		
+	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="bds">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="username" value="iouser"/>
+		<property name="password" value="iouser"/>
+	</bean>
+	
+	<!--
+		mapUnderscoreToCamelCase
+		DB Table의 칼럼이름을 underscore가 붙은 snake case로 작성하고
+		domain class의 필드 변수는 camel case로 작성했을 때
+		mybatis에서 데이터를 가져올 때 자동으로 변경하여 mapping 수행하기
+		
+		table		domain
+		===================
+		td_seq		tdSeq
+		td_date		tdDate
+		===================
+	-->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="ssfb">
+		<property name="dataSource" ref="bds"/>
+		<property name="mapperLocations" value="/WEB-INF/spring/mybatis/mapper/*-mapper.xml" />
+		<property name="configuration">
+			<bean class="org.apache.ibatis.session.Configuration">
+				<property name="mapUnderscoreToCamelCase" value="true" />
+			</bean>
+		</property>		
+		<property name="typeAliasesPackage" value="com.biz.todo.domain" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="ssfb"/>
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.biz.todo.repository.ToDoListDao"/>
+		<property name="sqlSessionFactory" ref="ssfb" />
+	</bean>
+
+</beans>

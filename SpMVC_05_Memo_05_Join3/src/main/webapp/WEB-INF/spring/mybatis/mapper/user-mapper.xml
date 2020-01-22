@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.biz.memo.persistence.UserDao">
+	
+	<select id="selectAll" resultType="UserDTO">
+		select * from tbl_user
+	</select>
+	
+	<select id="userCount" resultType="Integer">
+		select count(*) from tbl_user
+	</select>
+	
+	<select id="selectById" resultType="UserDTO">
+		select * from tbl_user where u_id = #{u_id}
+	</select>
+	
+	<insert id="userInsert" parameterType="UserDTO">
+		insert into tbl_user(
+			u_id,
+			u_nick,
+			u_name,
+			u_pw,
+			u_tel,
+			u_grade
+		) values (
+			#{u_id,jdbcType=VARCHAR},
+			#{u_nick,jdbcType=VARCHAR},
+			#{u_name,jdbcType=VARCHAR},
+			#{u_pw,jdbcType=VARCHAR},
+			#{u_tel,jdbcType=VARCHAR},
+			#{u_grade,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+</mapper>

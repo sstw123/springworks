@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.iolist.persistence.IolistDao">
+
+	
+	
+	<select id="findAll" resultType="IolistDTO">
+		select * from tbl_iolist ORDER BY io_seq DESC
+	</select>
+	
+	<select id="viewFindAll" resultType="IolistVO">
+		select
+		    IO_SEQ,
+		    IO_DATE,
+		    
+		    IO_DCODE,
+		    D_NAME as IO_DNAME,
+		    D_CEO as IO_DCEO,
+		    
+		    IO_PCODE,
+		    P_NAME as IO_PNAME,
+		    P_IPRICE as IO_PIPRICE,
+		    P_OPRICE as IO_POPRICE,
+		    P_VAT as IO_PVAT,
+		    
+		    IO_INOUT,
+		    IO_QTY,
+		    IO_PRICE,
+		    IO_TOTAL
+		    
+		from tbl_iolist IO
+		    left join tbl_dept D
+		    on IO.io_dcode = D.d_code
+		    left join tbl_product P
+	    	on IO.io_pcode = P.p_code
+	    
+	    order by io_seq desc
+	</select>
+	
+	<select id="findBySeq" resultType="IolistVO">
+		select
+		    IO_SEQ,
+		    IO_DATE,
+		    
+		    IO_DCODE,
+		    D_NAME as IO_DNAME,
+		    D_CEO as IO_DCEO,
+		    
+		    IO_PCODE,
+		    P_NAME as IO_PNAME,
+		    P_IPRICE as IO_PIPRICE,
+		    P_OPRICE as IO_POPRICE,
+		    P_VAT as IO_PVAT,
+		    
+		    IO_INOUT,
+		    IO_QTY,
+		    IO_PRICE,
+		    IO_TOTAL
+		    
+		from tbl_iolist IO
+		    left join tbl_dept D
+		    on IO.io_dcode = D.d_code
+		    left join tbl_product P
+	    	on IO.io_pcode = P.p_code
+	    	
+	    where io_seq = #{io_seq}
+	    order by io_seq desc
+	</select>
+	
+	<select id="findById" resultType="IolistDTO">
+		select * from tbl_iolist where io_seq = #{io_seq,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insert" parameterType="IolistDTO">
+		insert into tbl_iolist(
+			IO_SEQ,
+			IO_DATE,
+			IO_INOUT,
+			IO_QTY,
+			IO_PRICE,
+			IO_TOTAL,
+			IO_PCODE,
+			IO_DCODE
+		) values (
+			seq_iolist.nextval,
+			#{io_date,jdbcType=VARCHAR},
+			#{io_inout,jdbcType=VARCHAR},
+			#{io_qty,jdbcType=VARCHAR},
+			#{io_price,jdbcType=VARCHAR},
+			#{io_total,jdbcType=VARCHAR},
+			#{io_pcode,jdbcType=VARCHAR},
+			#{io_dcode,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.product.persistence.ProductDao">
+	<select id="selectAll" resultType="productDTO">
+		select * from tbl_product order by p_code desc
+	</select>
+	
+	<select id="selectByPCode" resultType="productDTO">
+		select * from tbl_product where p_code = #{p_code}
+	</select>
+	
+	<select id="selectByPName" resultType="productDTO">
+		select * from TBL_PRODUCT where P_NAME like '%' || #{p_name} || '%'
+	</select>
+	
+	<!-- resultType이 기본형(int, float, String...) 일 경우는 별도로 명시하지 않아도 문제가 없다
+		하지만 현재 3.5에서 문제가 발생하므로 resultType을 명시해주자 -->
+	<select id="selectMaxPCode" resultType="String">
+		select max(P_CODE) from TBL_PRODUCT
+	</select>
+	
+	<!-- 현재 사용중인 MyBatis 3.5 버전에서는 parameterType을 사용하지 않아도 데이터를 잘 가져온다
+		하지만 호환성을 위해서 명시해주자 -->
+	<insert id="insert" parameterType="productDTO">
+		insert into TBL_PRODUCT(P_CODE, P_NAME, P_IPRICE, P_OPRICE, P_VAT, P_FILE)
+		values(
+				#{p_code,jdbcType=VARCHAR},
+				#{p_name,jdbcType=VARCHAR},
+				#{p_iprice,jdbcType=VARCHAR},
+				#{p_oprice,jdbcType=VARCHAR},
+				#{p_vat,jdbcType=VARCHAR},
+				#{p_file,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="productDTO">
+		update TBL_PRODUCT set
+			p_name = #{p_name,jdbcType=VARCHAR},
+			p_iprice = #{p_iprice,jdbcType=VARCHAR},
+			p_oprice = #{p_oprice,jdbcType=VARCHAR},
+			p_vat = #{p_vat,jdbcType=VARCHAR},
+			p_file = #{p_file,jdbcType=VARCHAR}
+		where p_code = #{p_code,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_product where p_code = #{p_code}
+	</delete>
+</mapper>

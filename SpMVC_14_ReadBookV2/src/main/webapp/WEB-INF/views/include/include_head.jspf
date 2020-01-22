@@ -1,0 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<title>JSP 페이지</title>
+<link rel="stylesheet" type="text/css" href="${rootPath}/css/rbook_main.css?ver=2020-01-14-001">
+<link rel="stylesheet" type="text/css" href="${rootPath}/css/main_table.css?ver=2020-01-14-001">
+<link rel="stylesheet" type="text/css" href="${rootPath}/css/search_table.css?ver=2020-01-14-001">
+<link rel="stylesheet" type="text/css" href="${rootPath}/css/color.css?ver=2020-01-14-001">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>

@@ -1,0 +1,63 @@
+@charset "UTF-8";
+table {
+	border-bottom: 1px solid #ddd;
+	border-collapse: collapse;
+}
+
+tr:first-child {
+	border-top: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+	background-color: #f1f1f1;
+}
+
+td, th {
+	white-space: nowrap;
+	text-align: left;
+	padding: 8px;
+	vertical-align: top;
+}
+
+/*
+html tag의 height 값을 지정하려면
+반드시 앞에서 html, body의 height를 지정해두어야 한다
+*/
+
+section#main_list {
+	height: 70%;
+	overflow: hidden;
+}
+
+/*
+	table의 header를 고정한 채 body만 scroll하기
+	1. table의 display를 block으로 설정하고
+	2. height값을 지정
+	
+	3. tbody의 display를 block으로 설정
+	4. height 값을 지정
+	5. overflow를 scroll 또는 auto로 지정
+	
+	6. width값이 무너지므로 th, td의 width 값을 별도로 지정한다
+*/
+#main_table {
+	width: 90%;
+	
+	margin: 10px auto;
+
+	height: 100%;
+	display: block;
+}
+
+#main_table tbody {
+	display: block;
+	overflow: auto;
+	height: 100%;
+}
+
+#main_table thead th:nth-of-type(1), #main_table tbody td:nth-of-type(1) {width: 10%;}
+#main_table thead th:nth-of-type(2), #main_table tbody td:nth-of-type(2) {width: 40%;}
+#main_table thead th:nth-of-type(3), #main_table tbody td:nth-of-type(3) {width: 30%;}
+#main_table thead th:nth-of-type(4), #main_table tbody td:nth-of-type(4) {width: 30%;}
+#main_table thead th:nth-of-type(5), #main_table tbody td:nth-of-type(5) {width: 70%;}
+#main_table thead th:nth-of-type(6), #main_table tbody td:nth-of-type(6) {width: 10%;}

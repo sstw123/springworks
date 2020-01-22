@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.product.persistence.ProductFileDao">
+
+	<!-- 동적쿼리를 사용해서 다수의 레코드를 한번에 insert 수행 -->
+	<insert id="filesInsert" parameterType="productFileDTO">
+		insert into TBL_FILES(
+				FILE_SEQ,
+				FILE_P_CODE,
+				FILE_ORIGIN_NAME,
+				FILE_UPLOAD_NAME
+		) select SEQ_FILES.NEXTVAL, SUB.* from (
+		<foreach collection="files" item="file" separator="UNION ALL">
+			 select
+				#{p_code},
+				#{file.file_origin_name},
+				#{file.file_upload_name}
+			from dual
+		</foreach>
+		) SUB
+	</insert>
+	
+	<!-- 1개의 레코드를 추가하는 용도 -->
+	<insert id="fileInsert" parameterType="productFileDTO">
+		insert into TBL_FILES(
+			FILE_SEQ,
+			FILE_P_CODE,
+			FILE_ORIGIN_NAME,
+			FILE_UPLOAD_NAME
+		) values (
+			seq_files.nextval,
+			#{file_p_code,jdbcType=VARCHAR},
+			#{file_origin_name,jdbcType=VARCHAR},
+			#{file_upload_name,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="fileList" parameterType="productFileDTO" resultType="productFileDTO">
+		select seq_files.nextval, sub.* from(
+		<foreach collection="list" item="file" separator="UNION ALL">
+			select
+				#{file.file_p_code},
+				#{file.file_origin_name},
+				#{file.file_upload_name}
+			from dual
+		</foreach>
+		) sub
+	</select>
+	
+	<select id="selectByFileSeq" resultType="productFileDTO">
+		select * from tbl_files where file_seq = #{file_seq}
+	</select>
+	
+	<delete id="fileDelete" parameterType="long">
+		delete from tbl_files where file_seq = #{file_seq}
+	</delete>
+</mapper>

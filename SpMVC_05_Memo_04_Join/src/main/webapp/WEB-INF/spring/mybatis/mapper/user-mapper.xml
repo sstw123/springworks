@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.biz.memo.persistence.UserDao">
+	
+	<select id="selectAllHobby" resultType="HobbyListDTO">
+		select * from tbl_hobby
+	</select>
+	
+	<select id="userCount" resultType="Integer">
+		select count(*) from tbl_user
+	</select>
+	
+	<insert id="insertUser" parameterType="UserDTO">
+		insert into tbl_user(
+			u_id,
+			u_nick,
+			u_name,
+			u_pw,
+			u_tel,
+			u_grade
+		) values (
+			#{u_id,jdbcType=VARCHAR},
+			#{u_nick,jdbcType=VARCHAR},
+			#{u_name,jdbcType=VARCHAR},
+			#{u_pw,jdbcType=VARCHAR},
+			#{u_tel,jdbcType=VARCHAR},
+			#{u_grade,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertUHobby" parameterType="UserHobbyDTO">
+		<selectKey order="BEFORE" keyProperty="uh_seq" resultType="Long">
+			select seq_uhobby.nextval from dual
+		</selectKey>
+		insert into tbl_uhobby(
+			UH_SEQ,
+			UH_ID,
+			UH_CODE
+		) values (
+			#{uh_seq,jdbcType=VARCHAR},
+			#{uh_id,jdbcType=VARCHAR},
+			#{uh_code,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+</mapper>
