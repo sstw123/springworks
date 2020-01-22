@@ -1,6 +1,7 @@
 package com.biz.ems.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,9 @@ public class SaveMailService {
 	
 	public EmailVO findBySeq(long emsSeq) {
 //		EmailVO emailVO = emailDao.findById(emsSeq);
-		EmailVO emailVO = emailDao.findByEmsSeq(emsSeq);
-		return emailVO;
+		// EmailVO emailVO = emailDao.findByEms_seq(emsSeq);
+		Optional<EmailVO> emailVO = emailDao.findById(emsSeq);
+		return (EmailVO) emailVO.get();
 	}
 
 	public void delete(long emsSeq) {

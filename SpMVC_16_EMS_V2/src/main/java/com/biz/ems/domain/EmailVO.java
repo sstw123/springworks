@@ -28,7 +28,7 @@ public class EmailVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ems_seq")//table의 칼럼명은 ems_seq로 지정하고 VO클래스의 필드변수는 emsSeq로 지정
-	private long emsSeq;
+	private long ems_seq;
 	
 	//보내는 email, 받는 email, 보내는 사람 이름, 받는 사람 이름, 제목, 내용, 작성일자, 보낸시간
 	

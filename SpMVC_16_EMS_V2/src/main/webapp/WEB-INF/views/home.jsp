@@ -8,28 +8,25 @@
 	<meta name="viewport" content="width=device-width, initian-scale=1">
 	<title>My EMS</title>
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$("#myEms").on("click", function() {
-				document.location.href = "${rootPath}/"
-			})
+	
+	<style>
+		.login_modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.4);
 			
-			$(".nav_link li").on("click", function() {
-				//let href = $(this).attr("data-menu")
-				let href = $(this).data("menu")//data-menu 속성에 지정된 값 가져오기
-				
-				if($(this).text() == "EMS") {
-					let menuName = $(this).data("menu-name")
-					//let menuName = $(this).data("menuName")
-					//data() 함수는 menu-name 또는 menuName 둘 다 사용 가능하다
-					//과거에 menu-name으로 가져올 경우 오류가 발생할 수 있었기 때문
-					alert(menuName)
-				}
-				
-				document.location.href = "${rootPath}/" + href
-			})
-		})
-	</script>
+			display: none;
+		}
+		
+		.login_modal form {
+			position: relative;
+			top: 200px;
+			margin: 10px auto;
+		}
+	</style>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/header&nav.jsp" %>
@@ -48,6 +45,10 @@
 				</c:otherwise>
 			</c:choose>
 		</article>
+	</section>
+	
+	<section class="login_modal">
+		<%@ include file="/WEB-INF/views/member-login.jsp" %>
 	</section>
 	
 </body>

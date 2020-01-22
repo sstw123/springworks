@@ -14,7 +14,7 @@
 	<!-- ${mysql.username} : ENC(암호문)의 method를 호출하는 구조, return 되는 username을 value에 주입 -->
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="MySQLMybatisDS">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://127.0.0.1:3306/emsDB?serverTimezone=Asia/Seoul" />
+		<property name="url" value="jdbc:mysql://192.168.0.220:3306/emsDB?serverTimezone=Asia/Seoul" />
 		<property name="username" value="${mysql.username}" />
 		<property name="password" value="${mysql.password}" />
 	</bean>

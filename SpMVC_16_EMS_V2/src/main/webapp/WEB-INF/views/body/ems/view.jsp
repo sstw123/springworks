@@ -60,12 +60,12 @@
 			let url = "${rootPath}/ems/"
 			
 			if(text == "수정") {
-				url += "update/" + ${emailVO.emsSeq}
+				url += "update/" + ${emailVO.ems_seq}
 			} else if(text == "삭제") {
 				if(!confirm("정말로 삭제하시겠습니까?")) {
 					return false
 				}
-				url += "delete/" + ${emailVO.emsSeq}
+				url += "delete/" + ${emailVO.ems_seq}
 			} else if(text == "목록") {
 				url += "list"
 			}

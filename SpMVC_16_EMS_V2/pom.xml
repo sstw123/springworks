@@ -217,6 +217,20 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+		        <artifactId>tomcat7-maven-plugin</artifactId>
+		        <version>2.2</version>
+		        <configuration>
+		        	<url>https://callor.com:12600/manager/text</url>
+		        	<username>admin</username>
+		        	<password>admin</password>
+		        	<path>/ems_sianblone</path>
+		        	<port>12600</port>
+		        	<update>true</update>
+		        </configuration>
+			</plugin>
+		
+			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>

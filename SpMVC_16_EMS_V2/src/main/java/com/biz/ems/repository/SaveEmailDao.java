@@ -11,7 +11,8 @@ import com.biz.ems.domain.EmailVO;
 @Repository
 public interface SaveEmailDao extends JpaRepository<EmailVO, Long> {
 
-	public EmailVO findByEmsSeq(long emsSeq);
+	// public EmailVO findByEms_seq(long emsSeq);
+	/*
 	public List<EmailVO> findAllByFromEmail(String from_email);
 	public List<EmailVO> findAllByFromEmailOrderByEmsSeqAsc(String from_email);
 	
@@ -20,5 +21,6 @@ public interface SaveEmailDao extends JpaRepository<EmailVO, Long> {
 	
 	public List<EmailVO> findAllByFromEmailAndFromName(@Param("from_email")String from_email, @Param("from_name")String from_name);
 	public List<EmailVO> findAllByFromNameAndFromEmail(@Param("from_email")String from_email, @Param("from_name")String from_name);
+	*/
 
 }

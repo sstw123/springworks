@@ -41,6 +41,7 @@ div.input_box input:focus {
 
 .mail_box {
 	text-align: right;
+	padding: 20px;
 }
 
 #send_mail {
