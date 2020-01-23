@@ -19,6 +19,11 @@ public class SendMailService {
 	
 	private final JavaMailSender mailSender;
 	
+	/**
+	 * @since 2020-01-01
+	 * @param emailVO
+	 * @author 505-07
+	 */
 	public void sendMail(EmailVO emailVO) {
 		
 		String from_email = emailVO.getFrom_email();

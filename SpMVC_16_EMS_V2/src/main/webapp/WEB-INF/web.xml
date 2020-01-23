@@ -3,6 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 	
+	<display-name>EMS by 선윤성</display-name>
+	<description>내가 만든 Email Manager System</description>
+	
 	<filter>
 		<filter-name>encKor</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

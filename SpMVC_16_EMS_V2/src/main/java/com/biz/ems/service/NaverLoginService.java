@@ -13,16 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class NaverLoginService {
 	
-	private final String clientId = "py_PCSPuu6Zh2MKNsfxO";
+	private final String client_Id = "py_PCSPuu6Zh2MKNsfxO";
 	private final String loginAPI_URL = "https://nid.naver.com/oauth2.0/authorize";
-	private final String callbackLocalURL = "http://localhost:8080/ems/naver/ok";
-	private final String callbackURL = "http://callor.com:12600/ems/naver/ok";
+	private final String callbackURL = "https://callor.com:12600/ems_sianblone/member/naver/ok";
 	
 	public String oAuthLoginGet() {
-		String redirectURI = null;
+		String redirect_uri = null;
 		
 		try {
-			redirectURI = URLEncoder.encode(callbackURL, "UTF-8");
+			redirect_uri = URLEncoder.encode(callbackURL, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,8 +35,9 @@ public class NaverLoginService {
 		log.debug("stateKey : " + stateKey);
 		
 		String getLoginURL = loginAPI_URL
-				+ "?client_id=" + clientId
-				+ "&redirectURI=" + redirectURI
+				+ "?client_id=" + client_Id
+				+ "&response_type=code"
+				+ "&redirect_uri=" + redirect_uri
 				+ "&state=" + stateKey
 				
 				;
