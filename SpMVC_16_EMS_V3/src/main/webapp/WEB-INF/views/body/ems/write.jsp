@@ -29,49 +29,49 @@ $(function() {
 })
 </script>
 
-<fieldset class="email_write_box">
-	<form:form modelAttribute="emailVO">
-		<div class="input_box">
-			<label for="from_email">보낼 사람의 Email</label>
-			<form:input path="from_email"/>
-		</div>
-		
-		<div class="input_box">
-			<label for="to_email">받을 사람의 Email</label>
-			<form:input path="to_email"/>
-		</div>
-		
-		<div class="input_box">
-			<label for="send_date">작성일자</label>
-			<form:input path="send_date"/>
-		</div>
-		
-		<div class="input_box">
-			<label for="send_time">보낸시간</label>
-			<form:input path="send_time"/>
-		</div>
-		
-		<div class="input_box">
-			<label for="from_name">작성자</label>
-			<form:input path="from_name"/>
-		</div>
-		
-		<div class="input_box">
-			<label for="to_name">받는사람</label>
-			<form:input path="to_name"/>
-		</div>
-		
-		<div class="input_box">
-			<label for="subject">제목</label>
-			<form:input path="subject"/>
-		</div>
-		
-		<div class="input_box">
-			<form:textarea path="content"/>
-		</div>
-		
-		<div class="mail_box">
-			<button id="send_mail">메일 보내기</button>
-		</div>
-	</form:form>
-</fieldset>
+
+<form:form modelAttribute="emailVO">
+	<div class="input_box">
+		<label for="from_email">보낼 사람의 Email</label>
+		<form:input path="from_email"/>
+	</div>
+	
+	<div class="input_box">
+		<label for="to_email">받을 사람의 Email</label>
+		<form:input path="to_email"/>
+	</div>
+	
+	<div class="input_box">
+		<label for="send_date">작성일자</label>
+		<form:input path="send_date"/>
+	</div>
+	
+	<div class="input_box">
+		<label for="send_time">보낸시간</label>
+		<form:input path="send_time"/>
+	</div>
+	
+	<div class="input_box">
+		<label for="from_name">작성자</label>
+		<form:input path="from_name"/>
+	</div>
+	
+	<div class="input_box">
+		<label for="to_name">받는사람</label>
+		<form:input path="to_name"/>
+	</div>
+	
+	<div class="input_box">
+		<label for="subject">제목</label>
+		<form:input path="subject"/>
+	</div>
+	
+	<div class="input_box">
+		<form:textarea path="content"/>
+	</div>
+	
+	<div class="mail_box">
+		<button id="send_mail">메일 보내기</button>
+	</div>
+	
+</form:form>
