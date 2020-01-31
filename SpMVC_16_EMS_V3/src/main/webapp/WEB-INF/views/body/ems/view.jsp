@@ -79,11 +79,11 @@
 </div>
 
 <div class="flex">
-	<span class="span1">발신</span><span>${emailVO.from_name}</span><span class="spanMail">${emailVO.from_email}</span>
+	<span class="span1">발신</span><span>${emailVO.from_name}</span><span class="spanMail">&lt;${emailVO.from_email}&gt;</span>
 </div>
 
 <div class="flex">
-	<span class="span1">수신</span><span>${emailVO.to_name}</span><span class="spanMail">${emailVO.to_email}</span>
+	<span class="span1">수신</span><span>${emailVO.to_name}</span><span class="spanMail">&lt;${emailVO.to_email}&gt;</span>
 </div>
 
 <div class="flex">

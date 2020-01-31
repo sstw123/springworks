@@ -1,7 +1,10 @@
 package com.biz.ems;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
@@ -34,63 +37,43 @@ public class MakeNaverSec {
 		secFileList.put("hibernate.secret.properties", new String[] {"mysql.username", "mysql.password"});
 		secFileList.put("naver.email.secret.properties", new String[] {"naver.username", "naver.password", "naver.client.id","naver.client.secret"});
 		
-		// 프로젝트 우클릭 - Run As - Run Configurations... - Environment에 등록한 환경변수 가져오기
-		System.out.println("ENV ABCDE123 : " + System.getenv("ABCDE123"));
+		String propFileDir = "./src/main/webapp/WEB-INF/spring/appServlet/props";
 		
-		System.out.print("Naver ID : ");
-		String naverId = scan.nextLine();
+		Set<String> files = secFileList.keySet();
 		
-		System.out.print("Naver PW : ");
-		String naverPW = scan.nextLine();
+		try {
+			for(String file : files) {
+				File propFile = new File(propFileDir, file);
+				System.out.println("=======================================");
+				System.out.println(propFile.getAbsolutePath() + " 파일 생성");
+				System.out.println("---------------------------------------");
+				
+				PrintWriter pw = new PrintWriter(propFile);
+				
+				for(String key : secFileList.get(file)) {
+					System.out.print(key + " : ");
+					String plainString = scan.nextLine();
+					if(plainString.isEmpty()) {
+						System.out.println("Exit!!!");
+						pw.close();
+						scan.close();
+						return;
+					}
+					String encString = String.format("%s=ENC(%s)", key, pbEnc.encrypt(plainString));
+					System.out.println(encString);
+					
+					pw.println(encString);
+					pw.flush();
+				}
+				
+				pw.close();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
 		
-		System.out.print("DB User : ");
-		String dbUserId = scan.nextLine();
-		
-		System.out.print("DB PW : ");
-		String dbUserPW = scan.nextLine();
-		
-		
-		
-		String encNaverId = pbEnc.encrypt(naverId);
-		String encNaverPW = pbEnc.encrypt(naverPW);
-		String encDBUserId = pbEnc.encrypt(dbUserId);
-		String encDBUserPW = pbEnc.encrypt(dbUserPW);
-		
-		System.out.println("encNaverId : " + encNaverId);
-		System.out.println("encNaverPW : " + encNaverPW);
-		
-		String saveNaverId = String.format("naver.username=ENC(%s)", encNaverId);
-		String saveNaverPW = String.format("naver.password=ENC(%s)", encNaverPW);
-		String saveDBUserId = String.format("mysql.username=ENC(%s)", encDBUserId);
-		String saveDBUserPW = String.format("mysql.password=ENC(%s)", encDBUserPW);
-		
-//		String profileName = "./src/main/webapp/WEB-INF/spring/naver.email.secret.properties";
-//		
-//		String WEB_INF = "./src/main/webapp/WEB-INF/spring";
-//		String naver_properties = "naver.email.secret.properties";
-//		
-//		File propertiesFile = new File(WEB_INF,naver_properties);
-//		// 앞쪽은 path, 뒤쪽은 파일명
-//		// 원래 path는 다른 OS는 /를 사용하고 윈도우에선 \를 사용하는데
-//		// File 클래스가 자동으로 실행되는 운영체제에 맞춰서 변환시켜준다
-//		
-//		try {
-//			PrintWriter pw = new PrintWriter(propertiesFile);
-//			pw.println(saveNaverId);
-//			pw.println(saveNaverPW);
-//			
-//			pw.flush();
-//			pw.close();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		scan.close();
-		
-		
-		System.out.println(saveDBUserId);
-		System.out.println(saveDBUserPW);
+		scan.close();
 	}
 
 }

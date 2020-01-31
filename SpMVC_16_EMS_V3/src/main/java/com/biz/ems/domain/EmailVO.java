@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Nationalized;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,23 +33,29 @@ public class EmailVO {
 	private long ems_seq;
 	
 	//보내는 email, 받는 email, 보내는 사람 이름, 받는 사람 이름, 제목, 내용, 작성일자, 보낸시간
+	//length 지정하지 않으면 기본값은 255가 된다
+	//@Nationalized 지정하지 않으면 기본값은 varchar가 된다
 	
 	@Column(name="from_email", nullable = false, length = 20)
 	private String from_email;
 	
-	@Column(nullable = false, name="to_email")
+	@Column(nullable = false, name="to_email", length = 125)
 	private String to_email;
 	
-	@Column(nullable = true, name="from_name", columnDefinition = "nVARCHAR(20)")
+	@Column(nullable = true, name="from_name", length = 125)
+	@Nationalized
 	private String from_name;
 	
-	@Column(nullable = true, columnDefinition = "nVARCHAR(20)")
+	@Column(nullable = true, length = 125)
+	@Nationalized
 	private String to_name;
 	
-	@Column(nullable = false, columnDefinition = "nVARCHAR(100)")
+	@Column(nullable = false, length = 255)
+	@Nationalized
 	private String subject;
 	
-	@Column(nullable = true, columnDefinition = "nVARCHAR(1000)")
+	@Column(nullable = true, length = 1000)
+	@Nationalized
 	private String content;
 	
 	@Column(nullable = true, name="send_date")

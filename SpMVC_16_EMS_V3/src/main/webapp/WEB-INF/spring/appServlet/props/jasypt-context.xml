@@ -24,8 +24,8 @@
 		<constructor-arg ref="configEnc"/>
 		<property name="locations">
 			<list>
-				<value>/WEB-INF/spring/props/naver.email.secret.properties</value>
-				<value>/WEB-INF/spring/props/hibernate.secret.properties</value>
+				<value>/WEB-INF/spring/appServlet/props/naver.email.secret.properties</value>
+				<value>/WEB-INF/spring/appServlet/props/hibernate.secret.properties</value>
 			</list>
 		</property>
 	</bean>

@@ -4,16 +4,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.biz.ems.domain.EmailVO;
+import com.biz.ems.domain.NaverMemberResponse;
 import com.biz.ems.service.SaveMailService;
 import com.biz.ems.service.SendMailService;
 
@@ -59,10 +61,25 @@ public class EMSController {
 	}
 
 	@RequestMapping(value="input", method=RequestMethod.GET)
-	public String input(@ModelAttribute("emailVO") EmailVO emailVO, Model model, SessionStatus status) {
+	public String input(@ModelAttribute("emailVO") EmailVO emailVO, Model model, SessionStatus status, HttpSession httpSession) {
 		
-		status.setComplete();
+		NaverMemberResponse nMemberResponse = (NaverMemberResponse) httpSession.getAttribute("MEMBER");
 		
+		if(nMemberResponse == null) {
+			model.addAttribute("LOGIN", "NO");
+			return "home";
+		}
+		
+		emailVO = this.makeEmailVO();
+		
+		if(nMemberResponse != null) {
+			emailVO.setFrom_email(nMemberResponse.getEmail());
+			emailVO.setFrom_name(nMemberResponse.getName());
+		}
+		
+		//status.setComplete();
+		
+		model.addAttribute("emailVO", emailVO);
 		model.addAttribute("BODY", "WRITE");
 		
 		return "home";
@@ -71,7 +88,7 @@ public class EMSController {
 	@RequestMapping(value="input", method=RequestMethod.POST)
 	public String input(@ModelAttribute("emailVO") EmailVO emailVO) {
 		
-		sendMailSvc.sendMail(emailVO);//메일보내기
+		//sendMailSvc.sendMail(emailVO);//메일보내기
 		mailSvc.insert(emailVO);//보낸 메일 목록 input하기
 		
 		return "redirect:/";

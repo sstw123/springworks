@@ -26,10 +26,8 @@ public class PropsRestController {
 	@Value("${mysql.username}")
 	private String mysql_username;
 	
-	@Value("#{app_pros['app.name']}")
 	private String app_name;
 	
-	@Value("#{app_pros['app.since']}")
 	private String app_since;
 	
 	@RequestMapping(value="system", method=RequestMethod.GET)

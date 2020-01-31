@@ -5,6 +5,12 @@
 
 <script type="text/javascript">
 	$(function() {
+		if("${LOGIN}" == "NO") {
+			alert("로그인을 해야합니다")
+			$(".login_modal").css("display", "block")
+			return
+		}
+		
 		$("#myEms").on("click", function() {
 			document.location.href = "${rootPath}/"
 		})
