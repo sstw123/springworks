@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+fieldset.email_write_box {
+	width: 60%;
+	margin: 10px auto;
+	border: 1px solid blue;
+	border-radius: 4px;
+}
+
+div.input_box {
+	display: flex;
+	margin: 3px;
+}
+
+div.input_box label {
+	display: block;
+	width: 25%;
+	text-align: right;
+	
+	margin: 8px;
+	padding: 5px;
+	font-weight: bold;
+	
+	white-space: nowrap;
+}
+
+div.input_box input {
+	width: 60%;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	padding: 5px;
+	margin: 3px;
+}
+
+div.input_box input:focus {
+	background-color: ivory;
+	
+}
+
+
+
+.mail_box {
+	text-align: right;
+	padding: 20px;
+}
+
+#send_mail {
+	padding: 10px;
+	background-color: #00E0FF;
+	border: 1px solid #00E0FF;
+	border-radius: 5px;
+	
+	cursor: pointer;
+}
+
+#send_mail:hover {
+	background-color: black;
+	border: 1px solid black;
+	color: white;
+}

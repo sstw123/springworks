@@ -1,0 +1,44 @@
+@charset "UTF-8";
+body {
+	width: 978px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+header {
+	text-align: center;
+	padding: 14px 0;
+	cursor: pointer;
+	background-color: #fafafa;
+}
+
+nav {
+	background-color: #00E0FF;
+}
+
+nav ul.nav_link {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	
+	flex-flow: row;
+	flex-wrap: wrap;
+}
+
+nav ul.nav_link li {
+	padding: 16px 14px;
+	text-align: center;
+	cursor: pointer;
+	
+	white-space: nowrap;
+}
+
+nav ul.nav_link li:hover {
+	background-color: black;
+	color: white;
+}
+
+nav ul.nav_link li:nth-of-type(4) {
+	margin-left: auto;
+}
