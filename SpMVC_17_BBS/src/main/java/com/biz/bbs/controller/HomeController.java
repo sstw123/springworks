@@ -28,7 +28,7 @@ public class HomeController {
 		model.addAttribute("MENUS", mList);
 		log.debug("11111111111111 : " + mList.toString());
 		
-		return "home";
+		return "redirect:/bbs/list";
 	}
 	
 }

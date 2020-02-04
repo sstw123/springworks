@@ -72,6 +72,7 @@
 		border-bottom: 1px solid white;
 		background-color: #ccc;
 		color: black;
+		text-decoration: none;
 	}
 </style>
 <nav>

@@ -10,7 +10,6 @@ import org.apache.ibatis.annotations.Select;
 
 import com.biz.bbs.domain.MenuVO;
 
-@Mapper
 public interface MenuDao {
 	
 	@Select("select * from tbl_menu where menu_p_id is null order by menu_id")//1.select
