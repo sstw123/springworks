@@ -3,7 +3,7 @@
 <c:set var="rootPath" value="${pageContext.request.contextPath}"/>
 <script>
 	$(function() {
-		$("tr").on("click", function() {
+		$("tr[data-id]").on("click", function() {
 			document.location.href = "${rootPath}/bbs/view?bbs_id=" + $(this).attr("data-id")
 		})
 	})

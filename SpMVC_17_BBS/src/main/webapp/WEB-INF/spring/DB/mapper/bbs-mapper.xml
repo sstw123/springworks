@@ -2,12 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.biz.bbs.mapper.BBsDao">
 	<select id="selectMain" resultMap="bbsReply">
-		select * from tbl_bbs where bbs_p_id is null
+		select * from tbl_bbs where bbs_p_id is null or bbs_p_id = 0
 	</select>
 	
 	<resultMap type="bbsVO" id="bbsReply">
 		<id column="bbs_id" property="bbs_id"/>
-		<result column="bbs_id" property="bbs_id" />
 		<collection property="bbs_reply" column="bbs_id" ofType="bbsVO" select="selectSub"/>
 	</resultMap>
 	
@@ -20,8 +19,6 @@
 			`BBS_ID`,
 			`BBS_P_ID`,
 			`BBS_WRITER`,
-			`BBS_DATE`,
-			`BBS_TIME`,
 			`BBS_SUBJECT`,
 			`BBS_CONTENT`,
 			`BBS_COUNT`
@@ -29,8 +26,6 @@
 			#{bbs_id},
 			#{bbs_p_id},
 			#{bbs_writer},
-			#{bbs_date},
-			#{bbs_time},
 			#{bbs_subject},
 			#{bbs_content},
 			#{bbs_count}
@@ -42,8 +37,6 @@
 		SET
 			`BBS_P_ID` = #{bbs_p_id},
 			`BBS_WRITER` = #{bbs_writer},
-			`BBS_DATE` = #{bbs_date},
-			`BBS_TIME` = #{bbs_time},
 			`BBS_SUBJECT` = #{bbs_subject},
 			`BBS_CONTENT` = #{bbs_content},
 			`BBS_COUNT` = #{bbs_count}

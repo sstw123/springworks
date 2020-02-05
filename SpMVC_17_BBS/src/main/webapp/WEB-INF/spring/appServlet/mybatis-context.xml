@@ -9,7 +9,7 @@
 	
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="mysqlDS">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property name="url" value="jdbc:mysql://127.0.0.1:3306/emsdb"/>
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/emsdb?serverTimezone=Asia/Seoul"/>
 		<property name="username" value="${mysql.username}"/>
 		<property name="password" value="${mysql.password}"/>
 	</bean>
