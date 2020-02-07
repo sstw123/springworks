@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.biz.bbs.mapper.BBsDao">
+
+	<!-- 
+		tbl_bbs 테이블 1개를 self join해서
+		게시판 원글과 답글을 동시에 select하여 수행하는 방식
+		
+		1. 원글(bbs_p_id가 없는 튜플)을 전부 select하고 : selectMain ->
+		2. 원글의 bbs_id 값을 selectSub에 전송하여 같은 테이블 끼리의 카티션곱 중 테이블1의 bbs_id와 테이블2의 bbs_p_id가 같은 튜플들을 select하여 : resultMap에서 id와 collection ->
+		3. 그 결과를 BBsVO의 List<BBsVO> bbs_reply 변수에 담아서 한번에 view로 전송하기 : resultMap
+	-->
 	<select id="selectMain" resultMap="bbsReply">
 		select * from tbl_bbs where bbs_p_id is null or bbs_p_id = 0
 	</select>
 	
+	<!-- 
+		fetchType="lazy"
+		
+		join 또는 sub query 실행시
+		실제로 view에서 해당 쿼리 결과를 참조하지 않으면 SQL 실행을 보류한다
+		실제 view에서 사용하지 않는 불필요한 쿼리를 실행하여 성능 효율을 향상시킬 수 있다
+		
+		mybatis가 쿼리를 실행하고 나서 lazy가 설정된 쿼리에는 보류하겠다는 표식을 남겨두고
+		어디선가 view에 표시하는 부분이 생기면 그 때 해당 쿼리를 실행하게 된다 
+	-->
 	<resultMap type="bbsVO" id="bbsReply">
 		<id column="bbs_id" property="bbs_id"/>
 		<collection property="bbs_reply" column="bbs_id" ofType="bbsVO" select="selectSub"/>

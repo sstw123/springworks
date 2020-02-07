@@ -1,0 +1,50 @@
+@charset "UTF-8";
+
+fieldset {
+	width: 80%;
+	border-radius: 8px;
+	border: 2px solid skyblue;
+	margin: 10px auto;
+	padding: 20px;
+}
+
+fieldset div {
+	display: flex;
+	width:90%;
+	margin:0 auto;
+}
+
+fieldset div label {
+	display: inline-block;
+	width: 15%;
+	padding: 8px 10px;
+	margin: 2px;
+	margin-right: 5px;
+	text-align: right;
+	vertical-align: center;
+	font-weight: bold;
+}
+
+fieldset div input {
+	display: inline-block;
+	width: 85%;
+	padding: 8px;
+	margin: 2px;
+	border: 1px solid #ddd;
+}
+
+button {
+	background-color: white;
+	padding: 14px 30px;
+	margin: 10px auto;
+	
+	border: 1px solid skyblue;
+	border-radius: 5px;
+	color: skyblue;
+}
+
+button:hover  {
+	color: white;
+	background-color: skyblue;
+	cursor: pointer;
+}

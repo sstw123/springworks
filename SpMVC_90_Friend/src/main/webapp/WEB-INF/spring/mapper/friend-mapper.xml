@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.friend.persistence.FriendDao">
+	
+	<insert id="insert">
+		insert into `tbl_friend`
+			(`frd_name`,
+			`frd_tel`,
+			`frd_addr`,
+			`frd_hobby`,
+			`frd_rel`)
+		values
+			(#{frd_name},
+			#{frd_tel},
+			#{frd_addr},
+			#{frd_hobby},
+			#{frd_rel});
+	</insert>
+	
+	<update id="update">
+		UPDATE `tbl_friend`
+		SET
+		`frd_name` = #{frd_name},
+		`frd_tel` = #{frd_tel},
+		`frd_addr` = #{frd_addr},
+		`frd_hobby` = #{frd_hobby},
+		`frd_rel` = #{frd_rel}
+		where `frd_id` = #{frd_id};
+	</update>
+</mapper>

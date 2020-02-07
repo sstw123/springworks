@@ -17,7 +17,7 @@
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="ssfb">
 		<property name="dataSource" ref="mysqlDS"/>
 		<property name="typeAliasesPackage" value="com.biz.bbs.domain"/>
-		<property name="mapperLocations" value="/WEB-INF/spring/DB/mapper/*-mapper.xml"/>
+		<property name="mapperLocations" value="/WEB-INF/spring/mapper/*-mapper.xml"/>
 		<property name="configuration">
 			<bean class="org.apache.ibatis.session.Configuration">
 				<property name="cacheEnabled" value="true"/>
@@ -27,7 +27,6 @@
 				<property name="logPrefix" value="마이바티스 : "/>
 			</bean>
 		</property>
-		
 	</bean>
 	
 	<tx:annotation-driven/>
