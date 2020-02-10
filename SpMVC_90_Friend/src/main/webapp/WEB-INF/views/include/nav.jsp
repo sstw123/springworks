@@ -24,6 +24,9 @@
 		background-color: black;
 		color: white;
 	}
+	#nav_mypage {
+		width: auto;
+	}
 </style>
 <script>
 	$(function() {
@@ -36,6 +39,14 @@
 				$("#modal_login").css("display", "block")
 			} else if(text == "회원가입") {
 				$("#modal_join").css("display", "block")
+			} else if(text == "로그아웃") {
+				$.ajax({
+					url : "${rootPath}/member/logout",
+					type : "POST",
+					success : function(result) {
+						document.location.href = document.location.href
+					}
+				})
 			}
 		})
 	})
@@ -43,7 +54,15 @@
 <nav>
 	<ul>
 		<li>홈</li>
-		<li>로그인</li>
-		<li>회원가입</li>
+		<c:choose>
+			<c:when test="${empty MEMBER}">
+				<li>로그인</li>
+				<li>회원가입</li>
+			</c:when>
+			<c:when test="${!empty MEMBER}">
+				<li id="nav_mypage">${MEMBER.m_id}님, 환영합니다!</li>
+				<li>로그아웃</li>
+			</c:when>
+		</c:choose>
 	</ul>
 </nav>

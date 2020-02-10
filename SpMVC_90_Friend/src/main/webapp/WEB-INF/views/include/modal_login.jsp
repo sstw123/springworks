@@ -61,6 +61,37 @@
 				$("#modal_login").css("display", "none")
 			}
 		})
+		
+		$("#btn_login").on("click", function() {
+		
+			// 유효성 검사
+			// id, pw가 입력되지 않았을 때 경고
+			if($("#login_m_id").val() == "") {
+				alert("아이디를 입력하세요")
+				$("#login_m_id").focus()
+				return false
+			} else if($("#login_m_pw").val() == "") {
+				alert("비밀번호를 입력하세요")
+				$("#login_m_pw").focus()
+				return false
+			}
+			
+			
+			$.post(
+					"${rootPath}/member/login",
+					$(".login_form").serialize(),
+					function(result) {
+						if(result) {
+							//true면 새로고침
+							document.location.replace(document.location.href)
+						} else {
+							alert("아이디 또는 비밀번호가 일치하지 않습니다")
+							return false
+						}
+					}
+			)
+			
+		})
 	})
 </script>
 <section id="modal_login" class="modal_bg">
@@ -77,7 +108,7 @@
 			</section>
 			
 			<section class="login_input_box">
-				<input id="m_id" name="m_id">
+				<input id="login_m_id" name="m_id">
 			</section>
 			
 			<section>
@@ -85,7 +116,7 @@
 			</section>
 			
 			<section class="login_input_box">
-				<input id="m_pw" name="m_pw">
+				<input type="password" id="login_m_pw" name="m_pw">
 			</section>
 			<br/>
 			<section class="login_btn_box">

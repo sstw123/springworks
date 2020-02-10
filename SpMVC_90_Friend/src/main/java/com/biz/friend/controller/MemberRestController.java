@@ -29,6 +29,19 @@ public class MemberRestController {
 		return joinResult;
 	}
 	
+	@RequestMapping(value="isMemberExists", method=RequestMethod.POST)
+	public boolean isMemberExists(String m_id) {
+		MemberDTO mDTO = mSvc.selectById(m_id);
+		
+		boolean selectResult = true;
+		if(mDTO != null) {
+			selectResult = true;
+		} else {
+			selectResult = false;
+		}
+		return selectResult;
+	}
+	
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	public boolean login(MemberDTO mDTO, HttpSession httpSession) {
 		

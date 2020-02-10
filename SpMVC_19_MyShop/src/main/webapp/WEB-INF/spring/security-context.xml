@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security-5.2.xsd">
+	
+	<!-- security 설정, root-context와 같은 위치 -->
+	<!-- admin 사용자를 임시로 등록하여 login 테스트 -->
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="admin" password="{noop}password" authorities="ROLE_ADMIN"/>
+				<security:user name="user" password="{noop}password" authorities="ROLE_USER"/>
+			</security:user-service>
+			
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<!--
+		intercept-url 옵션
+		spring security를 통해서 접근할 url(path)설정
+		
+		use-expressions 옵션
+		"ROLE_ADMIN" 대신 "hasRole('')" 함수를 이용해 ROLE_ 뒤의 ADMIN과 대조
+	-->
+	<security:http auto-config="true" use-expressions="true">
+	<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+	<security:intercept-url pattern="/auth/**" access="hasAnyRole('ADMIN','USER')"/>
+		<security:intercept-url pattern="/**" access="permitAll"/>
+		<!-- 정상적으로 로그인이 되면 /로 redirect
+		로그인 실패시 /login에 ?error 변수를 붙인 주소로 보내기 -->
+		<security:form-login
+			login-page="/login"
+			default-target-url="/"
+			authentication-failure-url="/login?error"
+			username-parameter="id"
+			password-parameter="password"
+			/>
+			
+		<security:logout
+			logout-url="/logout"
+			logout-success-url="/"
+		/>
+		
+	</security:http>
+
+
+</beans>

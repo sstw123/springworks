@@ -36,6 +36,13 @@
 		text-align: center;
 	}
 	
+	input {
+		-webkit-ime-mode:disabled;
+		-moz-ime-mode:disabled;
+		-ms-ime-mode:disabled;
+		ime-mode:disabled;
+	}
+	
 	.modal_close {
 	    padding: 0 8px;
 	    color: white;
@@ -62,17 +69,62 @@
 			}
 		})
 		
-		$.ajax({
-			url : ${rootPath}/member/join,
-			type : "POST",
-			data : "",
-			success : function(success) {
-				
-			},
-			error : function(error) {
-				
+		$("#btn_join").on("click", function() {
+			
+			var id = $("#join_m_id").val()
+			var pw1 = $("#join_m_pw1").val()
+			var pw2 = $("#join_m_pw2").val()
+			
+			if(id == "") {
+				alert("ID를 입력하세요")
+				return false
+			} else if (pw1 == "") {
+				alert("비밀번호를 입력하세요")
+				return false
+			} else if (pw2 == "") {
+				alert("비밀번호 확인을 입력하세요")
+				return false
+			} else if (pw1 != pw2) {
+				alert("비밀번호가 서로 다릅니다")
+				return false
 			}
+			
+			$.ajax({
+				url : "${rootPath}/member/isMemberExists",
+				type : "POST",
+				data : {m_id : $("#join_m_id").val()},
+				success : function(result) {
+					if(result) {
+						alert("이미 존재하는 아이디입니다")
+						return false
+					} else {
+						//중복된 아이디가 없으면 form submit
+						$.ajax({
+							url : "${rootPath}/member/join",
+							type : "POST",
+							data : $(".join_form").serialize(),
+							success : function(result) {
+								if(result) {
+									document.location.href = document.location.href
+								} else {
+									alert("회원가입에 실패했습니다")
+									return false
+								}
+							},
+							error : function(error) {
+								alert("서버 통신 오류")
+								return false
+							}
+						})
+					}
+				},
+				error : function(error) {
+					alert("서버 통신 오류")
+					return false
+				}
+			})
 		})
+		
 	})
 </script>
 <section id="modal_join" class="modal_bg">
@@ -88,7 +140,7 @@
 			</section>
 			
 			<section class="join_input_box">
-				<input id="m_id" name="m_id">
+				<input id="join_m_id" name="m_id">
 			</section>
 			
 			<section>
@@ -96,7 +148,15 @@
 			</section>
 			
 			<section class="join_input_box">
-				<input id="m_pw" name="m_pw">
+				<input type="text" id="join_m_pw1" name="m_pw">
+			</section>
+			
+			<section>
+				<label>비밀번호 확인</label><br/>
+			</section>
+			
+			<section class="join_input_box">
+				<input type="password" id="join_m_pw2">
 			</section>
 			
 			<section>
@@ -104,7 +164,7 @@
 			</section>
 			
 			<section class="join_input_box">
-				<input id="m_name" name="m_name">
+				<input id="join_m_name" name="m_name">
 			</section>
 			
 			<section>
@@ -112,7 +172,7 @@
 			</section>
 			
 			<section class="join_input_box">
-				<input id="m_nick" name="m_nick">
+				<input id="join_m_nick" name="m_nick">
 			</section>
 			
 			<br/>

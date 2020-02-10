@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.biz.friend.persistence.FriendDao">
+<mapper namespace="com.biz.friend.persistence.MemberDao">
 	
 	<insert id="insert">
 		INSERT INTO `tbl_member`
@@ -8,14 +8,14 @@
 			`m_pw`)
 		values
 			(#{m_id},
-			#{m_pw});
+			#{m_pw})
 	</insert>
 	
 	<update id="update">
 		update `tbl_member`
 		set
 		`m_pw` = #{m_pw}
-		where `m_id` = #{m_id},
+		where `m_id` = #{m_id}
 
 	</update>
 </mapper>

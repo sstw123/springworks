@@ -14,7 +14,7 @@
 			#{frd_tel},
 			#{frd_addr},
 			#{frd_hobby},
-			#{frd_rel});
+			#{frd_rel})
 	</insert>
 	
 	<update id="update">
@@ -25,6 +25,6 @@
 		`frd_addr` = #{frd_addr},
 		`frd_hobby` = #{frd_hobby},
 		`frd_rel` = #{frd_rel}
-		where `frd_id` = #{frd_id};
+		where `frd_id` = #{frd_id}
 	</update>
 </mapper>

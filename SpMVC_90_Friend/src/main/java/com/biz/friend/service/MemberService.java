@@ -34,5 +34,9 @@ public class MemberService {
 		
 		return login;
 	}
+
+	public MemberDTO selectById(String m_id) {
+		return mDao.selectById(m_id);
+	}
 	
 }
