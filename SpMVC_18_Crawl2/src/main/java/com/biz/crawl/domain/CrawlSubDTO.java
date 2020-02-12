@@ -15,7 +15,11 @@ import lombok.ToString;
 @Builder
 public class CrawlSubDTO {
 	
-    private String date;// VARCHAR(125),
-    private String hit;// VARCHAR(125),
+	private String c_id;//int auto_increment primary key
+	private String c_site;// varchar(125)
+	private String c_board;// varchar(125)
+	private String c_bbsNo;// varchar(30)
+    private String c_date;// varchar(20)
+    private int c_hit;// int
 
 }

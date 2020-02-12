@@ -19,9 +19,17 @@ public class CrawlDTO {
 	
 	private String crawlSiteURL;
 	private String nextPageSiteURL;
+	private String bbsNoTag;
 	private String dateTag;
 	private String hitTag;
-    private int sumOfHit;
+    private String srchStartDate;
+    private String srchLastDate;
+    
+    private long sumOfHit;
+    private long avgOfHit;
+    private int numOfTuples;
+    private String c_site;
+    private String c_board;
     private List<CrawlSubDTO> crawlSubList;
 
 }

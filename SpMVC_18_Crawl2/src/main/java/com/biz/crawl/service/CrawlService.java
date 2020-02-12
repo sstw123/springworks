@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.biz.crawl.domain.CrawlDTO;
 import com.biz.crawl.domain.CrawlSubDTO;
+import com.biz.crawl.domain.PaginationDTO;
 import com.biz.crawl.persistence.CrawlDao;
 
 import lombok.RequiredArgsConstructor;
@@ -29,16 +30,51 @@ public class CrawlService {
 	 * - rankList
 	 * 를 가져오기 위한 tag 묶음 정보를 변수로 선언
 	 */
-	private final String tupleBoxTag = "tr.ls.oh.tr";
 	
-	Document crawlDocument = null;
 	Elements dateList = null;
 	Elements hitList = null;
+	Elements bbsNoList = null;
 
-	private final CrawlDao crwDao;
+	private final CrawlDao crawlDao;
 	
-	public List<CrawlSubDTO> selectAll() {
-		return crwDao.selectAll();
+	// Read
+	public CrawlDTO selectByOptions(CrawlDTO crawlDTO) {
+		
+		long startTime = System.currentTimeMillis();
+		List <CrawlSubDTO> crawlSubList = crawlDao.selectByOptions(crawlDTO);// 모든 게시물의 리스트 가져오기
+		long endTime = System.currentTimeMillis();
+		log.debug("DB에서 가져오는데 걸린 시간 : " + (endTime - startTime));
+		
+		startTime = System.currentTimeMillis();
+		long sumOfHit = 0;
+		for(CrawlSubDTO dto : crawlSubList) {
+			sumOfHit += dto.getC_hit();//총 조회수에 조회수 전부 더하기
+		}
+		endTime = System.currentTimeMillis();
+		log.debug("더하는데 걸린 시간 : " + (endTime - startTime));
+		
+		long avgOfHit = 0;
+		if(crawlSubList.size() > 0) {
+			avgOfHit = sumOfHit / crawlSubList.size();
+		}
+		
+		crawlDTO.setSumOfHit(sumOfHit);//총 조회수
+		crawlDTO.setAvgOfHit(avgOfHit);//평균 조회수
+		crawlDTO.setNumOfTuples(crawlSubList.size());//게시물 수
+		crawlDTO.setCrawlSubList(crawlSubList);
+		
+		return crawlDTO;
+	}
+	
+	public long countByOptions(CrawlDTO crawlDTO) {
+		return crawlDao.countByOptions(crawlDTO);
+	}
+	
+	public CrawlDTO selectByPage(PaginationDTO paginationDTO) {
+		
+		crawlDao.selectByPage(paginationDTO);
+		
+		return null;
 	}
 	
 	/*
@@ -63,92 +99,158 @@ public class CrawlService {
 	}
 	*/
 	
-	public CrawlDTO getFreeBoard() {
+	// Insert,Update
+	protected void setInvenCrawl(CrawlDTO crawlDTO, String crawlSiteURL) {
+		crawlDTO.setSrchStartDate("10-31");//마주치면 크롤링 DB삽입 중단할 날짜 설정
+		
+		crawlDTO.setCrawlSiteURL(crawlSiteURL);//크롤링 할 사이트 설정
+		crawlDTO.setNextPageSiteURL(crawlSiteURL + "?sort=PID&p=");//크롤링 할 사이트 2페이지부터 쿼리 설정
+		crawlDTO.setBbsNoTag(".ls.tr td.bbsNo");//가져올 글번호 HTML 태그 선택자 설정
+		crawlDTO.setDateTag(".ls.tr td.date");//가져올 작성일자 HTML 태그 선택자 설정
+		crawlDTO.setHitTag(".ls.tr td.hit");//가져올 조회수 HTML 태그 선택자 설정
+	}
+	
+	public void insertLOLInvenUserInfo() {
+		CrawlDTO crawlDTO = new CrawlDTO();
+		String crawlSiteURL = "http://www.inven.co.kr/board/lol/2778";//크롤링 할 사이트 URL 설정
+		crawlDTO.setC_site("롤인벤");//DB에 넣을 사이트이름 설정
+		crawlDTO.setC_board("실시간 유저 정보");//DB에 넣을 게시판이름 설정
+		
+		setInvenCrawl(crawlDTO, crawlSiteURL);
+		
+		this.insertCrawlDTO(crawlDTO);
+	}
+	
+	public void insertLOLInvenTip() {
+		CrawlDTO crawlDTO = new CrawlDTO();
+		String crawlSiteURL = "http://www.inven.co.kr/board/lol/2766";
+		crawlDTO.setC_site("롤인벤");//DB에 넣을 사이트이름 설정
+		crawlDTO.setC_board("팁과노하우");//DB에 넣을 게시판이름 설정
+		
+		setInvenCrawl(crawlDTO, crawlSiteURL);
+		
+		this.insertCrawlDTO(crawlDTO);
+	}
+	
+	public void insertLOLInvenFreeBoard() {
+		CrawlDTO crawlDTO = new CrawlDTO();
+		String crawlSiteURL = "http://www.inven.co.kr/board/lol/4626";
+		crawlDTO.setC_site("롤인벤");//DB에 넣을 사이트이름 설정
+		crawlDTO.setC_board("자유게시판");//DB에 넣을 게시판이름 설정
+		
+		setInvenCrawl(crawlDTO, crawlSiteURL);
+		
+		this.insertCrawlDTO(crawlDTO);
+	}
+	
+	public void insertHSInvenFreeBoard() {
 		CrawlDTO crawlDTO = new CrawlDTO();
 		String crawlSiteURL = "http://www.inven.co.kr/board/hs/3509";
-		crawlDTO.setCrawlSiteURL(crawlSiteURL);
-		crawlDTO.setNextPageSiteURL(crawlSiteURL + "?sort=PID&p=");
-		crawlDTO.setDateTag(".ls.oh.tr td.date");
-		crawlDTO.setHitTag(".ls.oh.tr td.hit");
+		crawlDTO.setC_site("하스인벤");//DB에 넣을 사이트이름 설정
+		crawlDTO.setC_board("자유게시판");//DB에 넣을 게시판이름 설정
 		
-		return this.getCrawlDTO(crawlDTO);
+		setInvenCrawl(crawlDTO, crawlSiteURL);
+		
+		this.insertCrawlDTO(crawlDTO);
 	}
 	
-	public void setCrawl(CrawlDTO crawlDTO) {
-		// 1. URL에 해당하는 html 페이지코드 가져오기
-		// 2. Document 클래스에 담기
-		// 3. jsoup의 Document 클래스를 사용하여 DOM 형식의 Document 만들기
-		
-		try {
-			crawlDocument = Jsoup.connect(crawlDTO.getCrawlSiteURL()).get();//Document 클래스에 페이지 코드 담김
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// DOM에서 dateTag 문자열 기준으로 리스트 추출
-		dateList = crawlDocument.select(crawlDTO.getDateTag());
-		// DOM에서 hitTag 문자열 기준으로 리스트 추출
-		hitList = crawlDocument.select(crawlDTO.getHitTag());
-		
-	}
 	
-	public CrawlDTO getCrawlDTO(CrawlDTO crawlDTO) {
+	
+	public void insertCrawlDTO(CrawlDTO crawlDTO) {
 		
-		this.setCrawl(crawlDTO);
+		this.makeCrawlDocument(crawlDTO);
 		
 		// JRE 1.7 이상에서는 생성자 Generic 생략 가능
 		List<CrawlSubDTO> crawlSubList = new ArrayList();
 		
-		int index = 0;
-		int tupleIndex = 0;
-		int page = 1;
-		String date = "";
-		String hit = "";
-		int sumOfHit = 0;
 		
-		log.debug("조회수 시작 =============" + sumOfHit);
+		String c_bbsNo = "";//글번호
+		String c_date = "";//작성일
+		String str_c_hit = "";//조회수
+		
+		String c_site = crawlDTO.getC_site();//사이트명
+		String c_board = crawlDTO.getC_board();//게시판명
+		
+		int index = 0;//현재 반복문 인덱스
+		int tupleIndex = 0;//한 페이지의 게시글 순서
+		int page = 1;//2페이지부터 사이트 URL 쿼리에 넣을 값
 		
 		while(true) {
 			
-			// dateTag에 담긴 text를 추출하기 = 날짜
+			// Document(한 페이지)에서
+			// dateTag의 text 추출 = 날짜
 			// hitTag의 text 추출 = 조회수
 			try {
-				date = dateList.get(tupleIndex).text();
-				hit = hitList.get(tupleIndex).text();
-				if(date.equals("01-31")) break;
+				c_bbsNo = bbsNoList.get(tupleIndex).text();
+				if(crawlSubList.contains(c_bbsNo)) {
+					tupleIndex++;
+					continue;// 같은 글번호가 list에 들어있다면 tupleIndex +1 하고 처음으로
+				}
+				c_date = dateList.get(tupleIndex).text();
+				str_c_hit = hitList.get(tupleIndex).text();
+				if(c_date.equals(crawlDTO.getSrchStartDate())) break;//가져온 날짜 체크해서 튜플 가져오는 반복문 끝내기
 			} catch (Exception e) {
-				page++;
-				crawlDTO.setCrawlSiteURL(crawlDTO.getNextPageSiteURL() + page);
-				this.setCrawl(crawlDTO);
-				tupleIndex = 0;
+				page++;//OutOfBound Exception 발생시 page 숫자를 1 올리기
+				crawlDTO.setCrawlSiteURL(crawlDTO.getNextPageSiteURL() + page);//사이트 URL을 쿼리가 포함된 URL로 변경 후 쿼리 값 입력
+				this.makeCrawlDocument(crawlDTO);//새로운 URL로 Document 다시 생성 후 dateList와 hitList 값만 가져오고 Document 소멸
+				tupleIndex = 0;//게시물 0번부터 다시 시작
 				
-				date = dateList.get(tupleIndex).text();
-				hit = hitList.get(tupleIndex).text();
-				if(date.equals("01-31")) break;
+				c_bbsNo = bbsNoList.get(tupleIndex).text();
+				if(crawlSubList.contains(c_bbsNo)) {
+					tupleIndex++;
+					continue;// 같은 글번호가 list에 들어있다면 tupleIndex +1 하고 처음으로
+				}
+				c_date = dateList.get(tupleIndex).text();
+				str_c_hit = hitList.get(tupleIndex).text();
+				if(c_date.equals(crawlDTO.getSrchStartDate())) break;//가져온 날짜 체크해서 튜플 가져오는 반복문 끝내기
 			}
 			
-			if(index > 2) {
-				sumOfHit += Long.valueOf(hit);
-			}
+			int c_hit = Integer.valueOf(str_c_hit.replace("[^0-9]", ""));
 			
 			crawlSubList.add(
 				CrawlSubDTO.builder()
-					.date(date)
-					.hit(hit)
+					.c_site(c_site)
+					.c_board(c_board)
+					.c_bbsNo(c_bbsNo)
+					.c_date(c_date)
+					.c_hit(c_hit)
 					.build()
 			);
 			
-			tupleIndex++;
-			index++;
+			tupleIndex++;//게시글 순서 +1
+			index++;//현재 반복문 인덱스 +1
 		} // for end
 		
-		log.debug("조회수 끝 ==============" + sumOfHit);
-		crawlDTO.setSumOfHit(sumOfHit);
-		crawlDTO.setCrawlSubList(crawlSubList);
-		
-		return crawlDTO;
+		// DB insert/update
+		for(CrawlSubDTO dto : crawlSubList) {
+			if(crawlDao.selectByBbsNo(dto) != null) {
+				crawlDao.updateDTO(dto);
+			} else {
+				crawlDao.insertDTO(dto);
+			}
+		}
 		
 	}
 	
+	public void makeCrawlDocument(CrawlDTO crawlDTO) {
+		// 1. URL에 해당하는 html 페이지코드 가져오기
+		// 2. Document 클래스에 담기
+		// 3. jsoup의 Document 클래스를 사용하여 DOM 형식의 Document 만들기
+		Document crawlDocument = null;
+		
+		try {
+			crawlDocument = Jsoup.connect(crawlDTO.getCrawlSiteURL()).get();//사이트 URL를 넣어서 DOM 형식의 Document 통째로 가져오기
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// Document(한 페이지)에서 postnumTag 선택자 문자열이 포함된 부분 전부 가져오기
+		bbsNoList = crawlDocument.select(crawlDTO.getBbsNoTag());
+		// Document(한 페이지)에서 dateTag 선택자 문자열이 포함된 부분 전부 가져오기
+		dateList = crawlDocument.select(crawlDTO.getDateTag());
+		// Document(한 페이지)에서 hitTag 선택자 문자열이 포함된 부분 전부 가져오기
+		hitList = crawlDocument.select(crawlDTO.getHitTag());
+		
+	}
+
 }

@@ -7,7 +7,7 @@
 	<select id="selectByBnameList" resultType="bookVO">
 		select * from tbl_books
 		<where>
-			<if test="#{bnameList != null}">
+			<if test="bnameList != null">
 			<foreach collection="bnameList" item="strName" separator="or">
 				b_name like '%' || #{strName} || '%'
 			</foreach>
