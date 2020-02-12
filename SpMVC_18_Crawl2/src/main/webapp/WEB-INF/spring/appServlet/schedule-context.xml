@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/task https://www.springframework.org/schema/task/spring-task-4.3.xsd">
+	
+	<!-- 스케줄링을 위한 bean 설정, 아래 tag만 작성하면 Spring의 scheduled를 사용할 수 있고 lombok으로 불러올 수도 있다 -->
+	<task:annotation-driven/>
+
+</beans>

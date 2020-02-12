@@ -12,11 +12,54 @@
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="admin" password="{noop}password" authorities="ROLE_ADMIN"/>
-				<security:user name="user" password="{noop}password" authorities="ROLE_USER"/>
+				<security:user name="admin11" password="{noop}admin11" authorities="ROLE_ADMIN"/>
+				<security:user name="user11" password="{noop}user11" authorities="ROLE_USER"/>
 			</security:user-service>
-			
 		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<bean id="passwordEncoder" 
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+		<constructor-arg index="0" value="4" />
+	</bean>
+	
+	<bean id="secureJDBC" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+		<property name="dataSource" ref="emsHiber" />
+		<property name="rolePrefix" value=""/>
+		<property name="usersByUsernameQuery">
+			<value>
+				SELECT username, password, enabled FROM users WHERE username=?		
+			</value>
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>
+				SELECT username, authority FROM authorities WHERE username=?
+			</value>
+		</property>
+	</bean>
+	
+	<!-- DB에서 사용자 정보 불러오기 
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service
+				data-source-ref="emsHiber"
+				users-by-username-query="SELECT username, password, enabled FROM users WHERE username=?"
+				authorities-by-username-query="SELECT username, authority FROM authorities WHERE username=?"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	-->
+	
+	<!-- DB에서 사용자 정보 불러오기 -->
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="secureJDBC">
+			<security:password-encoder ref="passwordEncoder"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<bean class="com.biz.shop.provider.CustomAuthProvider" id="customAuth"/>
+	
+	<security:authentication-manager>
+		<security:authentication-provider ref="customAuth"/>
 	</security:authentication-manager>
 	
 	<!--
@@ -27,16 +70,28 @@
 		"ROLE_ADMIN" 대신 "hasRole('')" 함수를 이용해 ROLE_ 뒤의 ADMIN과 대조
 	-->
 	<security:http auto-config="true" use-expressions="true">
-	<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
-	<security:intercept-url pattern="/auth/**" access="hasAnyRole('ADMIN','USER')"/>
+		<security:csrf disabled="false"/>
+		<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+		<security:intercept-url pattern="/auth/**" access="permitAll()"/>
 		<security:intercept-url pattern="/**" access="permitAll"/>
-		<!-- 정상적으로 로그인이 되면 /로 redirect
-		로그인 실패시 /login에 ?error 변수를 붙인 주소로 보내기 -->
+		<!--
+		form-login
+		 1. 정상적으로 로그인이 되면 "/"로 redirect
+		 2. 로그인 실패시 "/login"에 "?error" 변수를 붙인 주소로 보내기
+		 
+		 login-page : 로그인 페이지
+		 login-processing-url : 로그인 페이지에서, 로그인 시 값을 보낼 form action에 지정할 url
+		 default-target-url : 로그인 성공시 보낼 주소
+		 authentication-failure-url : 로그인 실패시 보낼 주소
+		 username-parameter : 로그인 form에서 아이디를 저장한 변수명
+		 password-parameter : 로그인 form에서 비밀번호를 저장한 변수명
+		-->
 		<security:form-login
-			login-page="/login"
-			default-target-url="/"
-			authentication-failure-url="/login?error"
-			username-parameter="id"
+			login-page="/auth/login"
+			login-processing-url="/auth/login"
+			default-target-url="/auth/login_ok"
+			authentication-failure-url="/auth/login?error"
+			username-parameter="username"
 			password-parameter="password"
 			/>
 			
