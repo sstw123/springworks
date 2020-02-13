@@ -2,7 +2,6 @@ package com.biz.crawl.service;
 
 import org.springframework.stereotype.Service;
 
-import com.biz.crawl.domain.CrawlDTO;
 import com.biz.crawl.domain.PaginationDTO;
 
 @Service
@@ -60,10 +59,10 @@ public class PaginationService {
 			startPageNo = lastPageNo - pageCount + 1 > 0 ? lastPageNo - pageCount + 1 : 1; 
 		}
 		
-		// DB에서 데이터 가져올 값 설정
-		// 1페이지 선택시 offset:1,limit:10, 2페이지 선택시 offset:11,limit:20, 3페이지 선택시 offset:21,limit:30
-		int offset = (currPageNo - 1) * listPerPage + 1;
-		int limit = offset + listPerPage - 1;
+		// MySQL DB에서 데이터 가져올 값 설정
+		// 1페이지 선택시 offset:0,limit:10, 2페이지 선택시 offset:10,limit:10, 3페이지 선택시 offset:20,limit:10
+		int offset = (currPageNo - 1) * listPerPage;
+		int limit = listPerPage;
 		
 		PaginationDTO paginationDTO = PaginationDTO.builder()
 				.totalCount(totalCount)

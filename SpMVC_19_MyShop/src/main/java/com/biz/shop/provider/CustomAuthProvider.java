@@ -37,9 +37,9 @@ public class CustomAuthProvider implements AuthenticationProvider {
 		 * CustomUserDetails 클래스에 세팅해서 controller로 전송할 수 있다
 		 */
 		CustomUserDetails cUserDetails = new CustomUserDetails();
-		cUserDetails.setNickname("홍길동");
-		cUserDetails.setTel("010-1111-1111");
-		cUserDetails.setTel("서울특별시");
+//		cUserDetails.setNickname("홍길동");
+//		cUserDetails.setTel("010-1111-1111");
+//		cUserDetails.setTel("서울특별시");
 		
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 					username,//principal

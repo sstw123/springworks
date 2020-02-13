@@ -2,19 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.biz.crawl.persistence.CrawlDao">
 
-	<select id="selectByPage">
-		SELECT * ORDER by c_bbsNo desc LIMIT #{offset}, ${limit}
-	</select>
-	
-	<select id="selectByBbsNo" resultType="crawlSubDTO">
+	<select id="selectByOptionsByPage" resultType="crawlSubDTO">
 		select * from tbl_crawl
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="c_site != null">c_site = #{c_site}</if>
 			<if test="c_board != null">AND c_board = #{c_board}</if>
-			<if test="c_bbsNo != null">AND c_bbsNo = #{c_bbsNo}</if>
+			<if test="srchStartDate != null">AND str_to_date(c_date, '%m-%d') &gt;= str_to_date(#{srchStartDate}, '%m-%d')</if>
+			<if test="srchLastDate != null">AND str_to_date(c_date, '%m-%d') &lt;= str_to_date(#{srchLastDate}, '%m-%d')</if>
 		</trim>
+		ORDER by c_bbsNo desc LIMIT #{paginationDTO.limit} OFFSET #{paginationDTO.offset}
 	</select>
-
+	
 	<select id="selectByOptions" resultType="crawlSubDTO">
 		select * from tbl_crawl
 		<trim prefix="WHERE" prefixOverrides="AND">
@@ -25,13 +23,32 @@
 		</trim>
 	</select>
 	
-	<select id="countByOptions" resultType="long">
-		select * from tbl_crawl
+	<select id="sumOfHitByOptions" resultType="long">
+		select sum(c_hit) from tbl_crawl
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="c_site != null">c_site = #{c_site}</if>
 			<if test="c_board != null">AND c_board = #{c_board}</if>
 			<if test="srchStartDate != null">AND str_to_date(c_date, '%m-%d') &gt;= str_to_date(#{srchStartDate}, '%m-%d')</if>
 			<if test="srchLastDate != null">AND str_to_date(c_date, '%m-%d') &lt;= str_to_date(#{srchLastDate}, '%m-%d')</if>
+		</trim>
+	</select>
+	
+	<select id="countByOptions" resultType="int">
+		select count(*) from tbl_crawl
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="c_site != null">c_site = #{c_site}</if>
+			<if test="c_board != null">AND c_board = #{c_board}</if>
+			<if test="srchStartDate != null">AND str_to_date(c_date, '%m-%d') &gt;= str_to_date(#{srchStartDate}, '%m-%d')</if>
+			<if test="srchLastDate != null">AND str_to_date(c_date, '%m-%d') &lt;= str_to_date(#{srchLastDate}, '%m-%d')</if>
+		</trim>
+	</select>
+	
+	<select id="selectByBbsNoSiteBoard" resultType="crawlSubDTO">
+		select * from tbl_crawl
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="c_site != null">c_site = #{c_site}</if>
+			<if test="c_board != null">AND c_board = #{c_board}</if>
+			<if test="c_bbsNo != null">AND c_bbsNo = #{c_bbsNo}</if>
 		</trim>
 	</select>
 
@@ -73,9 +90,8 @@
 		SET
 			`c_site` = #{c_site},
 			`c_board` = #{c_board},
-			`c_bbsNo` = #{c_bbsNo},
 			`c_date` = #{c_date},
 			`c_hit` = #{c_hit}
-		WHERE `c_id` = #{c_id}
+		WHERE `c_bbsNo` = #{c_bbsNo}
 	</update>
 </mapper>

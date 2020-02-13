@@ -30,6 +30,7 @@ public class CrawlDTO {
     private int numOfTuples;
     private String c_site;
     private String c_board;
+    private PaginationDTO paginationDTO;
     private List<CrawlSubDTO> crawlSubList;
 
 }

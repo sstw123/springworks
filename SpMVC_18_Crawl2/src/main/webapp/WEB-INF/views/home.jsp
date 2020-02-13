@@ -75,7 +75,8 @@
 		<c:choose>
 			<c:when test="${BODY == 'USERINFO'}">
 				<h3>실시간 유저 정보</h3>
-				<form method="POST" action="${rootPath}/crawl/lol/freeboard/save">
+				<c:set var="URL" value="${rootPath}/crawl/lol/userinfo"/>
+				<form method="POST" action="${URL}/save">
 					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
 				</form>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
@@ -83,7 +84,8 @@
 			
 			<c:when test="${BODY == 'TIP'}">
 				<h3>팁과 노하우</h3>
-				<form method="POST" action="${rootPath}/crawl/lol/tip/save">
+				<c:set var="URL" value="${rootPath}/crawl/lol/tip"/>
+				<form method="POST" action="${URL}/save">
 					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
 				</form>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
@@ -91,7 +93,8 @@
 			
 			<c:when test="${BODY == 'FREEBOARD'}">
 				<h3>자유게시판</h3>
-				<form method="POST" action="${rootPath}/crawl/lol/freeboard/save">
+				<c:set var="URL" value="${rootPath}/crawl/lol/freeboard"/>
+				<form method="POST" action="${URL}/save">
 					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
 				</form>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>

@@ -16,11 +16,12 @@ public interface CrawlDao {
 	
 	public List<CrawlSubDTO> selectByOptions(CrawlDTO crawlDTO);
 	
-	public CrawlSubDTO selectByBbsNo(CrawlSubDTO crawlSubDTO);
+	public CrawlSubDTO selectByBbsNoSiteBoard(CrawlSubDTO crawlSubDTO);
 	
-	public long countByOptions(CrawlDTO crawlDTO);
+	public long sumOfHitByOptions(CrawlDTO crawlDTO);
+	public int countByOptions(CrawlDTO crawlDTO);
 	
-	public CrawlSubDTO selectByPage(PaginationDTO paginationDTO);
+	public List<CrawlSubDTO> selectByOptionsByPage(CrawlDTO crawlDTO);
 	
 	public int insertDTO(CrawlSubDTO crawlSubDTO);
 	public int insertList(List<CrawlSubDTO> crawlSubList);
