@@ -239,5 +239,9 @@ public class CrawlService {
 		hitList = crawlDocument.select(crawlDTO.getHitTag());
 		
 	}
+	
+	public void deleteBySiteBoard(CrawlDTO crawlDTO) {
+		crawlDao.deleteBySiteBoard(crawlDTO);
+	}
 
 }

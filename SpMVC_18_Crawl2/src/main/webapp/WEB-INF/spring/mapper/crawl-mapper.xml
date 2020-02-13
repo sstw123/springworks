@@ -94,4 +94,5 @@
 			`c_hit` = #{c_hit}
 		WHERE `c_bbsNo` = #{c_bbsNo}
 	</update>
+	
 </mapper>

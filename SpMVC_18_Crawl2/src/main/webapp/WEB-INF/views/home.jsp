@@ -79,6 +79,10 @@
 				<form method="POST" action="${URL}/save">
 					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
 				</form>
+				
+				<form method="POST" action="${URL}/delete">
+					<button class="delete_crawling" type="submit">사이트/게시판 별 DB 삭제</button>
+				</form>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
 			</c:when>
 			
@@ -88,6 +92,10 @@
 				<form method="POST" action="${URL}/save">
 					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
 				</form>
+				
+				<form method="POST" action="${URL}/delete">
+					<button class="delete_crawling" type="submit">사이트/게시판 별 DB 삭제</button>
+				</form>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
 			</c:when>
 			
@@ -96,6 +104,10 @@
 				<c:set var="URL" value="${rootPath}/crawl/lol/freeboard"/>
 				<form method="POST" action="${URL}/save">
 					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
+				</form>
+				
+				<form method="POST" action="${URL}/delete">
+					<button class="delete_crawling" type="submit">사이트/게시판 별 DB 삭제</button>
 				</form>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
 			</c:when>

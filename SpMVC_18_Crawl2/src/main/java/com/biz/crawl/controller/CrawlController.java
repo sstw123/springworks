@@ -50,6 +50,20 @@ public class CrawlController {
 		return "redirect:/crawl/lol/userinfo";
 	}
 	
+	@RequestMapping(value="lol/userinfo/delete", method=RequestMethod.POST)
+	public String lolUserInfoDelete() {
+		
+		// DB에서 삭제할 사이트,게시판명 설정
+		CrawlDTO crawlDTO = CrawlDTO.builder()
+				.c_site("롤인벤")
+				.c_board("실시간 유저 정보")
+				.build();
+		
+		crawlSvc.deleteBySiteBoard(crawlDTO);
+		
+		return "redirect:/crawl/lol/userinfo";
+	}
+	
 	@RequestMapping(value="lol/tip", method=RequestMethod.GET)
 	public String lolTip(Model model, String srchStartDate, String srchLastDate,
 						@RequestParam(value="currPage", required = false, defaultValue = "1") int currPageNo) {
@@ -73,6 +87,20 @@ public class CrawlController {
 	@RequestMapping(value="lol/tip/save", method=RequestMethod.POST)
 	public String lolTipSave() {
 		crawlSvc.insertLOLInvenTip();
+		
+		return "redirect:/crawl/lol/tip";
+	}
+	
+	@RequestMapping(value="lol/tip/delete", method=RequestMethod.POST)
+	public String lolTipDelete() {
+		
+		// DB에서 삭제할 사이트,게시판명 설정
+		CrawlDTO crawlDTO = CrawlDTO.builder()
+				.c_site("롤인벤")
+				.c_board("팁과노하우")
+				.build();
+		
+		crawlSvc.deleteBySiteBoard(crawlDTO);
 		
 		return "redirect:/crawl/lol/tip";
 	}
@@ -104,6 +132,20 @@ public class CrawlController {
 		return "redirect:/crawl/lol/freeboard";
 	}
 	
+	@RequestMapping(value="lol/freeboard/delete", method=RequestMethod.POST)
+	public String lolFreeBoardDelete() {
+		
+		// DB에서 삭제할 사이트,게시판명 설정
+		CrawlDTO crawlDTO = CrawlDTO.builder()
+				.c_site("롤인벤")
+				.c_board("자유게시판")
+				.build();
+		
+		crawlSvc.deleteBySiteBoard(crawlDTO);
+		
+		return "redirect:/crawl/lol/freeboard";
+	}
+	
 	@RequestMapping(value="hs/freeboard", method=RequestMethod.GET)
 	public String hsFreeBoard(Model model,
 							String srchStartDate,
@@ -129,6 +171,20 @@ public class CrawlController {
 	@RequestMapping(value="hs/freeboard/save", method=RequestMethod.POST)
 	public String hsFreeBoardSave() {
 		crawlSvc.insertHSInvenFreeBoard();
+		
+		return "redirect:/crawl/hs/freeboard";
+	}
+	
+	@RequestMapping(value="hs/freeboard/delete", method=RequestMethod.POST)
+	public String hsFreeBoardDelete() {
+		
+		// DB에서 삭제할 사이트,게시판명 설정
+		CrawlDTO crawlDTO = CrawlDTO.builder()
+				.c_site("하스인벤")
+				.c_board("자유게시판")
+				.build();
+		
+		crawlSvc.deleteBySiteBoard(crawlDTO);
 		
 		return "redirect:/crawl/hs/freeboard";
 	}

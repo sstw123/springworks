@@ -27,6 +27,9 @@ public interface CrawlDao {
 	public int insertList(List<CrawlSubDTO> crawlSubList);
 	public int updateDTO(CrawlSubDTO crawlSubDTO);
 	
+	@Delete("delete from tbl_crawl WHERE c_site = #{c_site} AND c_board = #{c_board}")
+	public void deleteBySiteBoard(CrawlDTO crawlDTO);
+	
 	@Delete("delete from tbl_crawl")
 	public void deleteAll();
 	
