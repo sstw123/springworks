@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.biz.crawl.domain.CrawlDTO;
 import com.biz.crawl.domain.CrawlSubDTO;
-import com.biz.crawl.domain.PaginationDTO;
 import com.biz.crawl.persistence.CrawlDao;
 
 import lombok.RequiredArgsConstructor;
@@ -102,48 +101,16 @@ public class CrawlService {
 	}
 	*/
 	
-	public void insertLOLInvenUserInfo() {
-		CrawlDTO crawlDTO = new CrawlDTO();
-		String crawlSiteURL = "http://www.inven.co.kr/board/lol/2778";//크롤링 할 사이트 URL 설정
-		crawlDTO.setC_site("롤인벤");//DB에 넣을 사이트이름 설정
-		crawlDTO.setC_board("실시간 유저 정보");//DB에 넣을 게시판이름 설정
+	public void saveSiteBoard(CrawlDTO crawlDTO) {
 		
-		this.setInvenCrawlAndInsert(crawlDTO, crawlSiteURL);
-	}
-	
-	public void insertLOLInvenTip() {
-		CrawlDTO crawlDTO = new CrawlDTO();
-		String crawlSiteURL = "http://www.inven.co.kr/board/lol/2766";
-		crawlDTO.setC_site("롤인벤");//DB에 넣을 사이트이름 설정
-		crawlDTO.setC_board("팁과노하우");//DB에 넣을 게시판이름 설정
-		
-		this.setInvenCrawlAndInsert(crawlDTO, crawlSiteURL);
-	}
-	
-	public void insertLOLInvenFreeBoard() {
-		CrawlDTO crawlDTO = new CrawlDTO();
-		String crawlSiteURL = "http://www.inven.co.kr/board/lol/4626";
-		crawlDTO.setC_site("롤인벤");//DB에 넣을 사이트이름 설정
-		crawlDTO.setC_board("자유게시판");//DB에 넣을 게시판이름 설정
-		
-		this.setInvenCrawlAndInsert(crawlDTO, crawlSiteURL);
-	}
-	
-	public void insertHSInvenFreeBoard() {
-		CrawlDTO crawlDTO = new CrawlDTO();
-		String crawlSiteURL = "http://www.inven.co.kr/board/hs/3509";
-		crawlDTO.setC_site("하스인벤");//DB에 넣을 사이트이름 설정
-		crawlDTO.setC_board("자유게시판");//DB에 넣을 게시판이름 설정
-		
-		this.setInvenCrawlAndInsert(crawlDTO, crawlSiteURL);
+		this.setInvenCrawlAndInsert(crawlDTO);
 	}
 	
 	// Insert,Update
-	protected void setInvenCrawlAndInsert(CrawlDTO crawlDTO, String crawlSiteURL) {
-		crawlDTO.setSrchStartDate("10-31");//마주치면 크롤링 DB삽입 중단할 날짜 설정
+	protected void setInvenCrawlAndInsert(CrawlDTO crawlDTO) {
+		crawlDTO.setCrawlStartDate("10-31");//마주치면 크롤링 DB삽입 중단할 날짜 설정
 		
-		crawlDTO.setCrawlSiteURL(crawlSiteURL);//크롤링 할 사이트 설정
-		crawlDTO.setNextPageSiteURL(crawlSiteURL + "?sort=PID&p=");//크롤링 할 사이트 2페이지부터 쿼리 설정
+		crawlDTO.setNextPageSiteURL(crawlDTO.getCrawlSiteURL() + "?sort=PID&p=");//크롤링 할 사이트 2페이지부터 쿼리 설정
 		crawlDTO.setBbsNoTag(".ls.tr td.bbsNo");//가져올 글번호 HTML 태그 선택자 설정
 		crawlDTO.setDateTag(".ls.tr td.date");//가져올 작성일자 HTML 태그 선택자 설정
 		crawlDTO.setHitTag(".ls.tr td.hit");//가져올 조회수 HTML 태그 선택자 설정
@@ -178,17 +145,17 @@ public class CrawlService {
 				c_bbsNo = bbsNoList.get(tupleIndex).text();
 				c_date = dateList.get(tupleIndex).text();
 				str_c_hit = hitList.get(tupleIndex).text();
-				if(c_date.equals(crawlDTO.getSrchStartDate())) break;//가져온 날짜 체크해서 튜플 가져오는 반복문 끝내기
+				if(c_date.equals(crawlDTO.getCrawlStartDate())) break;//가져온 날짜 체크해서 튜플 가져오는 반복문 끝내기
 			} catch (Exception e) {
 				page++;//OutOfBound Exception 발생시 page 숫자를 1 올리기
-				crawlDTO.setCrawlSiteURL(crawlDTO.getNextPageSiteURL() + page);//사이트 URL을 쿼리가 포함된 URL로 변경 후 쿼리 값 입력
+				crawlDTO.setCrawlSiteURL(crawlDTO.getNextPageSiteURL() + page);//사이트 URL을 쿼리가 포함된 URL로 변경 후 값 입력
 				this.makeCrawlDocument(crawlDTO);//새로운 URL로 Document 다시 생성 후 dateList와 hitList 값만 가져오고 Document 소멸
 				tupleIndex = 0;//게시물 0번부터 다시 시작
 				
 				c_bbsNo = bbsNoList.get(tupleIndex).text();
 				c_date = dateList.get(tupleIndex).text();
 				str_c_hit = hitList.get(tupleIndex).text();
-				if(c_date.equals(crawlDTO.getSrchStartDate())) break;//가져온 날짜 체크해서 튜플 가져오는 반복문 끝내기
+				if(c_date.equals(crawlDTO.getCrawlStartDate())) break;//가져온 날짜 체크해서 튜플 가져오는 반복문 끝내기
 			}
 			
 			int c_hit = Integer.valueOf(str_c_hit.replace("[^0-9]", ""));//String형 조회수 값을 정규식으로 숫자만 남긴 뒤, int형으로 바꾸기

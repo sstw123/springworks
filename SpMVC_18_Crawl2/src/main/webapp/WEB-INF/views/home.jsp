@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}"/>
+<c:set var="URL" value="${rootPath}/crawl/site/board"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,15 +34,23 @@
 		
 		$("nav ul li").on("click", function() {
 			let text = $(this).text()
+			let url = ""
+			let query = ""
+			
 			if(text == "홈") {
-				document.location.href = "${rootPath}/"
+				url = "${rootPath}/"
 			} else if(text == "실시간 유저 정보") {
-				document.location.href = "${rootPath}/crawl/lol/userinfo"
+				url = "${rootPath}/crawl/site/board"
+				query = "?c_site=롤인벤&c_board=실시간유저정보&currPage=1"
 			} else if(text == "팁과 노하우") {
-				document.location.href = "${rootPath}/crawl/lol/tip"
+				url = "${rootPath}/crawl/site/board"
+				query = "?c_site=롤인벤&c_board=팁과노하우&currPage=1"
 			} else if(text == "자유게시판") {
-				document.location.href = "${rootPath}/crawl/lol/freeboard"
+				url = "${rootPath}/crawl/site/board"
+				query = "?c_site=롤인벤&c_board=자유게시판&currPage=1"
 			}
+			
+			document.location.href = url + query
 			
 		})
 	})
@@ -60,55 +70,22 @@
 	</nav>
 	
 	<section>
-		<form>
-			<label for="srchStartDate">시작날짜</label>
-			<input name="srchStartDate" placeholder="날짜입력">
-			
-			<label for="srchLastDate">마지막날짜</label>
-			<input name="srchLastDate" placeholder="날짜입력">
-			
-			<button>검색</button>
-		</form>
-	</section>
-	
-	<section>
 		<c:choose>
-			<c:when test="${BODY == 'USERINFO'}">
-				<h3>실시간 유저 정보</h3>
-				<c:set var="URL" value="${rootPath}/crawl/lol/userinfo"/>
-				<form method="POST" action="${URL}/save">
-					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
-				</form>
-				
-				<form method="POST" action="${URL}/delete">
-					<button class="delete_crawling" type="submit">사이트/게시판 별 DB 삭제</button>
-				</form>
+			<c:when test="${BODY == '롤인벤실시간유저정보'}">
+				<c:set var="SITE_URL" value="http://www.inven.co.kr/board/lol/2778"/>
+				<c:set var="HEADER" value="실시간 유저 정보"/>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
 			</c:when>
 			
-			<c:when test="${BODY == 'TIP'}">
-				<h3>팁과 노하우</h3>
-				<c:set var="URL" value="${rootPath}/crawl/lol/tip"/>
-				<form method="POST" action="${URL}/save">
-					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
-				</form>
-				
-				<form method="POST" action="${URL}/delete">
-					<button class="delete_crawling" type="submit">사이트/게시판 별 DB 삭제</button>
-				</form>
+			<c:when test="${BODY == '롤인벤팁과노하우'}">
+				<c:set var="SITE_URL" value="http://www.inven.co.kr/board/lol/2778"/>
+				<c:set var="HEADER" value="팁과 노하우"/>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
 			</c:when>
 			
-			<c:when test="${BODY == 'FREEBOARD'}">
-				<h3>자유게시판</h3>
-				<c:set var="URL" value="${rootPath}/crawl/lol/freeboard"/>
-				<form method="POST" action="${URL}/save">
-					<button class="save_crawling" type="submit">크롤링 DB 저장</button>
-				</form>
-				
-				<form method="POST" action="${URL}/delete">
-					<button class="delete_crawling" type="submit">사이트/게시판 별 DB 삭제</button>
-				</form>
+			<c:when test="${BODY == '롤인벤자유게시판'}">
+				<c:set var="SITE_URL" value="http://www.inven.co.kr/board/lol/4626"/>
+				<c:set var="HEADER" value="팁과 노하우"/>
 				<%@ include file="/WEB-INF/views/list_body.jsp" %>
 			</c:when>
 		</c:choose>

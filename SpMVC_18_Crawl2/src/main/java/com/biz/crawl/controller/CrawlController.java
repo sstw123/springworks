@@ -2,9 +2,11 @@ package com.biz.crawl.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.biz.crawl.domain.CrawlDTO;
 import com.biz.crawl.domain.PaginationDTO;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@SessionAttributes(value = "CRAWL_DTO")
 @RequiredArgsConstructor
 @RequestMapping("crawl")
 @Controller
@@ -23,170 +26,38 @@ public class CrawlController {
 	private final CrawlService crawlSvc;
 	private final PaginationService pageSvc;
 	
-	@RequestMapping(value="lol/userinfo", method=RequestMethod.GET)
-	public String lolUserInfo(Model model, String srchStartDate, String srchLastDate,
-							@RequestParam(value="currPage", required = false, defaultValue = "1") int currPageNo) {
+	@ModelAttribute("CRAWL_DTO")
+	protected CrawlDTO makeCrawlDTO() {
+		return new CrawlDTO();
+	}
+	
+	@RequestMapping(value="/site/board", method=RequestMethod.GET)
+	public String siteBoard(Model model, @ModelAttribute("CRAWL_DTO") CrawlDTO crawlDTO) {
 		
-		// DB에서 검색할 쿼리값 c_site와 c_board 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-					.c_site("롤인벤")
-					.c_board("실시간 유저 정보")
-					.srchStartDate(srchStartDate)
-					.srchLastDate(srchLastDate)
-					.build();
+		this.pagination(model, crawlDTO, crawlDTO.getCurrPage());
 		
-		this.pagination(model, crawlDTO, currPageNo);
-		
-		model.addAttribute("BODY", "USERINFO");
+		model.addAttribute("BODY", crawlDTO.getC_site()+crawlDTO.getC_board());
 		model.addAttribute("CRAWL_DTO", crawlDTO);// 총 조회수, 평균 조회수, 게시물 수, List<CrawlSubDTO> 들어있음
 		
 		return "home";
 	}
 	
-	@RequestMapping(value="lol/userinfo/save", method=RequestMethod.POST)
-	public String lolUserInfoSave() {
-		crawlSvc.insertLOLInvenUserInfo();
+	@RequestMapping(value="/site/board/save", method=RequestMethod.POST)
+	public String saveSiteBoard(@ModelAttribute("CRAWL_DTO") CrawlDTO crawlDTO) {
 		
-		return "redirect:/crawl/lol/userinfo";
+		crawlSvc.saveSiteBoard(crawlDTO);
+		// c_site, c_board, crawlSiteURL 필요
+		
+		return "redirect:/crawl/site/board?c_site=" + crawlDTO.getC_site() + "?c_board=" + crawlDTO.getC_board();
 	}
 	
-	@RequestMapping(value="lol/userinfo/delete", method=RequestMethod.POST)
-	public String lolUserInfoDelete() {
-		
-		// DB에서 삭제할 사이트,게시판명 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("롤인벤")
-				.c_board("실시간 유저 정보")
-				.build();
+	@RequestMapping(value="/site/board/delete", method=RequestMethod.POST)
+	public String deleteSiteBoard(@ModelAttribute("CRAWL_DTO") CrawlDTO crawlDTO) {
 		
 		crawlSvc.deleteBySiteBoard(crawlDTO);
+		// c_site, c_board 필요
 		
-		return "redirect:/crawl/lol/userinfo";
-	}
-	
-	@RequestMapping(value="lol/tip", method=RequestMethod.GET)
-	public String lolTip(Model model, String srchStartDate, String srchLastDate,
-						@RequestParam(value="currPage", required = false, defaultValue = "1") int currPageNo) {
-		
-		// DB 검색 쿼리값 c_site와 c_board 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("롤인벤")
-				.c_board("팁과노하우")
-				.srchStartDate(srchStartDate)
-				.srchLastDate(srchLastDate)
-				.build();
-		
-		this.pagination(model, crawlDTO, currPageNo);
-		
-		model.addAttribute("BODY", "TIP");
-		model.addAttribute("CRAWL_DTO", crawlDTO);// 총 조회수, 평균 조회수, 게시물 수, List<CrawlSubDTO> 들어있음
-		
-		return "home";
-	}
-	
-	@RequestMapping(value="lol/tip/save", method=RequestMethod.POST)
-	public String lolTipSave() {
-		crawlSvc.insertLOLInvenTip();
-		
-		return "redirect:/crawl/lol/tip";
-	}
-	
-	@RequestMapping(value="lol/tip/delete", method=RequestMethod.POST)
-	public String lolTipDelete() {
-		
-		// DB에서 삭제할 사이트,게시판명 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("롤인벤")
-				.c_board("팁과노하우")
-				.build();
-		
-		crawlSvc.deleteBySiteBoard(crawlDTO);
-		
-		return "redirect:/crawl/lol/tip";
-	}
-	
-	@RequestMapping(value="lol/freeboard", method=RequestMethod.GET)
-	public String lolFreeBoard(Model model, String srchStartDate, String srchLastDate,
-							@RequestParam(value="currPage", required = false, defaultValue = "1") int currPageNo) {
-		
-		// DB 검색 쿼리값 c_site와 c_board 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("롤인벤")
-				.c_board("자유게시판")
-				.srchStartDate(srchStartDate)
-				.srchLastDate(srchLastDate)
-				.build();
-		
-		this.pagination(model, crawlDTO, currPageNo);
-		
-		model.addAttribute("BODY", "FREEBOARD");
-		model.addAttribute("CRAWL_DTO", crawlDTO);// 총 조회수, 평균 조회수, 게시물 수, List<CrawlSubDTO> 들어있음
-		
-		return "home";
-	}
-	
-	@RequestMapping(value="lol/freeboard/save", method=RequestMethod.POST)
-	public String lolFreeBoardSave() {
-		crawlSvc.insertLOLInvenFreeBoard();
-		
-		return "redirect:/crawl/lol/freeboard";
-	}
-	
-	@RequestMapping(value="lol/freeboard/delete", method=RequestMethod.POST)
-	public String lolFreeBoardDelete() {
-		
-		// DB에서 삭제할 사이트,게시판명 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("롤인벤")
-				.c_board("자유게시판")
-				.build();
-		
-		crawlSvc.deleteBySiteBoard(crawlDTO);
-		
-		return "redirect:/crawl/lol/freeboard";
-	}
-	
-	@RequestMapping(value="hs/freeboard", method=RequestMethod.GET)
-	public String hsFreeBoard(Model model,
-							String srchStartDate,
-							String srchLastDate,
-							@RequestParam(value="currPage", required = false, defaultValue = "1") int currPageNo) {
-		
-		// DB 검색 쿼리값 c_site와 c_board 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("하스인벤")
-				.c_board("자유게시판")
-				.srchStartDate(srchStartDate)
-				.srchLastDate(srchLastDate)
-				.build();
-		
-		this.pagination(model, crawlDTO, currPageNo);
-		
-		model.addAttribute("BODY", "FREEBOARD");
-		model.addAttribute("CRAWL_DTO", crawlDTO);// 총 조회수, 평균 조회수, 게시물 수, List<CrawlSubDTO> 들어있음
-		
-		return "home";
-	}
-	
-	@RequestMapping(value="hs/freeboard/save", method=RequestMethod.POST)
-	public String hsFreeBoardSave() {
-		crawlSvc.insertHSInvenFreeBoard();
-		
-		return "redirect:/crawl/hs/freeboard";
-	}
-	
-	@RequestMapping(value="hs/freeboard/delete", method=RequestMethod.POST)
-	public String hsFreeBoardDelete() {
-		
-		// DB에서 삭제할 사이트,게시판명 설정
-		CrawlDTO crawlDTO = CrawlDTO.builder()
-				.c_site("하스인벤")
-				.c_board("자유게시판")
-				.build();
-		
-		crawlSvc.deleteBySiteBoard(crawlDTO);
-		
-		return "redirect:/crawl/hs/freeboard";
+		return "redirect:/crawl/site/board?c_site=" + crawlDTO.getC_site() + "?c_board=" + crawlDTO.getC_board();
 	}
 	
 	private void pagination (Model model, CrawlDTO crawlDTO, int currPageNo) {
