@@ -22,10 +22,12 @@
 	}
 	
 	td.p_name {
-		width: 30px;
+		display:inline-block;
+		width: 150px;
 		padding: 0 5px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 </style>
 <section class="mt-5 row">
@@ -33,18 +35,23 @@
 		<form:form modelAttribute="productVO" action="${rootPath}/admin/product/input">
 			<div class="container-fluid form-group row">
 				<form:select class="custom-select-sm col-6" path="p_bcode">
-					<option value="0">품목을 선택하세요</option>
-					<option value="B0001">공산품</option>
-					<option value="B0002">농산물</option>
-					<option value="B0003">수산물</option>
+					<form:option value="0">품목을 선택하세요</form:option>
+					<form:option value="B0001">공산품</form:option>
+					<form:option value="B0002">농산물</form:option>
+					<form:option value="B0003">수산물</form:option>
 				</form:select>
 				
 				<form:select class="custom-select-sm col-6" path="p_dcode">
-					<option value="0">거래처를 선택하세요</option>
-					<option value="D0001">대덕물산</option>
-					<option value="D0002">태경농산</option>
-					<option value="D0003">목포수산</option>
+					<form:option value="0">거래처를 선택하세요</form:option>
+					<form:option value="D0001">대덕물산</form:option>
+					<form:option value="D0002">태경농산</form:option>
+					<form:option value="D0003">목포수산</form:option>
 				</form:select>
+			</div>
+			
+			<div class="container-fluid row">
+				<form:errors path="p_bcode" class="in-errors col-6"/>
+				<form:errors path="p_dcode" class="in-errors col-6"/>
 			</div>
 		
 			<div class="form-group">

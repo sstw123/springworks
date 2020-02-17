@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value="admin")
 public class AdminController {
 	
-	@RequestMapping(value="/", method=RequestMethod.GET)
+	@RequestMapping(value= {"/",""}, method=RequestMethod.GET)
 	public String main() {
 		
 		return "admin/main";
 	}
 	
-	@RequestMapping(value="product", method=RequestMethod.GET)
+	//@RequestMapping(value="product", method=RequestMethod.GET)
 	public String product(Model model) {
 		
 		model.addAttribute("BODY", "PRODUCT");

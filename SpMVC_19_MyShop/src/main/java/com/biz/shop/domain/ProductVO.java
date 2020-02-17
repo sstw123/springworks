@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,25 +50,29 @@ public class ProductVO {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long p_id;
+	@Column(name="p_id")
+	private long id;
 	
 	// 입력값이 공백일 경우 error
-	@NotBlank(message = "* 필수항목")
+	@NotBlank(message = "* 상품코드는 공백이 될수 없습니다")
 	@NotEmpty
 	@NotNull
 	// 문자열의 길이가 맞지 않을 경우
 	// Size(min, max)
 	// Min(), Max()
-	@Max(13)
+	// @Max(13)
 	@Size(max = 13, message = "* 상품코드는 13자리 이하만 가능합니다")
-	@Column(name="p_code", length = 13)
+	@Column(name="p_code",
+		length = 13, // 최대 13자리
+		unique = true, // UNIQUE
+		nullable = false) // NOT NULL
 	private String p_code;
 	
 	// @Pattern(regexp = "/(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/")
 	// 정규식 문법, 비밀번호 확인 정규식
 	// @Email : 문자열이 email 형식과 같은지 검사
 	
-	@NotBlank(message = "* 필수항목")
+	@NotBlank(message = "* 상품명은 공백이 될수 없습니다")
 	@Column(name="p_name")
 	private String p_name;
 	

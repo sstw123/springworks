@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="myLogBack" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%
+			</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="STDLogBack" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+			---------------------------------------------
+%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg
+---------------------------------------------%n
+			</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="com.biz.shop.controller" level="WARN" additivity="false">
+		<appender-ref ref="STDLogBack"/>
+	</logger>
+	
+	<logger name="com.biz.shop.controller" level="DEBUG" additivity="false">
+		<appender-ref ref="myLogBack"/>
+	</logger>
+	
+	<logger name="com.biz.shop.service" level="DEBUG" additivity="false">
+		<appender-ref ref="myLogBack"/>
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="STDLogBack" />
+	</root>
+</configuration>
