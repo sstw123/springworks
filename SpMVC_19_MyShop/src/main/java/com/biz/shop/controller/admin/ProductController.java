@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.biz.shop.domain.DeptVO;
 import com.biz.shop.domain.ProductVO;
 import com.biz.shop.service.ProductService;
 
@@ -30,10 +31,15 @@ public class ProductController {
 	
 	private final ProductService productSvc;
 	
-	
 	@ModelAttribute(value = "productVO")
 	public ProductVO newProductVO() {
 		return new ProductVO();
+	}
+	
+	protected void modelMapping(Model model) {
+		List<ProductVO> proList = productSvc.selectAll();
+		model.addAttribute("PRO_LIST", proList);
+		model.addAttribute("BODY", "PRODUCT");
 	}
 	
 	@RequestMapping(value = {"/",""}, method = RequestMethod.GET)
@@ -48,32 +54,36 @@ public class ProductController {
 		}
 		*/
 		
-		ProductVO productVO = new ProductVO();
+		ProductVO productVO = new ProductVO();//다른 페이지에 들어가서 저장된 productVO 세션의 초기화를 위한 코드
+		model.addAttribute("productVO", productVO);//다른 페이지에 들어가서 저장된 productVO 세션의 초기화를 위한 코드
 		
-		List<ProductVO> proList = productSvc.selectAll();
-		model.addAttribute("PRO_LIST", proList);
+		this.modelMapping(model);
 		
 		model.addAttribute("search",search);
 		model.addAttribute("text",text);
 		
-		model.addAttribute("productVO", productVO);
-		model.addAttribute("BODY", "PRODUCT");
 		return "admin/main";
 	}
 	
-	@RequestMapping(value = "/input", method = RequestMethod.POST)
-	public String input(@Valid @ModelAttribute("productVO") ProductVO productVO, BindingResult result, Model model, SessionStatus ssStatus) {
+	@RequestMapping(value="/detail", method=RequestMethod.POST)
+	public String product_detail(@Valid @ModelAttribute("productVO") ProductVO productVO, BindingResult result, Model model) {
 		// Validation 사용법
 		// 1. form에서 받을 변수에 @Valid 어노테이션 붙이기
 		// 2. 만약 유효성 검사를 통과하지 못하면 BindingResult로 에러를 전달하고 hasErrors() 메소드로 에러 검사 가능
-		
 		if(result.hasErrors()) {
 			log.debug("========== validation 오류 ==========");
-			List<ProductVO> proList = productSvc.selectAll();
-			model.addAttribute("PRO_LIST", proList);
-			model.addAttribute("BODY", "PRODUCT");
+			this.modelMapping(model);
 			return "admin/main";
 		}
+		
+		this.modelMapping(model);
+		model.addAttribute("PRO_BODY", "DETAIL");
+		return "admin/main";
+		
+	}
+	
+	@RequestMapping(value = "/input", method = RequestMethod.POST)
+	public String input(@ModelAttribute("productVO") ProductVO productVO, Model model, SessionStatus ssStatus) {
 		
 		productSvc.save(productVO);
 		ssStatus.setComplete();
@@ -84,13 +94,10 @@ public class ProductController {
 	@RequestMapping(value="/update/{id}", method=RequestMethod.GET)
 	public String update(@ModelAttribute(value = "productVO") ProductVO productVO, @PathVariable("id") long id, Model model) {
 		
-		List<ProductVO> proList = productSvc.selectAll();
-		model.addAttribute("PRO_LIST", proList);
+		this.modelMapping(model);
 		
 		productVO = productSvc.findById(id);// 세션에 productVO 저장
-		
-		model.addAttribute("productVO", productVO);
-		model.addAttribute("BODY", "PRODUCT");
+		model.addAttribute("productVO", productVO);// 세션에 productVO 저장
 		return "admin/main";
 	}
 

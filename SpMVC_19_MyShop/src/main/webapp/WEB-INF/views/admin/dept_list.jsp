@@ -1,19 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}" />
+<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 <script>
 	$(function() {
 		
-		// tr tag가 클릭되면 id값을 가져와서 update method로 전달하기
 		$(".dept-tr").on("click", function() {
-			let id = $(this).data("id")
+			let tds = $(this).children()
+			let d_code = tds.eq(0).text()
+			let d_name = tds.eq(1).text()
 			
-			document.location.href = "${rootPath}/admin/dept/update/" + id
+			$("#p_dcode",opener.document).val(d_code)
+			$("#span_d_name",opener.document).text(d_name)
+			
+			window.close()
+			window.open('about:blank', '_self').self.close()
+			
+			//document.location.href = "${rootPath}/admin/dept/update/" + id
 		})
 	})
 </script>
 <table class="col-md-4 col-12">
 	<tr>
+		<th>거래처코드</th>
 		<th>거래처</th>
 		<th>대표자</th>
 		<th>대표전화</th>
@@ -31,6 +40,7 @@
 		<c:otherwise>
 			<c:forEach var="DEPT" items="${DEPT_LIST}" varStatus="i">
 				<tr class="dept-tr" data-id="${DEPT.id}">
+					<td>${DEPT.d_code}</td>
 					<td>${DEPT.d_name}</td>
 					<td>${DEPT.d_ceo}</td>
 					<td>${DEPT.d_tel}</td>

@@ -4,7 +4,6 @@
 <script>
 	$(function() {
 		
-		// tr tag가 클릭되면 id값을 가져와서 update method로 전달하기
 		$(".pro-tr").on("click", function() {
 			let id = $(this).data("id")
 			let c = $(this).attr("class")
