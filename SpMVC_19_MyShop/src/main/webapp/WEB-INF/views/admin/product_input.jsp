@@ -14,15 +14,17 @@
 		
 		
 		$("#p_dcode").on("keydown", function(e) {
-			/* keyCode
-			F10 : 121
-			F9 : 120
-			F8 : 119
-			F7 : 118
+			/*
+				keyCode
+				F10 : 121
+				F9 : 120
+				F8 : 119
+				F7 : 118
 			*/
 			if(e.keyCode == KEY_F9) {
 				let search = $(this).val()
-				let dept_url = "${rootPath}/admin/dept/list"
+				let dept_url = "${rootPath}/admin/dept/search/" + search
+				
 				let win_style = "toolbar=no, scrollbar=yes, resizable=no, top=500, left=500, width=400, height=400"
 				window.open(dept_url, "_black", win_style)
 			}

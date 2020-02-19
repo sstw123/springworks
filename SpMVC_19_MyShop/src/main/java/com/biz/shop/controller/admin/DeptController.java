@@ -35,24 +35,13 @@ public class DeptController {
 		return new DeptVO();
 	}
 	
-	protected void modelMapping(Model model) {
-		List<DeptVO> deptList = deptSvc.selectAll();
-		model.addAttribute("DEPT_LIST", deptList);
-		model.addAttribute("BODY", "DEPT");
-	}
-	
 	@RequestMapping(value = {"/",""}, method = RequestMethod.GET)
-	public String product(@RequestParam(value="search", required = false, defaultValue = "0") String search,
-						@RequestParam(value = "text", required = false, defaultValue = "") String text,
-						Model model) {
+	public String dept(Model model) {
 		
 		DeptVO deptVO = new DeptVO();//다른 페이지에 들어가서 저장된 deptVO 세션의 초기화를 위한 코드
 		model.addAttribute("deptVO", deptVO);//다른 페이지에 들어가서 저장된 deptVO 세션의 초기화를 위한 코드
 		
 		this.modelMapping(model);
-		
-		model.addAttribute("search",search);
-		model.addAttribute("text",text);
 		
 		return "admin/main";
 	}
@@ -98,6 +87,32 @@ public class DeptController {
 		model.addAttribute("deptVO", deptVO);// 세션에 deptVO 저장
 		
 		return "admin/main";
+	}
+	
+	// @PathVariable은 required = false를 보낼 수 없다
+	@RequestMapping(value= {"/search/{search}","/search/","/search"}, method=RequestMethod.GET)
+	public String search(@PathVariable(name="search", required=false) String search, Model model) {
+		
+		this.modelMapping(model, search);
+		
+		return "admin/dept_list";
+	}
+	
+	protected void modelMapping(Model model, String search) {
+		List<DeptVO> deptList = null;
+		
+		if(search == null || search.isEmpty()) {
+			deptList = deptSvc.selectAll();	
+		} else {
+			deptList = deptSvc.findByDName(search);
+		}
+		
+		model.addAttribute("DEPT_LIST", deptList);
+		model.addAttribute("BODY", "DEPT");
+	}
+	
+	private void modelMapping(Model model) {
+		this.modelMapping(model,null);
 	}
 
 }

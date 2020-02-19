@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+.product_box {
+	width: 80%;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.title {
+	margin: 10px 0;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#product_info {
+	text-align: center;
+	
+	width: 80%;
+	margin: 0 auto;
+	
+	border: 2px solid black;
+	border-radius: 10px;
+}
+
+p.product_name {
+	font-weight: bold;
+}
+
+.button_box {
+	text-align: right;
+	margin-top: 20px;
+}
+
+button.product_button {
+	background-color: white;
+	padding: 14px 16px;
+	margin: 10px;
+	
+	border: 1px solid black;
+	border-radius: 5px;
+	color: black;
+}
+
+button.product_button:hover {
+	color: white;
+	background-color: black;
+	cursor: pointer;
+}

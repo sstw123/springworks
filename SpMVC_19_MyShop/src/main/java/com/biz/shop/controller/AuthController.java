@@ -36,11 +36,11 @@ public class AuthController {
 		return "redirect:/";
 	}
 	
-	@ResponseBody
 	@RequestMapping(value="login_ok", method=RequestMethod.GET)
-	public CustomUserDetails login_ok() {
+	public String login_ok() {
 		CustomUserDetails cUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-		return cUserDetails;
+		
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value="auth/test", method=RequestMethod.GET)

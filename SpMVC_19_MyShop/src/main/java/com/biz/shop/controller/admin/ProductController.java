@@ -36,12 +36,6 @@ public class ProductController {
 		return new ProductVO();
 	}
 	
-	protected void modelMapping(Model model) {
-		List<ProductVO> proList = productSvc.selectAll();
-		model.addAttribute("PRO_LIST", proList);
-		model.addAttribute("BODY", "PRODUCT");
-	}
-	
 	@RequestMapping(value = {"/",""}, method = RequestMethod.GET)
 	public String product(@RequestParam(value="search", required = false, defaultValue = "0") String search,
 						@RequestParam(value = "text", required = false, defaultValue = "") String text,
@@ -101,4 +95,10 @@ public class ProductController {
 		return "admin/main";
 	}
 
+	protected void modelMapping(Model model) {
+		List<ProductVO> proList = productSvc.selectAll();
+		model.addAttribute("PRO_LIST", proList);
+		model.addAttribute("BODY", "PRODUCT");
+	}
+	
 }

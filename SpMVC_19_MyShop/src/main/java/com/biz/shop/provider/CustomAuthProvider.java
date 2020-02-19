@@ -13,7 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.biz.shop.domain.CustomUserDetails;
 
 /*
- * supports() 메소드가 true를 리턴하면
+ * Spring Security의 authentication 클래스 상속
+ * 아래의 supports() 메소드가 true를 리턴하면
  * 정상적으로 로그인된 사용자 정보가 token 형태로
  * default-target-url에 지정된 controller path로 데이터가 전송된다
  * 

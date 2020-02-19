@@ -18,8 +18,33 @@
 			
 			//document.location.href = "${rootPath}/admin/dept/update/" + id
 		})
+		
+		var dept_call = function(key) {
+			var id = $(this).data("id")
+			if(key == "edit") {
+				document.location.href = "${rootPath}/admin/product/update/" + id
+			} else if (key == "delete") {
+				if(confirm("정말 삭제하시겠습니까?")) {
+					document.location.href = "${rootPath}/admin/product/delete/" + id
+				}
+			}
+		}
+		
+		$.contextMenu({
+			selector : ".dept-tr",
+			items : {
+				"edit" : {name : "수정", icon : "edit"},
+				"delete" : {name : "삭제", icon : "ddelete"}
+			},
+			callback : dept_call
+		})
 	})
 </script>
+<style>
+tr, th, td {
+	white-space: nowrap;
+}
+</style>
 <table class="col-md-4 col-12">
 	<tr>
 		<th>거래처코드</th>
@@ -52,11 +77,4 @@
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
-	<div>
-		<a href="/list?pageno=1&search=${search}&text=${text}">1</a>
-		<a href="/list?pageno=2&search=${search}&text=${text}">2</a>
-		<a href="/list?pageno=3&search=${search}&text=${text}">3</a>
-		<a href="/list?pageno=4&search=${search}&text=${text}">4</a>
-		<a href="/list?pageno=5&search=${search}&text=${text}">5</a>
-	</div>
 </table>

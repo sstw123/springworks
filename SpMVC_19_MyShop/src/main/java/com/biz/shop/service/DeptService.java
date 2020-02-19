@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.biz.shop.dao.DeptDao;
 import com.biz.shop.domain.DeptVO;
-import com.biz.shop.repository.DeptDao;
+import com.biz.shop.persistence.DeptRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,18 +14,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class DeptService {
 	
+	protected final DeptRepository deptRepo;
 	protected final DeptDao deptDao;
 
 	public List<DeptVO> selectAll() {
-		return deptDao.findAll(); 
+		return deptRepo.findAll(); 
 	}
 	
 	public void save(DeptVO deptVO) {
-		deptDao.save(deptVO);
+		deptRepo.save(deptVO);
 	}
 
 	public DeptVO findById(long id) {
-		return deptDao.findById(id).get();
+		return deptRepo.findById(id).get();
+	}
+
+	public List<DeptVO> findByDName(String search) {
+		return deptDao.findByDName(search);
 	}
 
 }

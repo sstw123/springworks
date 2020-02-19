@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.biz.shop.domain.Authorities;
 import com.biz.shop.domain.Users;
-import com.biz.shop.repository.AuthDao;
-import com.biz.shop.repository.UserDao;
+import com.biz.shop.persistence.AuthRepository;
+import com.biz.shop.persistence.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
 	private final BCryptPasswordEncoder passEncoder;
-	private final UserDao userDao;
-	private final AuthDao authDao;
+	private final UserRepository userDao;
+	private final AuthRepository authDao;
 	
 	
 	@Transactional

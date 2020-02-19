@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="mysqlDS">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost/emsDB?serverTimezone=Asia/Seoul&amp;useSSL=false"/>
+		<property name="username" value="${mysql.username}"/>
+		<property name="password" value="${mysql.password}"/>
+	</bean>
+	
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="ssfb">
+		<property name="dataSource" ref="mysqlDS"/>
+		<property name="typeAliasesPackage" value="com.biz.shop.domain"/>
+		<property name="mapperLocations" value="/WEB-INF/spring/mapper/*-mapper.xml"/>
+	</bean>
+	
+	<tx:annotation-driven/>
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="ssfb"/>
+	</bean>
+	
+	<mybatis-spring:scan base-package="com.biz.shop.dao"/>
+</beans>

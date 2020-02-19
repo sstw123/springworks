@@ -1,18 +1,45 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="/WEB-INF/views/include/context_menu.jsp" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}" />
 <script>
 	$(function() {
 		
 		$(".pro-tr").on("click", function() {
 			let id = $(this).data("id")
-			let c = $(this).attr("class")
 			
 			//document.location.href = "${rootPath}/admin/product/update?id=" + id
 			document.location.href = "${rootPath}/admin/product/update/" + id
 		})
+		
+		//$.contextMenu("html5")
+		var pro_call_func = function(key) {
+			var id = $(this).data("id")
+			if(key == "edit") {
+				document.location.href = "${rootPath}/admin/product/update/" + id
+			} else if (key == "delete") {
+				if(confirm("정말 삭제하시겠습니까?")) {
+					document.location.href = "${rootPath}/admin/product/delete/" + id
+				}
+			}
+		}
+		
+		$.contextMenu({
+			selector : ".pro-tr",
+			items : {
+				"edit" : {name : "수정", icon : "edit"},
+				"delete" : {name : "삭제", icon : "ddelete"}
+			},
+			callback : pro_call_func
+		})
+		
 	})
 </script>
+<style>
+tr, th, td {
+	white-space: nowrap;
+}
+</style>
 <table class="col-md-4 col-12">
 	<tr>
 		<th>상품코드</th>
@@ -41,11 +68,4 @@
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
-	<div>
-		<a href="/list?pageno=1&search=${search}&text=${text}">1</a>
-		<a href="/list?pageno=2&search=${search}&text=${text}">2</a>
-		<a href="/list?pageno=3&search=${search}&text=${text}">3</a>
-		<a href="/list?pageno=4&search=${search}&text=${text}">4</a>
-		<a href="/list?pageno=5&search=${search}&text=${text}">5</a>
-	</div>
 </table>
