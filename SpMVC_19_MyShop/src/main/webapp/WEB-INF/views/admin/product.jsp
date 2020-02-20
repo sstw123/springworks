@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
-<section class="mt-5 row">
+<section class="mt-5 row justify-content-center">
 	<article class="col-xl-7 col-sm-12 bg-light pro-input">
 		<c:choose>
 			<c:when test="${PRO_BODY == 'DETAIL'}">

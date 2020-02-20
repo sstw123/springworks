@@ -3,6 +3,15 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}" />
+<style>
+	.nav-link {
+		color: white !important;
+	}
+	
+	.nav-link:hover {
+		color: orange !important;
+	}
+</style>
 <header class="jumbotron text-center text-white bg-primary">
 	<h3>My Shop</h3>
 </header>
@@ -17,7 +26,6 @@
 	<ul class="navbar-nav mx-auto">
 		<sec:authorize access="hasRole('ADMIN')">
 		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/product/">상품정보</a></li>
-		<li class="nav-item"><a class="nav-link" href="#">품목정보</a></li>
 		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/dept/">거래처정보</a></li>
 		</sec:authorize>
 	</ul>
