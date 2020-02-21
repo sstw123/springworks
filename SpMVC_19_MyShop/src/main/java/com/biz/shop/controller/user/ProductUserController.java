@@ -54,13 +54,14 @@ public class ProductUserController {
 	public String basket(long id, HttpSession httpSession) {
 		
 		ProductVO basketVO = productSvc.findById(id);
-		List<ProductVO> basketList = new ArrayList<ProductVO>();
-		if(basketVO != null) {
-			basketList.add(basketVO);
-			httpSession.setAttribute("BASKET_LIST", basketList);
-		}
 		
-		return "users/user_main";
+//		List<ProductVO> basketList = new ArrayList<ProductVO>();
+//		if(basketVO != null) {
+//			basketList.add(basketVO);
+//			httpSession.setAttribute("BASKET_LIST", basketList);
+//		}
+		
+		return "SUCCESS";
 	}
 	
 	protected void makeModel() {

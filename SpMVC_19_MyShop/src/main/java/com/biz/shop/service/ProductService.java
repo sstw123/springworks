@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.biz.shop.dao.ProductDao;
 import com.biz.shop.domain.ProductVO;
 import com.biz.shop.persistence.ProductRepository;
 
@@ -16,15 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 	
-	private final ProductRepository pDao;
+	private final ProductRepository productRepo;
+	private final ProductDao productDao;
 	
 	public void save(ProductVO productVO) {
-		ProductVO pVO = pDao.save(productVO);
+		ProductVO pVO = productRepo.save(productVO);
 		log.debug("상품정보 : " + pVO.toString());
 	}
 	
 	public List<ProductVO> selectAll() {
-		List<ProductVO> proList = pDao.findAll();
+		List<ProductVO> proList = productRepo.findAll();
 		return proList;
 	}
 
@@ -34,8 +36,12 @@ public class ProductService {
 		 * NullPointerException 방지를 위한 조치인데 실제 VO 객체를 추출하려면
 		 * .get() 메소드를 이용해 가져온다
 		 */
-		Optional<ProductVO> productVO = pDao.findById(id);
+		Optional<ProductVO> productVO = productRepo.findById(id);
 		return productVO.get();
+	}
+
+	public void delete(long id) {
+		productDao.delete(id);
 	}
 
 }

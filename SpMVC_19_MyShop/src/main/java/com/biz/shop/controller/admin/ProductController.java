@@ -94,6 +94,16 @@ public class ProductController {
 		model.addAttribute("productVO", productVO);// 세션에 productVO 저장
 		return "admin/main";
 	}
+	
+	@RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
+	public String delete(@PathVariable("id") long id, Model model) {
+		
+		productSvc.delete(id);
+		
+		return "redirect:/admin/product";
+	}
+	
+	
 
 	protected void modelMapping(Model model) {
 		List<ProductVO> proList = productSvc.selectAll();

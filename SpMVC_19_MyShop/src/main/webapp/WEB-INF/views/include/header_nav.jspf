@@ -25,8 +25,8 @@
 	
 	<ul class="navbar-nav mx-auto">
 		<sec:authorize access="hasRole('ADMIN')">
-		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/product/">상품정보</a></li>
-		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/dept/">거래처정보</a></li>
+		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/product/">상품관리</a></li>
+		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/dept/">거래처관리</a></li>
 		</sec:authorize>
 	</ul>
 	
