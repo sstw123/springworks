@@ -17,8 +17,8 @@
 			<c:when test="${BODY == 'DETAIL'}">
 				<%@ include file="/WEB-INF/views/users/user_product_detail.jsp" %>
 			</c:when>
-			<c:when test="${BODY == 'BASKET'}">
-				<%@ include file="/WEB-INF/views/users/user_product_basket.jsp" %>
+			<c:when test="${BODY == 'CART'}">
+				<%@ include file="/WEB-INF/views/users/user_product_cart.jsp" %>
 			</c:when>
 		</c:choose>
 	</section>

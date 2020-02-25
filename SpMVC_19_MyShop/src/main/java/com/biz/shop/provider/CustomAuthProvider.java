@@ -27,6 +27,10 @@ public class CustomAuthProvider implements AuthenticationProvider {
 		String username = (String) authentication.getPrincipal(); // username 추출
 		String password = (String) authentication.getCredentials(); // password 추출
 		
+		if(username == null || username.isEmpty()) {
+			return null;
+		}
+		
 		List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
 		roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		roles.add(new SimpleGrantedAuthority("ROLE_USER"));

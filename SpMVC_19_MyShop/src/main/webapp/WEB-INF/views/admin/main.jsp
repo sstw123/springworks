@@ -44,6 +44,10 @@
 			<c:when test="${BODY == 'DEPT'}">
 				<%@ include file="/WEB-INF/views/admin/dept.jsp" %>
 			</c:when>
+			<c:otherwise>
+				<h3>장바구니에 담겨있는 상품 : ${COUNT_CART}</h3>
+				<h3>배송중인 상품 : ${COUNT_DELIVERY}</h3>
+			</c:otherwise>
 		</c:choose>
 	</section>
 </body>

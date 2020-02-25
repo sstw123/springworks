@@ -24,8 +24,7 @@ import com.biz.shop.domain.ProductVO;
  * boolean			Boolean
  * ======================================
  */
-public interface ProductRepository 
-		extends JpaRepository<ProductVO, Long>{
+public interface ProductRepository extends JpaRepository<ProductVO, Long>{
 
 	// C(R)UD의 기본 method가 준비되어 있다.
 	

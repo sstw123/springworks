@@ -44,4 +44,8 @@ public class ProductService {
 		productDao.delete(id);
 	}
 
+	public List<ProductVO> selectByName(String search) {
+		return productDao.selectByName(search);
+	}
+
 }

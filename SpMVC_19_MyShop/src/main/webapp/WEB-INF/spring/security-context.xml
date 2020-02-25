@@ -90,7 +90,7 @@
 		<security:form-login
 			login-page="/auth/login"
 			login-processing-url="/auth/login"
-			default-target-url="/auth/login_ok"
+			default-target-url="/"
 			authentication-failure-url="/auth/login?error"
 			username-parameter="username"
 			password-parameter="password"
