@@ -18,7 +18,7 @@
 		</encoder>
 	</appender>
 	
-	<logger name="com.biz.shop.controller" level="WARN" additivity="false">
+	<logger name="com.biz.shop.controller" level="info" additivity="false">
 		<appender-ref ref="STDLogBack"/>
 	</logger>
 	
@@ -26,7 +26,11 @@
 		<appender-ref ref="myLogBack"/>
 	</logger>
 	
-	<logger name="com.biz.shop.service" level="DEBUG" additivity="false">
+	<logger name="com.biz.shop.provider" level="trace" additivity="false">
+		<appender-ref ref="myLogBack"/>
+	</logger>
+	
+	<logger name="com.biz.shop.service" level="debug" additivity="false">
 		<appender-ref ref="myLogBack"/>
 	</logger>
 
