@@ -1,10 +1,9 @@
 package com.biz.bbs.domain;
 
-import java.util.List;
-
 import org.apache.ibatis.type.Alias;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 /*
  * VO(Value Object) = DTO(Data Transfer Object) 클래스
  * 메서드와 메서드간에
@@ -68,6 +68,6 @@ public class BBsVO {
 	private String b_content;	//nVARCHAR2(2000)
 	private String b_file;		//nVARCHAR2(125)
 	
-	// private List<CommentVO> cmtList;//코멘트와 따로 불러올 거라면 필요 없음
+	// private List<CommentVO> cmtList;//코멘트를 따로 불러올 거라면 필요 없음
 
 }

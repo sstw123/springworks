@@ -9,13 +9,16 @@ import com.biz.bbs.domain.BBsVO;
 
 public interface BBsDao {
 
-	@Select("SELECT * FROM tbl_bbs ORDER BY b_date_time DESC")
+	@Select("SELECT * FROM tbl_bbs")
 	public List<BBsVO> selectAll();
+	
+	@Select("SELECT * FROM tbl_bbs WHERE b_p_id = #{b_id} ORDER BY b_date_time DESC")
+	public List<BBsVO> findByPId(long b_id);
 	
 	@Select("SELECT * FROM tbl_bbs WHERE b_id = #{b_id}")
 	public BBsVO findById(long b_id);
 	
-	public BBsVO findByIdRM(long b_id);
+	//public BBsVO findByIdRM(long b_id);
 	
 	public List<BBsVO> findBySubject(String b_subject);
 	public List<BBsVO> findByWriter(String b_writer);

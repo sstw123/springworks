@@ -1,5 +1,6 @@
 package com.biz.bbs.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.biz.bbs.domain.BBsVO;
 import com.biz.bbs.domain.CommentVO;
 import com.biz.bbs.service.BBsService;
 import com.biz.bbs.service.CommentService;
+import com.biz.bbs.service.FileReaderService;
 import com.biz.bbs.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +65,7 @@ public class BBsController {
 	public String list(Model model) {
 		
 		List<BBsVO> bbsList = bbsService.selectAll();
+		
 		model.addAttribute("BBS_LIST",bbsList);
 		return "bbs_list";
 	
@@ -160,6 +163,29 @@ public class BBsController {
 	public String delete(String strId) {
 		bbsService.delete(Long.valueOf(strId));
 		return null;
+	}
+	
+	@RequestMapping(value="/reply", method=RequestMethod.GET)
+	public String reply(@RequestParam("b_p_id") String strId, Model model) {
+		long b_p_id = Long.parseLong(strId);
+		
+		// 원글과 답글 연결을 위해 답글의 b_p_id에 부모게시글ID 저장
+		BBsVO bbsVO = BBsVO.builder().b_p_id(b_p_id).build();
+		model.addAttribute("BBS", bbsVO);
+		
+		return "bbs_write";
+	}
+	
+	@RequestMapping(value="/reply", method=RequestMethod.POST)
+	public String reply(BBsVO bbsVO, Model model) {
+		
+		// form에서 입력받은 값에 추가로 세팅해서 insert
+		bbsVO.setB_p_id(bbsVO.getB_p_id());
+		bbsVO.setB_id(0);
+		
+		bbsService.insert(bbsVO);
+		
+		return "redirect:/list";
 	}
 	
 	@ResponseBody

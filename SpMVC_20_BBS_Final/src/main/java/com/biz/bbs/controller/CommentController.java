@@ -61,9 +61,16 @@ public class CommentController {
 	public String insert(@ModelAttribute CommentVO commentVO, Model model) {
 		
 		cmtSvc.insert(commentVO);
-		model.addAttribute("b_id", commentVO.getC_b_id());
 		
+		model.addAttribute("b_id", commentVO.getC_b_id());
 		return "redirect:/detail";
+	}
+	
+	@RequestMapping(value="reply", method=RequestMethod.GET)
+	public String reply(CommentVO cmtVO, Model model) {
+		
+		model.addAttribute("CMT", cmtVO);
+		return "comment_write";
 	}
 	
 	@RequestMapping(value="delete", method = RequestMethod.POST)

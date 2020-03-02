@@ -16,11 +16,11 @@ public interface CommentDao {
 	public CommentVO findById(long c_id);
 	
 	// 부모 글에 달린 코멘트들 가져오기, 실제로 사용할 메소드
-	@Select("SELECT * FROM tbl_comment WHERE c_b_id = #{c_b_id} ORDER BY c_date_time DESC")
+	@Select("SELECT * FROM tbl_comment WHERE c_b_id = #{c_b_id} AND c_p_id = 0 ORDER BY c_date_time DESC")
 	public List<CommentVO> findByBId(long c_b_id);
 	
 	// 부모 코멘트에 달린 코멘트들 가져오기
-	@Select("SELECT * FROM tbl_comment WHERE c_p_id = #{c_p_id}")
+	@Select("SELECT * FROM tbl_comment WHERE c_p_id = #{c_p_id} ORDER BY c_date_time DESC")
 	public List<CommentVO> findByPId(long c_p_id);
 	
 	public int insert(CommentVO commentVO);
