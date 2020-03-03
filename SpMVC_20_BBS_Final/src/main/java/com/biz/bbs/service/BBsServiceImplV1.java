@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.biz.bbs.domain.BBsVO;
 import com.biz.bbs.repository.BBsDao;
 
-import lombok.RequiredArgsConstructor;
-
 /*
  * 다중 select를 수행하는 메소드들이 있고
  * 재귀호출에 의해서 계속되는 select문이 실행된다
@@ -22,12 +20,14 @@ import lombok.RequiredArgsConstructor;
  * 중간에 데이터 fetch가 누락되는 것을 막을 수 있다
  */
 @Transactional
-@RequiredArgsConstructor
-@Service
-public class BBsServiceImpl implements BBsService {
+@Service("bbsSvcV1")
+public class BBsServiceImplV1 implements BBsService {
 
 	protected final BBsDao bbsDao;
-	
+	public BBsServiceImplV1(BBsDao bbsDao) {
+		this.bbsDao = bbsDao;
+	}
+
 	/*
 	 * pagination을 수행할 때
 	 * - 원글 + 댓글 포함한 리스트를 pagination 대상으로 할 것인지(일반적)
@@ -40,10 +40,10 @@ public class BBsServiceImpl implements BBsService {
 		List<BBsVO> allbbsList = bbsDao.selectAll();
 		
 		Collections.sort(allbbsList, (o1, o2)-> 
-			(int)(o1.getB_id() - o2.getB_id())
-		);// b_id 순서대로 정렬
+			(int)(o2.getB_id() - o1.getB_id())
+		);// 모든 글을 b_id 낮을수록 나중으로 정렬
 		
-		List<BBsVO> parentList = allbbsList.stream().filter(vo -> vo.getB_p_id() == 0).collect(Collectors.toList());//원글 리스트 추출
+		List<BBsVO> parentList = allbbsList.stream().filter(vo -> vo.getB_p_id() == 0).collect(Collectors.toList());//최상위 글 리스트 추출
 		List<BBsVO> bbsList = new ArrayList<>();//모든 글 리스트
 		
 		parentList.forEach(vo -> {

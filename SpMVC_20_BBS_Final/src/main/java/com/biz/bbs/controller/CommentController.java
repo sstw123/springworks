@@ -2,6 +2,7 @@ package com.biz.bbs.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class CommentController {
 	
-	@Qualifier("cmtSvcV1")
-	protected final CommentService cmtSvc;
-	
-	public CommentController(CommentService cmtSvc) {
-		super();
-		this.cmtSvc = cmtSvc;
-	}//생성자 끝
+	@Autowired
+	@Qualifier("cmtSvcV2")
+	private CommentService cmtSvc;//생성자 끝
 	
 
 	// 게시판의 ID값을 매개변수로 받아서 코멘트 리스트를 보여주는 메소드

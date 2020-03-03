@@ -1,9 +1,9 @@
 package com.biz.bbs.controller;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,6 @@ import com.biz.bbs.domain.BBsVO;
 import com.biz.bbs.domain.CommentVO;
 import com.biz.bbs.service.BBsService;
 import com.biz.bbs.service.CommentService;
-import com.biz.bbs.service.FileReaderService;
 import com.biz.bbs.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,12 +46,14 @@ public class BBsController {
 	 * 
 	 */
 	@Autowired
+	@Qualifier("bbsSvcV2")
 	private BBsService bbsService;
 	
 	@Autowired
 	private FileService fileService;
 	
 	@Autowired
+	@Qualifier("cmtSvcV2")
 	private CommentService cmtSvc;
 	
 	/*
@@ -63,12 +64,10 @@ public class BBsController {
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.GET)
 	public String list(Model model) {
-		
 		List<BBsVO> bbsList = bbsService.selectAll();
 		
 		model.addAttribute("BBS_LIST",bbsList);
 		return "bbs_list";
-	
 	}
 	
 	/*
@@ -109,7 +108,6 @@ public class BBsController {
 	 */
 	@RequestMapping(value="/insert",method=RequestMethod.POST)
 	public String insert(BBsVO bbsVO) {
-		
 		long b_id = bbsVO.getB_id();
 		
 		if(b_id > 0) {
@@ -118,7 +116,6 @@ public class BBsController {
 			bbsService.insert(bbsVO);
 		}
 		return "redirect:/list";
-	
 	}
 	
 	/*
@@ -137,7 +134,6 @@ public class BBsController {
 		BBsVO bbsVO = bbsService.findById(Long.valueOf(b_id));
 		model.addAttribute("BBS",bbsVO);
 		return "bbs_write";
-	
 	}
 
 	@RequestMapping(value="/update",method=RequestMethod.POST)
@@ -156,7 +152,6 @@ public class BBsController {
 		BBsVO bbsVO = bbsService.findById(b_id);
 		model.addAttribute("BBS",bbsVO);
 		return "bbs_view";
-	
 	}
 	
 	

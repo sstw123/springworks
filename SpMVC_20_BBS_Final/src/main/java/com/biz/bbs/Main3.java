@@ -3,8 +3,8 @@ package com.biz.bbs;
 public class Main3 {
 	
 	public static void main(String[] args) {
-		int sum = add(10);
-		System.out.println(sum);
+		//int sum = add(10);
+		//System.out.println(sum);
 	}
 	
 	

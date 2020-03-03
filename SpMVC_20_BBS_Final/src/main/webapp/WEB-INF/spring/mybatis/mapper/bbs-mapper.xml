@@ -5,6 +5,14 @@
   
  <mapper namespace="com.biz.bbs.repository.BBsDao">
  
+ 	<select id="selectLevel" resultType="bbsVO">
+ 		SELECT b_id, b_p_id, b_date_time, b_writer, LPAD('re:', (LEVEL-1)*5) || b_subject AS b_subject, b_content, b_file
+		FROM tbl_bbs
+		START WITH b_p_id = 0
+		CONNECT BY PRIOR b_id = b_p_id
+		ORDER SIBLINGS BY b_p_id
+ 	</select>
+ 
  	<select id="findByIdRM" resultMap="findByIdRM">
  		SELECT * FROM tbl_bbs WHERE b_id = #{b_id}
  	</select>
@@ -18,7 +26,6 @@
  		<result column="b_p_id" property="b_p_id"/>
  		<result column="b_date_time" property="b_date_time"/>
  		<result column="b_writer" property="b_writer"/>
- 		<result column="b_subject" property="b_subject"/>
  		<result column="b_subject" property="b_subject"/>
  		<result column="b_content" property="b_content"/>
  		<result column="b_file" property="b_file"/>

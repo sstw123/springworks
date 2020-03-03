@@ -9,16 +9,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.biz.bbs.domain.BBsVO;
 import com.biz.bbs.domain.CommentVO;
 import com.biz.bbs.repository.CommentDao;
 
 @Service("cmtSvcV1")
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImplV1 implements CommentService {
 	
 	protected final CommentDao cmtDao;
 	
-	public CommentServiceImpl(CommentDao cmtDao) {
+	public CommentServiceImplV1(CommentDao cmtDao) {
 		super();
 		this.cmtDao = cmtDao;
 	}
@@ -106,7 +105,7 @@ public class CommentServiceImpl implements CommentService {
 //		-> 9. 모든 댓글을 cmtList[1]에 순서대로 저장한 뒤 for문이 끝나고 cmtList[1] 리턴 
 		for(CommentVO vo : tempList) {
 			List<CommentVO> childList = this.findCommentByBId(vo, depth+1);
-			// 3에서 리턴된 후 아래로 진행
+			// 코드 3에서 리턴된 후 아래로 진행
 			cmtList.addAll(childList);
 		}
 		return cmtList;

@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Select;
 import com.biz.bbs.domain.BBsVO;
 
 public interface BBsDao {
+	
+	public List<BBsVO> selectLevel();
 
 	@Select("SELECT * FROM tbl_bbs")
 	public List<BBsVO> selectAll();
