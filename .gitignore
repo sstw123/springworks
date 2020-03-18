@@ -128,6 +128,8 @@ RemoteSystemsTempFiles/
 
 # mySec File
 
+NaverConfig.*
+DataGoConfig.*
 myData.go.kr.key.js
 naver_secret.js
 dbconfig.js
