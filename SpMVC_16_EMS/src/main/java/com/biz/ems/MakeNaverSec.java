@@ -21,9 +21,21 @@ public class MakeNaverSec {
 		Map<String, String> envList = System.getenv();
 		
 		String saltPass = envList.get("NAVER");
-		
 		System.out.println("SaltPass : " + saltPass);
 		
+		// 암호화 설정
+		pbEnc.setAlgorithm("PBEWithMD5AndDES");
+		pbEnc.setPassword(saltPass);
+		
+		// 암호화하기
+		//encrypt(scan, pbEnc);
+		
+		// 복호화하기
+		decrypt(scan, pbEnc);
+	}
+	
+	private static void encrypt(Scanner scan, StandardPBEStringEncryptor pbEnc) {
+		// 평문 입력받기
 		System.out.print("Naver ID : ");
 		String naverId = scan.nextLine();
 		
@@ -36,10 +48,7 @@ public class MakeNaverSec {
 		System.out.print("DB PW : ");
 		String dbUserPW = scan.nextLine();
 		
-		// 암호화 하기
-		pbEnc.setAlgorithm("PBEWithMD5AndDES");
-		pbEnc.setPassword(saltPass);
-		
+		// 평문 -> 암호화
 		String encNaverId = pbEnc.encrypt(naverId);
 		String encNaverPW = pbEnc.encrypt(naverPW);
 		String encDBUserId = pbEnc.encrypt(dbUserId);
@@ -80,6 +89,17 @@ public class MakeNaverSec {
 		
 		System.out.println(saveDBUserId);
 		System.out.println(saveDBUserPW);
+	}
+	
+	private static void decrypt(Scanner scan, StandardPBEStringEncryptor pbEnc) {
+		// 암호문 입력받기
+		System.out.print("암호문 : ");
+		String encString = scan.nextLine();
+		
+		// 평문 -> 암호화
+		String originalStr = pbEnc.decrypt(encString);
+		
+		System.out.println("복호화 값 : " + originalStr);
 	}
 
 }

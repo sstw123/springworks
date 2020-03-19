@@ -128,8 +128,14 @@ RemoteSystemsTempFiles/
 
 # mySec File
 
+mybatis-config.*
 NaverConfig.*
 DataGoConfig.*
+naver.email.secret.properties
+
+naver_secret.*
+dataGoKr.*
+
 myData.go.kr.key.js
 naver_secret.js
 dbconfig.js
@@ -150,6 +156,3 @@ Training
 Blog
 About
 Press h to open a hovercard with more details.
-
-# important
-naver.email.secret.properties
