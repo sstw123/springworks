@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="mysql">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/bucketdb?serverTimezone=Asia/Seoul"/>
+		<property name="username" value="bucket"/>
+		<property name="password" value="bucket"/>
+	</bean>
+	
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="mysql"/>
+		<property name="typeAliasesPackage" value="com.mycompany.bucket.model"/>
+		<property name="mapperLocations" value="/WEB-INF/spring/mapper/*-mapper.xml"/>
+		<property name="configuration">
+			<bean class="org.apache.ibatis.session.Configuration">
+				<property name="jdbcTypeForNull" value="VARCHAR"/>
+				<property name="logPrefix" value="마이바티스"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<tx:annotation-driven/>
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="mysql"/>
+	</bean>
+	
+	<mybatis-spring:scan base-package="com.mycompany.bucket.mapper"/>
+</beans>

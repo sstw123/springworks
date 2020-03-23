@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.bucket.mapper.BucketDao">
+	<insert id="insert">
+		INSERT INTO tbl_bucket(
+			b_order,
+			b_content,
+			b_success
+		) VALUES (
+			#{b_order},
+			#{b_content},
+			#{b_success}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_bucket
+		SET
+			b_order = #{b_order},
+			b_content = #{b_content},
+			b_success = #{b_success}
+		WHERE b_id = #{b_id}
+	</update>
+	
+	<update id="updateOrder">
+		UPDATE tbl_bucket
+		SET
+			b_order = b_order - 1
+		WHERE b_id > #{b_id}
+	</update>
+</mapper>
