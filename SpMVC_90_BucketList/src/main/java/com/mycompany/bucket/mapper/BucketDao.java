@@ -6,16 +6,28 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import com.mycompany.bucket.model.BucketDTO;
+import com.mycompany.bucket.model.PaginationDTO;
 
 public interface BucketDao {
 	
-	@Select("select * from tbl_bucket")
+	@Select("SELECT * FROM tbl_bucket ORDER BY b_order")
 	public List<BucketDTO> selectAll();
+	
+	@Select("SELECT * FROM tbl_bucket WHERE b_success = true ORDER BY b_order")
+	public List<BucketDTO> selectSuccessTrue();
+	@Select("SELECT * FROM tbl_bucket WHERE b_success = false ORDER BY b_order")
+	public List<BucketDTO> selectSuccessFalse();
+	
+	//페이지네이션
+	@Select("SELECT COUNT(*) FROM tbl_bucket")
+	public int countAll();
+	//페이지네이션
+	public List<BucketDTO> selectAllByPage(PaginationDTO pageDTO);
 	
 	@Select("SELECT * FROM tbl_bucket WHERE b_id = #{b_id}")
 	public BucketDTO findById(int b_id);
 	
-	@Select("select max(b_order) from tbl_bucket")
+	@Select("SELECT MAX(b_order) FROM tbl_bucket")
 	public Integer getMaxOrder();
 	
 	public int insert(BucketDTO bucketDTO);
@@ -24,5 +36,7 @@ public interface BucketDao {
 	
 	@Delete("DELETE FROM tbl_bucket WHERE b_id = #{b_id}")
 	public int delete(int b_id);
+	
+	
 
 }

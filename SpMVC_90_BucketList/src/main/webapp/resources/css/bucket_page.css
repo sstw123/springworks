@@ -1,0 +1,43 @@
+@charset "UTF-8";
+/* bucket_page css */
+.bucket_page {
+	width: 100%;
+}
+
+/* add_form css */
+.add_form {
+	display: flex;
+	margin: 0 auto;
+	margin-top: 20px;
+}
+#add_b_content {
+	display: block;
+	width: 70%;
+	
+	/* flex: 1; */
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 0;
+	
+	margin-left: 8%;
+	margin-right: 3%;
+}
+.btn_add {
+	display: block;
+	margin-left: auto;
+	
+	padding: 10px 0;
+	width: 10%;
+	text-align: center;
+	
+	background-color: white;
+	border: 1px solid skyblue;
+	border-radius: 3px;
+	color: skyblue;
+	
+	cursor: pointer;
+}
+.btn_add:hover {
+	background-color: skyblue;
+	color: white;
+}

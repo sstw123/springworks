@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycompany.bucket.mapper.BucketDao">
+
+	<select id="selectAllByPage" resultType="bucketDTO">
+		SELECT *
+		FROM tbl_bucket
+		ORDER BY b_order ASC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
 	<insert id="insert">
 		INSERT INTO tbl_bucket(
 			b_order,
