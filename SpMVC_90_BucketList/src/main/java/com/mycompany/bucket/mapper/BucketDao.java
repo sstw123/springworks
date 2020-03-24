@@ -15,10 +15,10 @@ public interface BucketDao {
 	
 	@Select("SELECT * FROM tbl_bucket WHERE b_success = true ORDER BY b_order")
 	public List<BucketDTO> selectSuccessTrue();
+	
 	@Select("SELECT * FROM tbl_bucket WHERE b_success = false ORDER BY b_order")
 	public List<BucketDTO> selectSuccessFalse();
 	
-	//페이지네이션
 	@Select("SELECT COUNT(*) FROM tbl_bucket")
 	public int countAll();
 	//페이지네이션
