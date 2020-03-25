@@ -9,7 +9,7 @@
 
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="mysql">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property name="url" value="jdbc:mysql://localhost:3306/bucketdb?serverTimezone=Asia/Seoul"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/bucketdb?allowMultiQueries=true"/>
 		<property name="username" value="bucket"/>
 		<property name="password" value="bucket"/>
 	</bean>

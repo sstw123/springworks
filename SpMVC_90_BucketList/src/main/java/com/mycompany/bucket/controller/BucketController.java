@@ -121,6 +121,21 @@ public class BucketController {
 		return "include/bucket_table";
 	}
 	
+	@RequestMapping(value="/order", method=RequestMethod.POST)
+	public String orderChange(int b_id, byte order, Model model) {
+		
+		int ret = bucketSvc.orderChange(b_id, order);
+		
+		log.debug("-----------컨트롤러-----------" + ret);
+		
+		//this.selectAllByPage(model, 1);
+		List<BucketDTO> bucketList = bucketSvc.selectAll();
+		model.addAttribute("BUCKET_LIST", bucketList);
+		
+		return "include/bucket_table";
+	}
+	
+	// 페이지네이션
 	private void selectAllByPage(Model model, int currPage) {
 		long totalCount = bucketSvc.countAll();
 		PaginationDTO pageDTO = pageSvc.makePageInfo(totalCount, currPage);
