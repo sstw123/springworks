@@ -1,11 +1,13 @@
 @charset "UTF-8";
 /* bucket_page css */
 .bucket_page {
-	width: 100%;
+	width: 95%;
+	margin: 0 auto;
 }
 
 /* add_form css */
 .add_form {
+	width: 95%;
 	display: flex;
 	margin: 0 auto;
 	margin-top: 20px;
