@@ -126,8 +126,6 @@ public class BucketController {
 		
 		int ret = bucketSvc.orderChange(b_id, order);
 		
-		log.debug("-----------컨트롤러-----------" + ret);
-		
 		//this.selectAllByPage(model, 1);
 		List<BucketDTO> bucketList = bucketSvc.selectAll();
 		model.addAttribute("BUCKET_LIST", bucketList);

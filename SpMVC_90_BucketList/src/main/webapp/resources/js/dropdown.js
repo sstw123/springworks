@@ -33,7 +33,7 @@ $(function() {
 			$(".dropdown .btn_delete").attr("data-id", b_id)
 			*/
 			
-			// 드롭다운 박스에 data-id 추가하기
+			// 드롭다운 박스에 data-id 추가하기, data("id", b_id)는 인식을 못하는 버그가 있기 때문에 attr("data-id", b_id)로 사용한다
 			$(".dropdown").attr("data-id", b_id)
 			
 			last_click_tr_b_id = b_id
@@ -50,7 +50,7 @@ $(function() {
 	
 	// 드롭다운 완료 클릭 시
 	$(document).on("click", ".btn_success", function(event) {
-		let b_id = $(this).closest(".dropdown").data("id")
+		let b_id = $(this).closest(".dropdown").attr("data-id")
 		
 		$.ajax({
 			url: rootPath + "/sc_update",
@@ -69,20 +69,26 @@ $(function() {
 	
 	// 드롭다운 수정 클릭 시
 	$(document).on("click", ".btn_edit", function(event) {
-		let b_id = $(this).closest(".dropdown").data("id")
+		let b_id = $(this).closest(".dropdown").attr("data-id")
 		
+		// 리스트의 id에 해당하는 b_content 텍스트 가져오기
 		let b_content = $("tr[data-id='" + b_id + "'] td.b_content").text()
 		
+		// 수정 창에 히든 id값과 b_content 텍스트 세팅하기
 		$(".edit_form input#edit_b_id").val(b_id)
 		$(".edit_form input#edit_b_content").val(b_content)
 		
+		// 수정 모달 창 css display 보이기
 		$(".edit_modal").css("display", "block")
+		
+		// 수정 b_content 창 focus주기
+		$(".edit_form input#edit_b_content").focus()
 	})
 	
 	// 드롭다운 삭제 클릭 시
 	$(document).on("click", ".btn_delete", function(event) {
 		if(confirm("정말로 삭제하시겠습니까?")) {
-			let b_id = $(this).closest(".dropdown").data("id")
+			let b_id = $(this).closest("div.dropdown").attr("data-id")
 			
 			$.ajax({
 				url: rootPath + "/delete",
@@ -100,7 +106,7 @@ $(function() {
 	
 	// 드롭다운 ▲ 버튼 클릭 시
 	$(document).on("click", ".btn_order_up", function(event) {
-		let b_id = $(this).closest(".dropdown").data("id")
+		let b_id = $(this).closest(".dropdown").attr("data-id")
 		
 		$.ajax({
 			url: rootPath + "/order",
@@ -117,7 +123,7 @@ $(function() {
 	
 	// 드롭다운 ▼ 버튼 클릭 시
 	$(document).on("click", ".btn_order_down", function(event) {
-		let b_id = $(this).closest(".dropdown").data("id")
+		let b_id = $(this).closest(".dropdown").attr("data-id")
 		
 		$.ajax({
 			url: rootPath + "/order",
