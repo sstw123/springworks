@@ -6,9 +6,9 @@
 <table>
 	<thead>
 		<tr>
-			<th class="th_order">번호</th>
+			<th>번호</th>
 			<th>내용</th>
-			<th class="th_success">성공</th>
+			<th>성공</th>
 		</tr>
 	</thead>
 	<tbody>

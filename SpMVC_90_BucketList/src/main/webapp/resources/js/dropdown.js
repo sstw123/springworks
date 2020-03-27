@@ -42,7 +42,7 @@ $(function() {
 	
 	// DOM에서 tbody tr을 제외한 모든 곳 클릭 시 드롭다운 안보이게(사라지게)
 	$(document).click(function(e) {
-		if( !$(e.target).is("tbody tr") ) {
+		if( !$(e.target).is("tbody tr, .btn_order_up, .btn_order_down") ) {
 			$(".dropdown").removeClass("dropdown_active")
 			$(".dropdown").addClass("dropdown_inactive")
 		}
@@ -75,6 +75,7 @@ $(function() {
 		let b_content = $("tr[data-id='" + b_id + "'] td.b_content").text()
 		
 		// 수정 창에 히든 id값과 b_content 텍스트 세팅하기
+		$("#text_b_content").text(b_content)
 		$(".edit_form input#edit_b_id").val(b_id)
 		$(".edit_form input#edit_b_content").val(b_content)
 		

@@ -6,8 +6,8 @@
 
 <div class="dropdown dropdown_inactive">
 	<ul>
+		<li class="btn_edit">보기/수정</li>
 		<li class="btn_success">완료</li>
-		<li class="btn_edit">수정</li>
 		<li class="btn_delete">삭제</li>
 		<div class="order_box">
 			<li class="btn_order_up">▲</li>

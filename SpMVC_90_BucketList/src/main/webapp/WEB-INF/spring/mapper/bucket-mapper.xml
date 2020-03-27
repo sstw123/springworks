@@ -37,6 +37,13 @@
 		WHERE b_order > #{b_order}
 	</update>
 	
+	<update id="massOrderMinusOne">
+		UPDATE tbl_bucket
+		SET
+			b_order = b_order -1
+		WHERE b_order > #{b_order}
+	</update>
+	
 	<update id="orderChange">
 		UPDATE tbl_bucket
 		SET b_order =
@@ -46,4 +53,5 @@
 			END
 		WHERE b_order IN ( #{b_order}, #{b_order2} )
 	</update>
+	
 </mapper>

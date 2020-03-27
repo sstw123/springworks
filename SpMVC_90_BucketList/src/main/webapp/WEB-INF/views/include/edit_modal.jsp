@@ -9,9 +9,13 @@
 		<span id="close">&times;</span>
 	</div>
 	
-	<form class="edit_form">
-		<input id="edit_b_id" name="b_id" type="hidden"/>
-		<input id="edit_b_content" name="b_content"/>
-		<button class="btn_edit_done">수정</button>
-	</form>
+	<div class="window_box">
+		<p id="text_b_content"></p>
+	
+		<form class="edit_form">
+			<input id="edit_b_id" name="b_id" type="hidden"/>
+			<input id="edit_b_content" name="b_content"/>
+			<button class="btn_edit_done">수정</button>
+		</form>
+	</div>
 </div>

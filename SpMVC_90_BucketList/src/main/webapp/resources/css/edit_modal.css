@@ -9,12 +9,21 @@
 	background-color: rgba(0, 0, 0, 0.4);
 }
 
-.edit_form {
-	background-color: rgba(255, 255, 255, 0.4);
+.window_box {
+	background-color: white;
 	max-width: 730px;
 	min-width: 300px;
 	margin: 150px auto;
 	padding: 15px;
+}
+.window_box p {
+	padding: 10px;
+	margin-bottom: 20px;
+	font-size: large;
+}
+
+.edit_form {
+	width: 100%;
 	display: flex;
 }
 

@@ -97,8 +97,25 @@ public class BucketService {
 	public void delete(int b_id) {
 		BucketDTO bucketDTO = bucketDao.findById(b_id);
 		
-		bucketDao.orderMinusOne(bucketDTO.getB_order());
+		// 삭제한 id의 순서값이 가장 마지막 순서가 아닐 때만 -1 하기
+		if(bucketDao.getMaxOrder() != bucketDTO.getB_order()) {
+			bucketDao.orderMinusOne(bucketDTO.getB_order());
+		}
 		bucketDao.delete(b_id);
+	}
+
+	// 스마트폰 최적화 어플이기 때문에 화면이 작아서 체크박스 일부러 미구현
+	// 한번에 삭제할 때 쓰려고 만든 메소드(사용하지 않음)
+	public void deleteMany(int[] arr_b_id) {
+		BucketDTO bucketDTO = null;
+		
+		for(int i = 0 ; i < arr_b_id.length ; i++) {
+			bucketDTO = bucketDao.findById(arr_b_id[i]);
+			if(bucketDao.getMaxOrder() != bucketDTO.getB_order()) {
+				bucketDao.orderMinusOne(bucketDTO.getB_order());
+			}
+			bucketDao.delete(arr_b_id[i]);
+		} 
 	}
 
 	public List<BucketDTO> selectSuccessTrue() {
