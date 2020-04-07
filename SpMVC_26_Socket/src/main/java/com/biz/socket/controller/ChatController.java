@@ -35,14 +35,12 @@ public class ChatController extends TextWebSocketHandler {
 		// TODO Auto-generated method stub
 		super.afterConnectionEstablished(session);
 		
+		// 사용자가 접속하면 WebSocketSession 추가하기
 		sessionList.add(session);
 		
-		// message에 기본 세팅 설정
-		MessageVO messageVO = MessageVO.builder()
-							//.wSession(session)
-							.build();
-		// json형 데이터 messageMap : 세션의 id, messageVO(json구조)로 되어있다 
-		messageMap.put(session.getId(), messageVO);
+		// messageVO 맵에 id를 키값으로 messageVO 추가하기
+		// 세션의 id, messageVO(json구조)로 되어있다
+		messageMap.put(session.getId(), new MessageVO());
 	}	
 
 	@Override
@@ -58,7 +56,8 @@ public class ChatController extends TextWebSocketHandler {
 		
 		if( user[0].equalsIgnoreCase("userName") ) {
 			MessageVO messageVO = messageMap.get(session.getId());
-			messageVO.setUserName(user[1]);
+			
+			messageVO.setUserName(user[1]); // 객체는 주소이기 떄문에 map에 들어있는 값이 변경된다
 			// json 형태의 string 문자열 만들기
 			// String sendUserName = String.format("{ \"message\" : \"userName\", \"userName\" : \"%s\" }", messageVO.getUserName());
 			// session.sendMessage(new TextMessage(sendUserName) );

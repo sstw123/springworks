@@ -19,7 +19,13 @@
 		}
 		
 		#message_list {
-			width: 500px;
+			border: 1px solid black;
+			height: 25vh;
+			margin: 0 auto;
+			overflow: auto;
+		}
+		form {
+			margin: 50px auto;
 		}
 		
 		.userName {
@@ -35,7 +41,8 @@
 		}
 	</style>
 	<script>
-		var sock = new SockJS('http://localhost:8080/socket/chat');
+		//var sock = new SockJS('http://localhost:8080/socket/chat');
+		var sock = new SockJS('http://192.168.4.12:8080/socket/chat');
 		
 		// 소켓 서버에 접속 시작
 		sock.onopen = function() {
@@ -46,17 +53,19 @@
 			if(userName && userName != "") {
 				sock.send("userName:" + userName)
 			}
+			
+			sock.send("getUserList:" + userName)
 		};
 		 
 		 // 서버로부터 수신되는 이벤트
 		 sock.onmessage = function(e) {
-		     console.log('message : ', e.data);
+		     //console.log('message : ', e.data);
 		     
 		     //jackson의 ObjectMapper
 		     //json 문자열을 JSON.parse로 만들기(stringify <-> parse)
 		     let jsonMessage = JSON.parse(e.data)
 		     
-		     console.log('message2 : ', jsonMessage);
+		     //console.log('message2 : ', jsonMessage);
 		     
 		     if(jsonMessage.what && jsonMessage.what == 'userName') {
 		    	 $("#userName").val(jsonMessage.userName)
@@ -70,10 +79,26 @@
 		    	 
 		    	 console.log("userList : ", userList)
 		    	 
-		    	 // 동적 tag를 만드는 jquery 코드
-		    	 let options = $("<option />", {value : all, text : "전체"} )
+		    	 // Object.keys() : js의 기본 method
+		    	 // userList 객체 그룹중에서 각 요소의 키값만 추출하여 배열로 만들기
+		    	 let userListKeys = Object.keys(userList)
 		    	 
+		    	 $("#toList").empty()
+		    	 $("#toList").append($("<option/>", {
+			    					value: "all",
+			    					text: "전체"
+		    					}))
 		    	 
+		    	 for(let i = 0; i < userListKeys.length ; i++) {
+		    		//console.log(userListKeys[i])
+		    		// JSON 데이터에서 key로 값을 추출할 때는 json[key] 방식으로 추출한다
+		    		 console.log("사용자 정보 : " + userList[userListKeys[i]].userName)
+		    		$("#toList").append($("<option/>", {
+			    					value: userListKeys[i],
+			    					text: userList[userListKeys[i]].userName
+		    					}))
+		    	 	
+		    	 }
 		    	 
 		    	 return false
 		     }
@@ -86,6 +111,7 @@
 		     			+ "</div>"
 		     			
 		     $("#message_list").append(html)
+		     $("#message_list").scrollTop( $("#message_list").prop("scrollHeight") )
 		     
 		     //sock.close();
 		 };
@@ -101,11 +127,6 @@
 		
 		$(function() {
 			
-			$(document).on("click", "#btn_1", function() {
-				sock.send("getUserList")
-			})
-			
-			
 			$(document).on("submit", "form", function() {
 				if($("#userName").val() == "") {
 					alert("이름을 입력하세요")
@@ -113,8 +134,11 @@
 					return false
 				}
 				
-				//let message = $("#message").val()
+				let toUserId = $("#toList option:checked").val()
+				let toUserName = $("#toList option:checked").text()
+				
 				let message = {
+					toUserId : toUserId,
 					userName : $("#userName").val(),
 					message : $("#message").val()
 				}
@@ -124,9 +148,13 @@
 						+ message.userName
 						+ "</span> : "
 						+ message.message
+						+ "<span>("
+						+ toUserName
+						+ ")</span>"
 						+ "</div>"
 				
 				$("#message_list").append(html)
+				$("#message_list").scrollTop( $("#message_list").prop("scrollHeight") )
 				
 				sock.send(JSON.stringify(message))
 				
@@ -155,36 +183,29 @@
 	</header>
 	
 	<section class="container-fluid">
+		<div id="message_list">
+			
+		</div>
+	</section>
+	
+	<section class="container-fluid">
 		<form class="col-5">
 			<div class="form-group">
-				<label for="userName">이름</label>
 				<input id="userName" class="form-control" placeholder="이름" autocomplete="off"/>
 			</div>
 			
 			<div class="form-group">
-				<label for="toList">이름</label>
 				<select id="toList" class="form-control">
 					<option value="all">전체</option>
 				</select>
 			</div>
 			
 			<div class="form-group">
-				<label for="message">내용</label>
-				<input id="message" class="form-control" placeholder="메세지 입력" autocomplete="off"/>
+				<input id="message" class="form-control" placeholder="내용" autocomplete="off"/>
 			</div>
 			
 			<button id="btn_send" class="btn btn-primary">전송</button>
 		</form>
-	</section>
-	<button id="btn_1" class="btn">버튼</button>
-	<section class="container-fluid">
-		<div id="user_list" class="col-3">
-			
-		</div>
-		
-		<div id="message_list" class="col-8">
-			
-		</div>
 	</section>
 </body>
 </html>
