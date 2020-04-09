@@ -9,7 +9,7 @@
 </head>
 <body>
 	<header>
-		<h2>Spring MVC Secerity Template</h2>
+		<h2>Spring MVC Security Template</h2>
 	</header>
 </body>
 </html>

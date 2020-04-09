@@ -59,3 +59,16 @@
 5. 이후 유저가 접근하면 JSESSIONID에서 정보를 추출하여 사용자 인증을 시도한다
 * ?JSESSIONID=asdasdasd 이러한 값이 URL 뒤에 따라붙기도 한다
 6. JSESSIONID에서 추출한 Session ID가 유효하면 접근 Request에게 Authentication을 부착한다
+
+### Spring Security와 form 데이터
+* Web Browser에서 서버로 요청하는 것을 request라고 하며 요청할 때 사용하는 주소를 URL, URI라고 한다
+* Web Browser에서 서버에 request하는 method 방식은 GET, POST, PUT, DELETE가 있고 Spring MVC에서는 GET, POST를 주로 사용한다
+* GET method는 주소창에 URL을 입력하고 Enter를 누르거나, anchor tag를 마우스로 클릭하거나, form tag의 method가 없는 경우 서버로 요청하는 방식이다
+* GET method는 주로 리스트를 요구하거나 입력 form 화면을 요구하는 용도로 사용된다
+* POST method는 입력창의 값을 서버로 전송할때 주로 사용하며 form, input 등의 tag에 값을 저장한 후 서버로 submit을 수행한다
+* POST method는 데이터의 양에 관계없이 서버로 전송할 수 있으며 file upload 등도 수행할 수 있다
+* Spring Security를 적용한 프로젝트에서는 GET method 방식은 아무런 제약이 없으나, POST method 방식은 서버로부터 전달받은 csrf token을 데이터들과 함께 보내야만 정상적으로 서버로 보낼 수 있다
+* 따라서 POST method로 값을 보내고 싶다면 다음과 같은 코드를 추가해주어야 한다
+* `<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">`
+* 매번 form을 만들면서 코드를 추가하다 보면 빠트릴 수 있고 이러한 경우 해당 form의 데이터를 전송하면 서버는 수신을 거부하고 403 오류를 보낸다
+* 이러한 불편을 방지하기 위해 Spring Form Taglibs를 사용하여 `<form:form>`을 작성하면 Spring Security와 연동되어 POST 메소드의 경우 자동으로 _csrf 토큰을 form에 추가하여 보내준다
