@@ -1,4 +1,4 @@
-package com.biz.temp.controller;
+package com.biz.temp;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

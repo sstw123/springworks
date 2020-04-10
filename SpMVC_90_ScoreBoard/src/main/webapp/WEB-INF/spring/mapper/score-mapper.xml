@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.score.mapper.ScoreDao">
+
+	<select id="selectAll" resultType="scoreVO">
+		SELECT ST.id, ST.st_num, ST.st_name, ST.st_grade, ST.st_class,
+			SUM(CASE WHEN SC.s_subject ='국어' 
+				THEN s_score ELSE 0 END) AS s_kor,
+			SUM(CASE WHEN SC.s_subject ='영어' 
+				THEN s_score ELSE 0 END) AS s_eng,
+			SUM(CASE WHEN SC.s_subject ='수학' 
+				THEN s_score ELSE 0 END) AS s_math,
+			SUM(s_score) AS s_sum,
+			AVG(s_score) AS s_avg			
+		FROM tbl_student as ST, tbl_score as SC
+        WHERE ST.st_num = SC.s_num
+		GROUP BY st_num
+	</select>
+	
+	<select id="findById" resultType="scoreVO">
+		SELECT ST.id, ST.st_num, ST.st_name, ST.st_grade, ST.st_class,
+			SUM(CASE WHEN SC.s_subject ='국어' 
+				THEN s_score ELSE 0 END) AS s_kor,
+			SUM(CASE WHEN SC.s_subject ='영어' 
+				THEN s_score ELSE 0 END) AS s_eng,
+			SUM(CASE WHEN SC.s_subject ='수학' 
+				THEN s_score ELSE 0 END) AS s_math,
+			SUM(s_score) AS s_sum,
+			AVG(s_score) AS s_avg
+		FROM tbl_student as ST, tbl_score as SC
+        WHERE ST.id = #{id} AND ST.st_num = SC.s_num
+		GROUP BY st_num
+	</select>
+	
+	<insert id="insertStudent">
+		INSERT INTO `tbl_student`
+			(`st_num`,
+			`st_name`,
+			`st_grade`,
+			`st_class`)
+		VALUES
+			(#{st_num},
+			#{st_name},
+			#{st_grade},
+			#{st_class})
+	</insert>
+	
+	<insert id="insertScore">
+		INSERT INTO `tbl_score`
+			(`s_num`,
+			`s_subject`,
+			`s_score`)
+		VALUES
+			(#{s_num},
+			#{s_subject},
+			#{s_score})
+	</insert>
+	
+	<update id="updateStudent">
+		UPDATE `tbl_student`
+		SET
+			`st_num` = #{st_num},
+			`st_name` = #{st_name},
+			`st_grade` = #{st_grade},
+			`st_class` = #{st_class}
+		WHERE `id` = #{id}
+	</update>
+	
+	<update id="updateScore">
+		UPDATE `tbl_score`
+		SET
+			`s_num` = #{s_num},
+			`s_subject` = #{s_subject},
+			`s_score` = #{s_score}
+		WHERE `id` = #{id}
+	</update>
+	
+</mapper>

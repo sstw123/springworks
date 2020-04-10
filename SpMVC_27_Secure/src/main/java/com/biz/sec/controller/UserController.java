@@ -44,10 +44,14 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value="/idcheck", method=RequestMethod.GET)
 	public boolean idcheck(String username) {
-		String userVO = userSvc.findByUserName(username);
+		UserVO userVO = userSvc.findByUserName(username);
 		
 		boolean ret = false;
-		if(userVO != null && userVO.equalsIgnoreCase(username)) {
+		
+		// 이미 DB에 회원정보가 저장되어있는 경우 체크하기
+		// null이 아니면 && 뒤쪽의 if문 진행
+		// 먼저 null 체크를 해서 NullPointerException 방지
+		if(userVO != null && userVO.getUsername().equalsIgnoreCase(username)) {
 			ret = true;
 		}
 		return ret;

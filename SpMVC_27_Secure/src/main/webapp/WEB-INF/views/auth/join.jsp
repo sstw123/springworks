@@ -68,8 +68,7 @@
 		}
 		
 		.message {
-			background-color: black;
-			color: yellow;
+			background-color: inherit;
 			font-weight: bold;
 			font-size: 1rem;
 		}
@@ -109,6 +108,7 @@
 				let username = $(this).val()
 				if(username == "") {
 					$("#m_username").text("아이디는 반드시 입력해야합니다")
+					$("#username").focus()
 					return false
 				}
 				
@@ -120,13 +120,14 @@
 						if(result) {
 							$("#m_username").text("이미 사용중인 ID입니다")
 							$("#m_username").css("color", "red")
+							$("#username").focus()
 						} else {
 							$("#m_username").text("사용 가능한 ID입니다")
 							$("#m_username").css("color", "lightgreen")
 						}
 					},
 					error : function() {
-						alert("서버 통신 오류")
+						$("#m_username").text("서버 통신 오류")
 					}
 				})
 				
