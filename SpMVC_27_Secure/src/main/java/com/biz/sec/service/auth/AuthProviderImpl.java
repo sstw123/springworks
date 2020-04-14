@@ -49,8 +49,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
 		}
 		
 		// UserDetailsService에서 보내준 사용자 정보를 Controller로 보내기
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
-		token.setDetails(user);
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		return token;
 	}
 
