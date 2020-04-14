@@ -40,6 +40,7 @@ public class UserDetailsVO implements UserDetails {
 	
 	// 이하 add unimplemented method를 하는 대신
 	// lombok을 사용하여 getter를 생성하여 사용하는 방법
+	private long id;
 	private String username;
 	private String password;
 	private boolean enabled;
@@ -49,5 +50,9 @@ public class UserDetailsVO implements UserDetails {
 	private boolean credentialsNonExpired;
 	
 	private Collection<? extends GrantedAuthority> authorities;
+	
+	private String email;
+	private String phone;
+	private String address;
 
 }

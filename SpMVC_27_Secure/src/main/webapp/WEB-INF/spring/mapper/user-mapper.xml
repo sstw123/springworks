@@ -2,6 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.biz.sec.persistence.UserDao">
+
+	<select id="findById" resultMap="userAndAuthorities">
+		SELECT
+			id,
+			user_name AS username,
+			user_pass AS password,
+			enabled,
+			email,
+			phone,
+			address
+		FROM tbl_users
+		WHERE id = #{id}
+	</select>
+	
+	<resultMap type="userDetailsVO" id="userAndAuthorities">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<collection property="authorities" column="username" ofType="authorityVO" select="findByUsernameAuthorities">
+		</collection>
+	</resultMap>
+	
+	<select id="findByUsernameAuthorities" resultType="authorityVO">
+		SELECT *
+		FROM authorities
+		WHERE username = #{username}
+	</select>
+
+	<select id="create_table">
+		${create_table}
+	</select>
 	
 	<insert id="insert">
 		INSERT INTO `tbl_users` (

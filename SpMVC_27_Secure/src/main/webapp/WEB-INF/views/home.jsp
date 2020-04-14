@@ -3,13 +3,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initian-scale=1">
-	<title>Spring Security</title>
+	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+		
+		body {
+			height: 2000px;
+		}
+		
+		.mypage {
+			margin-top: 60px;
+		}
+	</style>
 </head>
 <body>
-	<header>
-		<h2>Spring MVC Security Template</h2>
-	</header>
+	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	
+	<c:choose>
+		<c:when test="${BODY == 'MYPAGE'}">
+			<section class="mypage">
+				<%@ include file="/WEB-INF/views/user/mypage.jsp" %>
+			</section>
+		</c:when>
+	</c:choose>
 </body>
 </html>

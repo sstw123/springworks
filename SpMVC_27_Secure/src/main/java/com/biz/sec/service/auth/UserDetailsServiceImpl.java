@@ -1,4 +1,4 @@
-package com.biz.sec.service;
+package com.biz.sec.service.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.biz.sec.domain.AuthorityVO;
 import com.biz.sec.domain.UserDetailsVO;
-import com.biz.sec.domain.UserVO;
 import com.biz.sec.persistence.AuthoritiesDao;
 import com.biz.sec.persistence.UserDao;
 
@@ -23,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 // Spring Security 여러 곳에서 사용할 수 있도록 VO에 연동하는 메소드
 // Spring Security의 UserDetailsService 인터페이스(또는 abstract 메소드)를 implements 하여 가져와서 커스터마이징
 @RequiredArgsConstructor
-@Service
+@Service("userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	/*
@@ -42,24 +41,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// DB로부터 사용자 정보 가져오기
-		UserVO userVO = userDao.findByUserName(username);
+		// UserVO userVO = userDao.findByUserName(username);
 		
 		// spring security가 사용할 UserDetails를 implements한 VO 선언
-		UserDetailsVO userDetails = new UserDetailsVO();
+		// UserDetailsVO userDetails = new UserDetailsVO();
+		UserDetailsVO userDetails = userDao.findByUserName(username);
 		
-		/*
-		userDetails.setUsername(userVO.getUsername());
-		userDetails.setPassword(userVO.getPassword());
+		
+		// userDetails.setUsername(userVO.getUsername());
+		// userDetails.setPassword(userVO.getPassword());
 		userDetails.setEnabled(true);
 		
 		// 사용자 정보를 사용할 수 있는지 아닌지를 세밀하게 제어하기 위한 칼럼들
 		userDetails.setAccountNonExpired(true);//유저 정보가 만료되지 않았는지
 		userDetails.setAccountNonLocked(true);//유저 정보가 잠기지 않았는지
 		userDetails.setCredentialsNonExpired(true);//자격이 만료되지 않았는지
-		userDetails.setAuthorities(this.getAuthorities(username));
-		*/
+		userDetails.setAuthorities(this.getAuthoritiesCS(username));
+		
+		userDetails.setEmail("n@n");
+		userDetails.setPhone("010-0000-0000");
+		userDetails.setAddress("지구");
+		
 		
 		// builder pattern 이용
+		/*
 		userDetails = UserDetailsVO.builder()
 							.username(userVO.getUsername())
 							.password(userVO.getPassword())
@@ -69,7 +74,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 							.credentialsNonExpired(true)
 							.authorities(this.getAuthoritiesCS(username))
 							.build();
-							
+		*/				
 		
 		return userDetails;
 	}

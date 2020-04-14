@@ -6,6 +6,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security-5.2.xsd">
+	
+	<!-- spring security exception message 커스터마이징 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<!-- path 뒤의 .properties는 뺴줘야한다 -->
+				<value>/WEB-INF/spring/properties/spring-security.message.ko</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 		
 	<!-- Spring Security 프로젝트의 핵심 context 파일 -->
 	<!-- 여기에 Security 설정과 관련된 내용을 작성한다 -->
@@ -18,24 +29,17 @@
 		<constructor-arg index="0" value="4" />
 	</bean>
 	
-	<!-- login을 수행할 때 user DB로부터 사용자 정보 가져오기 설정 -->
+	<!-- login을 수행할 때 user DB로부터 사용자 정보 가져오기 설정(기본형) 
 	<bean id="secureDao" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
 		<property name="dataSource" ref="authDB"/>
 		<property name="usersByUsernameQuery">
 			<value>
-				SELECT username, password, enabled
-				FROM users WHERE username=?
+				SELECT user_name AS username, user_pass AS password, enabled
+				FROM tbl_users
+				WHERE user_name=?
 			</value>
 		</property>
-		<!--
-		임의로 테이블 만들어서 사용하기
-		<property name="usersByUsernameQuery">
-			<value>
-				SELECT user_name AS username, user_pass AS password, enable
-				FROM tbl_users WHERE username=?
-			</value>
-		</property>
-		-->
+		
 		<property name="authoritiesByUsernameQuery">
 			<value>
 				SELECT username, authority
@@ -44,13 +48,24 @@
 			</value>
 		</property>
 	</bean>
+	-->
+	
+	<context:component-scan base-package="com.biz.sec.service.auth"/>
+	<bean id="authProvider" class="com.biz.sec.service.auth.AuthProviderImpl">
+	</bean>
 	
 	<!-- 사용자 login을 검증하는 부분 -->
+	<security:authentication-manager>
+		<security:authentication-provider ref="authProvider"/>
+	</security:authentication-manager>
+	
+	<!-- 사용자 login을 검증하는 부분(기본형) 
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="secureDao">
 			<security:password-encoder ref="passwordEncoder"/>
 		</security:authentication-provider>
 	</security:authentication-manager>
+	-->
 	
 	<!--
 		사용자 인증을 할 때 우리가 만든 login form과 연동하기 위한 설정
@@ -88,11 +103,15 @@
 		
 		<security:intercept-url
 			pattern="/admin/**"
-			access="hasRole('admin')" />
+			access="hasRole('ADMIN')" />
 			
 		<security:intercept-url
 			pattern="/user/mypage"
-			access="hasAnyRole('admin','user')" />
+			access="hasAnyRole('ADMIN','USER')" />
+			
+		<security:intercept-url
+			pattern="/user/password"
+			access="hasAnyRole('ADMIN','USER')" />
 			
 		<security:intercept-url
 			pattern="/user/**"
@@ -108,9 +127,17 @@
 			default-target-url=""
 			username-parameter="username"
 			password-parameter="password" />
-		<security:logout
-			logout-url="/logout"
+			
+		<!--
+			logout 시 반드시
 			invalidate-session="true"
+			delete-cookies="true"로 설정한다
+			delete-cookies="true"로 설정하지 않으면 웹브라우저에 저장된 쿠키를 탈취당하여 서버 공격에 사용될 수 있다
+		-->
+		<security:logout
+			logout-url="/user/logout"
+			invalidate-session="true"
+			delete-cookies="true"
 			logout-success-url="" />
 	</security:http>
 

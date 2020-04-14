@@ -15,6 +15,5 @@
 		<property name="mapperLocations" value="/WEB-INF/spring/mapper/*-mapper.xml" />
 	</bean>
 	
-	<tx:annotation-driven/>
 	<mybatis-spring:scan base-package="com.biz.sec.persistence"/>
 </beans>

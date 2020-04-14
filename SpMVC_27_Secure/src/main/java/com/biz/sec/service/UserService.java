@@ -1,19 +1,15 @@
 package com.biz.sec.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.biz.sec.domain.UserDetailsVO;
 import com.biz.sec.domain.UserVO;
 import com.biz.sec.persistence.UserDao;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class UserService {
 	
@@ -23,6 +19,33 @@ public class UserService {
 	private final PasswordEncoder pwEncoder;
 	private final UserDao userDao;
 	
+	public UserService(PasswordEncoder pwEncoder, UserDao userDao) {
+		super();
+		this.pwEncoder = pwEncoder;
+		this.userDao = userDao;
+		
+		String create_user_table = "CREATE TABLE IF NOT EXISTS tbl_users ( " + 
+				" id BIGINT PRIMARY KEY AUTO_INCREMENT, " + 
+				" user_name VARCHAR(50) UNIQUE, " + 
+				" user_pass VARCHAR(125), " + 
+				" enabled BOOLEAN default true, " +
+				" email VARCHAR(50), " +
+				" phone VARCHAR(20), " +
+				" address VARCHAR(125) " +
+				" ) "
+				;
+		
+		String create_auth_table = "CREATE TABLE IF NOT EXISTS authorities ( " + 
+				" id BIGINT PRIMARY KEY AUTO_INCREMENT, " + 
+				" username VARCHAR(50), " + 
+				" authority VARCHAR(50) " + 
+				" ) "
+				;
+		
+		userDao.create_table(create_user_table);
+		userDao.create_table(create_auth_table);
+	}
+
 	/**
 	 * @since 2020-04-09
 	 * @author 나
@@ -43,7 +66,7 @@ public class UserService {
 		String encPW = pwEncoder.encode(password);
 		log.debug("암호화된 비밀번호 : " + encPW);
 		
-		UserVO userVO = UserVO.builder()
+		UserDetailsVO userVO = UserDetailsVO.builder()
 							.username(username)
 							.password(encPW)
 							.build();
@@ -53,9 +76,20 @@ public class UserService {
 		return ret;
 	}
 
-	public UserVO findByUserName(String username) {
+	public UserDetailsVO findByUserName(String username) {
 		return userDao.findByUserName(username);
-		
+	}
+	
+	public UserDetailsVO findByUsernameAuthorities(String username) {
+		return userDao.findByUsernameAuthorities(username);
+	}
+
+	public UserDetailsVO findById(long id) {
+		return userDao.findById(id);
+	}
+
+	public int update(UserDetailsVO userVO) {
+		return userDao.update(userVO);
 	}
 
 }

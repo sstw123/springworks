@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 // DB와 연동해서 순수한 CRUD를 수행하는 클래스
+// 이 프로젝트에선 사용하지 않는다
 @Getter
 @Setter
 @NoArgsConstructor

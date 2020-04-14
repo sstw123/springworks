@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="/WEB-INF/views/include/include_head.jsp" %>
+	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
 		:root {
 			--bg-color-input: rgba(0, 0, 0, 0.05);
@@ -27,8 +29,6 @@
 		form {
 			display: flex;
 			flex-direction: column;
-			width: 95%;
-			height: 95%;
 			margin: 0 auto;
 			
 		}
@@ -42,6 +42,7 @@
 		}
 		
 		.form_item input {
+			box-sizing: border-box;
 			display: block;
 			width: 100%;
 			background-color: var(--bg-color-input);
@@ -52,9 +53,10 @@
 		}
 		.btn_box {
 			display: flex;
-			justify-content: center;
+			justify-content: space-around;
 		}
 		.btn_box button {
+			flex: 1;
 			margin: 20px;
 			padding: 10px;
 			border: none;
@@ -77,8 +79,15 @@
 	</script>
 </head>
 <body>
-	<form action="${rootPath}/user/login" method="post" autocomplete="off">
+	<!-- Spring Security는 보통 Spring Form 태그와 연계하여 사용한다 -->
+	<form:form class="login_form" action="${rootPath}/login" method="post" autocomplete="off">
 		<h2>로그인</h2>
+		
+		<div>
+			<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
+				<span>${SPRING_SECURITY_LAST_EXCEPTION.message}</span>
+			</c:if>
+		</div>
 		
 		<div class="form_item_label">
 			<label for="username">ID</label>
@@ -100,6 +109,6 @@
 			<button class="login">로그인</button>
 			<button class="join" type="button">회원가입</button>
 		</div>
-	</form>
+	</form:form>
 </body>
 </html>

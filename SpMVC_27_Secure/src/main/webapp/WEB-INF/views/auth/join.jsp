@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="/WEB-INF/views/include/include_head.jsp" %>
+	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
 		:root {
 			--bg-color-input: rgba(0, 0, 0, 0.05);
