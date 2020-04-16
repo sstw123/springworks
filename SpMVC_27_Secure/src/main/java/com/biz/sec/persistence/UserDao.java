@@ -16,7 +16,9 @@ public interface UserDao {
 	public void create_table(String create_table);
 	
 	// VO는 username으로 설계해놓았기 때문에 AS를 이용해서 DB 테이블의 user_name과 매핑될 수 있도록 설정해준다 
-	@Select("SELECT user_name AS username, "
+	@Select("SELECT"
+			+ " id, "
+			+ " user_name AS username, "
 			+ " user_pass AS password, "
 			+ " enabled, "
 			+ " email, phone, address "
@@ -27,6 +29,8 @@ public interface UserDao {
 	
 	public int insert(UserDetailsVO userVO);
 	
-	public int update(UserDetailsVO userVO);
+	public int updateInfo(UserDetailsVO userVO);
+
+	public int updatePW(UserDetailsVO userVO);
 
 }

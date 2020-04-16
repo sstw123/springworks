@@ -38,18 +38,18 @@ public class AuthProviderImpl implements AuthenticationProvider {
 		String password = authentication.getCredentials().toString();
 		
 		// Service -> Dao를 통해서 DB로부터 사용자 정보 가져오기
-		UserDetailsVO user = (UserDetailsVO) userDetailsSvc.loadUserByUsername(username);
-		if( !passwordEncoder.matches(password, user.getPassword()) ) {
+		UserDetailsVO userDetails = (UserDetailsVO) userDetailsSvc.loadUserByUsername(username);
+		if( !passwordEncoder.matches(password, userDetails.getPassword()) ) {
 			throw new BadCredentialsException("비밀번호 오류");
 		}
 		
 		// enabled가 false = username이 정지된 아이디일 경우
-		if(!user.isEnabled()) {
+		if(!userDetails.isEnabled()) {
 			throw new BadCredentialsException("사용 정지된 ID 입니다");
 		}
 		
 		// UserDetailsService에서 보내준 사용자 정보를 Controller로 보내기
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 		return token;
 	}
 

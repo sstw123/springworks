@@ -3,7 +3,7 @@
 
 <mapper namespace="com.biz.sec.persistence.UserDao">
 
-	<select id="findById" resultMap="userAndAuthorities">
+	<select id="findById" resultMap="userAndAuthoritiesRM">
 		SELECT
 			id,
 			user_name AS username,
@@ -16,7 +16,7 @@
 		WHERE id = #{id}
 	</select>
 	
-	<resultMap type="userDetailsVO" id="userAndAuthorities">
+	<resultMap id="userAndAuthoritiesRM" type="userDetailsVO">
 		<id column="id" property="id" />
 		<result column="username" property="username" />
 		<collection property="authorities" column="username" ofType="authorityVO" select="findByUsernameAuthorities">
@@ -45,16 +45,21 @@
 		);
 	</insert>
 	
-	<update id="update">
-	
+	<update id="updateInfo">
 		UPDATE `tbl_users`
 		SET
-		`user_name` = #{username},
-		`user_pass` = #{password},
-		`enabled` = #{enabled}
+		`enabled` = #{enabled},
+		`email` = #{email},
+		`phone` = #{phone},
+		`address` = #{address}
 		WHERE `id` = #{id};
-				
+	</update>
 	
+	<update id="updatePW">
+		UPDATE `tbl_users`
+		SET
+		`user_pass` = #{password}
+		WHERE `id` = #{id};
 	</update>
 	
 </mapper>

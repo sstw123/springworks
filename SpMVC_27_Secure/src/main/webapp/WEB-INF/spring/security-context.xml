@@ -29,7 +29,7 @@
 		<constructor-arg index="0" value="4" />
 	</bean>
 	
-	<!-- login을 수행할 때 user DB로부터 사용자 정보 가져오기 설정(기본형) 
+	<!-- login을 수행할 때 user DB로부터 사용자 정보 가져오기 설정(커스터마이징 하지 않고 사용할 때의 기본형) 
 	<bean id="secureDao" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
 		<property name="dataSource" ref="authDB"/>
 		<property name="usersByUsernameQuery">
@@ -135,10 +135,10 @@
 			delete-cookies="true"로 설정하지 않으면 웹브라우저에 저장된 쿠키를 탈취당하여 서버 공격에 사용될 수 있다
 		-->
 		<security:logout
-			logout-url="/user/logout"
+			logout-url="/logout"
 			invalidate-session="true"
 			delete-cookies="true"
-			logout-success-url="" />
+			logout-success-url="/" />
 	</security:http>
 
 </beans>

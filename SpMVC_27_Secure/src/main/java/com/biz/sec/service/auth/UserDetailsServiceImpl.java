@@ -46,6 +46,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		// spring security가 사용할 UserDetails를 implements한 VO 선언
 		// UserDetailsVO userDetails = new UserDetailsVO();
 		UserDetailsVO userDetails = userDao.findByUserName(username);
+		if(userDetails == null) {
+			throw new UsernameNotFoundException("Username이 없습니다");
+		}
 		
 		
 		// userDetails.setUsername(userVO.getUsername());

@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /** Spring Security와 연동하여 회원정보를 관리하기 위한 UserDetailsVO는 일반적으로 단독으로 작성하지 않고
  UserDetails라는 인터페이스를 implements하여 작성한다
@@ -29,6 +30,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class UserDetailsVO implements UserDetails {
 

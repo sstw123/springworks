@@ -2,6 +2,9 @@ package com.biz.sec.controller;
 
 import java.security.Principal;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +63,36 @@ public class UserController {
 		return ret;
 	}
 	
+	@RequestMapping(value="/pwcheck", method=RequestMethod.GET)
+	public String pw_check() {
+		
+		return "user/pw_check";
+	}
+	
+	@RequestMapping(value="/pwcheck", method=RequestMethod.POST)
+	public String pw_check(String password) {
+		boolean ret =  userSvc.pw_check(password);
+		
+		String page = "";
+		if(ret) {
+			page = "user/pw_change";
+		} else {
+			page = "user/pw_check_false";
+		}
+		return page;
+	}
+	
+	@RequestMapping(value="/pwchange", method=RequestMethod.POST)
+	public String pw_change(String password, String re_password) {
+		if(password.isEmpty() || re_password.isEmpty() || password != re_password) {
+			return "user/pw_change_false";
+		}
+		
+		userSvc.pw_change(password);
+		
+		return "redirect:/";
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "", method=RequestMethod.GET)
 	public String user() {
@@ -68,25 +101,48 @@ public class UserController {
 	
 	@RequestMapping(value = "/mypage", method=RequestMethod.GET)
 	public String mypage(Principal principal, Model model) {
+		UsernamePasswordAuthenticationToken upaToken = (UsernamePasswordAuthenticationToken) principal;
+		UserDetailsVO loginVO = (UserDetailsVO) upaToken.getPrincipal();
+		loginVO.setAuthorities(upaToken.getAuthorities());
 		
 		model.addAttribute("BODY", "MYPAGE");
-		model.addAttribute("prcp", principal);
+		model.addAttribute("loginVO", loginVO);
 		
 		return "home";
 	}
 	
 	@RequestMapping(value = "/mypage", method=RequestMethod.POST)
-	public String mypage(UserDetailsVO userVO, Principal principal) {
+	public String mypage(UserDetailsVO userVO, String[] auth) {
 		
-		UserDetailsVO tempVO = (UserDetailsVO) principal;
+		/*
+		 * 아래 코드는 Security Session 정보가 저장된 메모리(Principal)에 직접 접근하여 수정하는 방법이다
+		 * 코드는 쉬워지지만 보안에 굉장히 위험할 수 있으므로 principal을 수정하는 방법은 사용하지 않는다
+		// 현재 로그인 된 사용자 정보 VO로 가져오기
+		UsernamePasswordAuthenticationToken upaToken = (UsernamePasswordAuthenticationToken) principal;
+		UserDetailsVO loginVO = (UserDetailsVO) upaToken.getPrincipal();
 		
-		long id = tempVO.getId();
+		// form에서 입력받은 값 저장 후 update 메소드로 VO 보내기
+		loginVO.setEmail(userVO.getEmail());
+		loginVO.setPhone(userVO.getPhone());
+		loginVO.setAddress(userVO.getAddress());
+		*/
 		
-		userVO.setId(id);
+		int ret= userSvc.updateInfo(userVO, auth);
 		
-		int ret= userSvc.update(userVO);
+		return "redirect:/user/mypage";
+	}
+	
+	@RequestMapping(value = "/mypage1", method=RequestMethod.GET)
+	public String mypage1(Model model) {
 		
-		return "redirect:/mypage";
+		// 로그인한 사용자 정보
+		UserDetailsVO userVO = (UserDetailsVO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		// 권한(ROLE) 리스트 추출하여 userVO에 setting
+		userVO.setAuthorities(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+		
+		model.addAttribute("userVO", userVO);
+		return "user/mypage";
 	}
 	
 	@RequestMapping(value = "/logout", method=RequestMethod.GET)

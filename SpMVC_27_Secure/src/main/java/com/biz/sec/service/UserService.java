@@ -1,10 +1,21 @@
 package com.biz.sec.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.biz.sec.domain.AuthorityVO;
 import com.biz.sec.domain.UserDetailsVO;
-import com.biz.sec.domain.UserVO;
+import com.biz.sec.persistence.AuthoritiesDao;
 import com.biz.sec.persistence.UserDao;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +29,13 @@ public class UserService {
 	//@Autowired
 	private final PasswordEncoder pwEncoder;
 	private final UserDao userDao;
+	private final AuthoritiesDao authDao;
 	
-	public UserService(PasswordEncoder pwEncoder, UserDao userDao) {
+	public UserService(PasswordEncoder pwEncoder, UserDao userDao, AuthoritiesDao authDao) {
 		super();
 		this.pwEncoder = pwEncoder;
 		this.userDao = userDao;
+		this.authDao = authDao;
 		
 		String create_user_table = "CREATE TABLE IF NOT EXISTS tbl_users ( " + 
 				" id BIGINT PRIMARY KEY AUTO_INCREMENT, " + 
@@ -60,11 +73,15 @@ public class UserService {
 	 * Map<String, String> 타입의 VO 데이터를
 	 * UserVO 타입으로 변경
 	 */
+	
+	// @Transactional
+	// 여러 쿼리를 한번에 실행할 때 하나라도 오류가 나면
+	// 여러 쿼리가 들어있는 메소드 실행 전 상태로 롤백
+	@Transactional
 	public int insert(String username, String password) {
 		
 		// 회원가입 form에서 전달받은 password 값을 암호화 시키는 과정
 		String encPW = pwEncoder.encode(password);
-		log.debug("암호화된 비밀번호 : " + encPW);
 		
 		UserDetailsVO userVO = UserDetailsVO.builder()
 							.username(username)
@@ -72,6 +89,11 @@ public class UserService {
 							.build();
 		
 		int ret = userDao.insert(userVO);
+		
+		List<AuthorityVO> authList = new ArrayList();
+		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
+		authDao.insert(authList);
 		
 		return ret;
 	}
@@ -87,9 +109,76 @@ public class UserService {
 	public UserDetailsVO findById(long id) {
 		return userDao.findById(id);
 	}
+	
+	public boolean pw_check(String password) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		String loginPW = userDao.findByUserName(username).getPassword();
+		// 현재 로그인한 사용자의 암호화된 비밀번호와 입력된 password와 비교
+		boolean ret = pwEncoder.matches(password, loginPW);
+		
+		return ret;
+	}
+	
+	@Transactional
+	public int updateInfo(UserDetailsVO userVO, String[] authList) {
+		Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsVO loginUserVO = (UserDetailsVO) oldAuth.getPrincipal();
+		
+		log.debug("------------------ loginUserVO : {}", loginUserVO.toString());
+		loginUserVO.setEmail(userVO.getEmail());
+		loginUserVO.setPhone(userVO.getPhone());
+		loginUserVO.setAddress(userVO.getAddress());
+		
+		int ret = userDao.updateInfo(loginUserVO);
+		
+		// DB update 성공시 로그인 된 session 정보 update		
+		if(ret > 0) {
+			// ret = authDao.update( new ArrayList( Arrays.asList(authList) ) );
+			List<AuthorityVO> authCollection = new ArrayList<AuthorityVO>();
+			for(String auth : authList) {
+				if(!auth.isEmpty()) {
+					AuthorityVO authVO = AuthorityVO.builder()
+										.username(loginUserVO.getUsername())
+										.authority(auth)
+										.build();
+					
+					authCollection.add(authVO);
+				}
+			}
+			authDao.delete(loginUserVO.getUsername());
+			authDao.insert(authCollection);
+			
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(loginUserVO, oldAuth.getCredentials(), this.getAuthoritiesCS(authList));
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
+		}
+		
+		return ret;
+	}
+	
+	public int updatePW(UserDetailsVO userVO) {
+		return userDao.updatePW(userVO);
+	}
 
-	public int update(UserDetailsVO userVO) {
-		return userDao.update(userVO);
+	public int pw_change(String password) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserDetailsVO userVO = userDao.findByUserName(username);
+		userVO.setPassword(password);
+		
+		return this.updatePW(userVO);
+	}
+	
+	private Collection<GrantedAuthority> getAuthoritiesCS(String[] authList) {
+		
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		
+		for(String auth : authList) {
+			if(!auth.isEmpty()) {
+				SimpleGrantedAuthority sAuth = new SimpleGrantedAuthority(auth);
+				authorities.add(sAuth);
+			}
+		}
+		
+		return authorities;
 	}
 
 }
