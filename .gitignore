@@ -132,6 +132,7 @@ mybatis-config.*
 NaverConfig.*
 DataGoConfig.*
 naver.email.secret.properties
+*-mail-context.xml
 
 naver_secret.*
 dataGoKr.*
