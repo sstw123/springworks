@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
-public class EncMain {
+public class NaverMailEnc {
 	
 	public static void main(String[] args) {
 		
@@ -21,19 +21,19 @@ public class EncMain {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.print("MySQL UserName >> ");
+		System.out.print("Naver Username >> ");
 		String username = scanner.nextLine();
 		
-		System.out.print("MySQL password >> ");
+		System.out.print("Naver Password >> ");
 		String password= scanner.nextLine();
 		
 		String encUserName = pbe.encrypt(username);
 		String encPassword = pbe.encrypt(username);
 		
-		String saveFile = "./src/main/webapp/WEB-INF/spring/db.connection.properties";
+		String saveFile = "./src/main/webapp/WEB-INF/spring/properties/naver.connection.properties";
 		
-		String saveUserName = String.format("mysql.username=ENC(%s)", encUserName);
-		String savePassword = String.format("mysql.password=ENC(%s)", encPassword);
+		String saveUserName = String.format("naver.username=ENC(%s)", encUserName);
+		String savePassword = String.format("naver.password=ENC(%s)", encPassword);
 		
 		try {
 			PrintWriter pw = new PrintWriter(saveFile);
@@ -48,7 +48,7 @@ public class EncMain {
 		
 		
 		scanner.close();
-		System.out.println("db.connection.properties 저장 완료!");
+		System.out.println("naver.connection.properties 저장 완료!");
 		
 		
 	}

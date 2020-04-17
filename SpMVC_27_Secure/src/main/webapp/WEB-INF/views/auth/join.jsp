@@ -171,7 +171,6 @@
 		
 		<div class="form_item btn_box">
 			<button id="btn-join" type="button">회원가입</button>
-			<button id="btn-find" type="button">ID/PW 찾기</button>
 		</div>
 	</form:form>
 </body>

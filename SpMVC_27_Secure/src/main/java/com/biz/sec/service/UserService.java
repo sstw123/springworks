@@ -119,52 +119,76 @@ public class UserService {
 		return ret;
 	}
 	
+	// 관리자가 다른 유저 정보 수정하기
 	@Transactional
 	public int updateInfo(UserDetailsVO userVO, String[] authList) {
-		Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
-		UserDetailsVO loginUserVO = (UserDetailsVO) oldAuth.getPrincipal();
+		UserDetailsVO dbUserVO = userDao.findByUserName(userVO.getUsername());
 		
-		log.debug("------------------ loginUserVO : {}", loginUserVO.toString());
-		loginUserVO.setEmail(userVO.getEmail());
-		loginUserVO.setPhone(userVO.getPhone());
-		loginUserVO.setAddress(userVO.getAddress());
+		dbUserVO.setEnabled(userVO.isEnabled());
+		dbUserVO.setEmail(userVO.getEmail());
+		dbUserVO.setPhone(userVO.getPhone());
+		dbUserVO.setAddress(userVO.getAddress());
 		
-		int ret = userDao.updateInfo(loginUserVO);
+		int ret = userDao.updateInfo(dbUserVO);
 		
-		// DB update 성공시 로그인 된 session 정보 update		
 		if(ret > 0) {
-			// ret = authDao.update( new ArrayList( Arrays.asList(authList) ) );
 			List<AuthorityVO> authCollection = new ArrayList<AuthorityVO>();
 			for(String auth : authList) {
+				//input에서 받은 auth 값이 비어있으면(""면) 무시함 
 				if(!auth.isEmpty()) {
 					AuthorityVO authVO = AuthorityVO.builder()
-										.username(loginUserVO.getUsername())
+										.username(dbUserVO.getUsername())
 										.authority(auth)
 										.build();
 					
 					authCollection.add(authVO);
 				}
 			}
-			authDao.delete(loginUserVO.getUsername());
+			authDao.delete(dbUserVO.getUsername());
 			authDao.insert(authCollection);
-			
-			Authentication newAuth = new UsernamePasswordAuthenticationToken(loginUserVO, oldAuth.getCredentials(), this.getAuthoritiesCS(authList));
+		}
+		
+		return ret;
+	}
+	
+	// 로그인 한 유저가 자기 정보 수정하기
+	@Transactional
+	public int updateInfo(UserDetailsVO userVO) {
+		Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsVO loginUserVO = (UserDetailsVO) oldAuth.getPrincipal();
+		
+		loginUserVO.setEmail(userVO.getEmail());
+		loginUserVO.setPhone(userVO.getPhone());
+		loginUserVO.setAddress(userVO.getAddress());
+		
+		int ret = userDao.updateInfo(loginUserVO);
+		if(ret > 0) {
+			// 업데이트 성공시, 전역으로 쓰는 SecurityContextHolder에 새로운 Authentication 업데이트 시켜주기
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(loginUserVO, oldAuth.getCredentials(), oldAuth.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(newAuth);
 		}
 		
 		return ret;
 	}
 	
+	public int pw_change(String password) {
+		// 패스워드에 아무것도 입력하지 않았다면 아무 일도 하지 않음
+		if(password.isEmpty()) {
+			return 0;
+		}
+		// 현재 사용자 이름 가져오기
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		// DB에서 사용자 이름으로 VO 정보 가져오기
+		UserDetailsVO userVO = userDao.findByUserName(username);
+		// userVO에 비밀번호 암호화해서 저장하기
+		userVO.setPassword(pwEncoder.encode(password));
+		
+		// DB에 username 기준으로 정보 update하기
+		return this.updatePW(userVO);
+	}
+	
 	public int updatePW(UserDetailsVO userVO) {
 		return userDao.updatePW(userVO);
-	}
-
-	public int pw_change(String password) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		UserDetailsVO userVO = userDao.findByUserName(username);
-		userVO.setPassword(password);
-		
-		return this.updatePW(userVO);
 	}
 	
 	private Collection<GrantedAuthority> getAuthoritiesCS(String[] authList) {
@@ -179,6 +203,15 @@ public class UserService {
 		}
 		
 		return authorities;
+	}
+	
+	// selectAll() 메소드는 2개의 테이블을 select하고 있다
+	// 이런 경우 1번 테이블의 데이터는 가져왔는데 2번 테이블을 가져오기 전
+	// 다른 사용자가 2번 테이블의 데이터를 수정할 수 있다
+	// @Transactional로 여기에 트랜잭션을 걸어주면 셀렉트할 때 다른 사용자가 select중인 테이블의 정보를 수정하지 못하도록 한다
+	@Transactional
+	public List<UserDetailsVO> selectAll() {
+		return userDao.selectAll();
 	}
 
 }

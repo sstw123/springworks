@@ -3,6 +3,19 @@
 
 <mapper namespace="com.biz.sec.persistence.UserDao">
 
+	<!-- VO는 username으로 설계해놓았기 때문에 AS를 이용해서 DB 테이블의 user_name과 매핑될 수 있도록 설정해준다 -->
+	<select id="selectAll" resultMap="userAndAuthoritiesRM">
+		SELECT
+			id,
+			user_name AS username,
+			user_pass AS password,
+			enabled,
+			email,
+			phone,
+			address
+		FROM tbl_users
+	</select>
+
 	<select id="findById" resultMap="userAndAuthoritiesRM">
 		SELECT
 			id,
@@ -14,6 +27,19 @@
 			address
 		FROM tbl_users
 		WHERE id = #{id}
+	</select>
+	
+	<select id="findByUserName" resultMap="userAndAuthoritiesRM">
+		SELECT
+			id,
+			user_name AS username,
+			user_pass AS password,
+			enabled,
+			email,
+			phone,
+			address
+		FROM tbl_users
+		WHERE user_name = #{username}
 	</select>
 	
 	<resultMap id="userAndAuthoritiesRM" type="userDetailsVO">
@@ -52,14 +78,14 @@
 		`email` = #{email},
 		`phone` = #{phone},
 		`address` = #{address}
-		WHERE `id` = #{id};
+		WHERE `user_name` = #{username};
 	</update>
 	
 	<update id="updatePW">
 		UPDATE `tbl_users`
 		SET
 		`user_pass` = #{password}
-		WHERE `id` = #{id};
+		WHERE `user_name` = #{username};
 	</update>
 	
 </mapper>

@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
-public class EncMain {
+public class MySQLEnc {
 	
 	public static void main(String[] args) {
 		
@@ -21,10 +21,10 @@ public class EncMain {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.print("MySQL UserName >> ");
+		System.out.print("MySQL Username >> ");
 		String username = scanner.nextLine();
 		
-		System.out.print("MySQL password >> ");
+		System.out.print("MySQL Password >> ");
 		String password= scanner.nextLine();
 		
 		String encUserName = pbe.encrypt(username);

@@ -53,7 +53,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		// userDetails.setUsername(userVO.getUsername());
 		// userDetails.setPassword(userVO.getPassword());
-		userDetails.setEnabled(true);
+		// userDetails.setEnabled(true);
 		
 		// 사용자 정보를 사용할 수 있는지 아닌지를 세밀하게 제어하기 위한 칼럼들
 		userDetails.setAccountNonExpired(true);//유저 정보가 만료되지 않았는지
@@ -61,9 +61,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		userDetails.setCredentialsNonExpired(true);//자격이 만료되지 않았는지
 		userDetails.setAuthorities(this.getAuthoritiesCS(username));
 		
-		userDetails.setEmail("n@n");
-		userDetails.setPhone("010-0000-0000");
-		userDetails.setAddress("지구");
+//		userDetails.setEmail("n@n");
+//		userDetails.setPhone("010-0000-0000");
+//		userDetails.setAddress("지구");
 		
 		
 		// builder pattern 이용

@@ -127,7 +127,7 @@ public class UserController {
 		loginVO.setAddress(userVO.getAddress());
 		*/
 		
-		int ret= userSvc.updateInfo(userVO, auth);
+		int ret= userSvc.updateInfo(userVO);
 		
 		return "redirect:/user/mypage";
 	}

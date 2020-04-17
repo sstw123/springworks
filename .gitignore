@@ -133,6 +133,8 @@ NaverConfig.*
 DataGoConfig.*
 naver.email.secret.properties
 *-mail-context.xml
+db.connection.properties
+naver.connection.properties
 
 naver_secret.*
 dataGoKr.*

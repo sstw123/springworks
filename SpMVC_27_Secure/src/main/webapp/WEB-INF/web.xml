@@ -25,6 +25,7 @@
 			/WEB-INF/spring/root-context.xml
 			/WEB-INF/spring/db-auth-context.xml
 			/WEB-INF/spring/security-context.xml
+			/WEB-INF/spring/naver-mail-context.xml
 			/WEB-INF/spring/mybatis-context.xml
 		</param-value>
 	</context-param>
@@ -57,7 +58,7 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-		
+	
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
