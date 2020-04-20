@@ -39,7 +39,7 @@
 * 접근한 유저가 어떤 서비스, 어떤 페이지에 접근할 수 있는 권한 부여
 
 #### 권한(Role)
-* 인증(Authenticated)된 주체(User)가 어떤 페이지, 기능, 서비스에 접근할 수 있는 권한이 있다는 것을 보증, 증명
+* 인증(Authenticated)된 주체(User)가 어떤 페이지, 기능, 서비스에 접근할 수 있는 권한이 있다는 것을 보증
 
 #### 무결성, 보안
 * 무결성 파괴 : 인가된 사용자에 의해 손상될 수 있는 것들
@@ -72,3 +72,11 @@
 * `<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">`
 * 매번 form을 만들면서 코드를 추가하다 보면 빠트릴 수 있고 이러한 경우 해당 form의 데이터를 전송하면 서버는 수신을 거부하고 403 오류를 보낸다
 * 이러한 불편을 방지하기 위해 Spring Form Taglibs를 사용하여 `<form:form>`을 작성하면 Spring Security와 연동되어 POST 메소드의 경우 자동으로 _csrf 토큰을 form에 추가하여 보내준다
+
+### Email 인증 회원가입
+* 회원가입 시 username, password, email을 입력받고 email을 사용자에게 보낸 후 인증을 거쳐 회원가입 완료하기
+* 회원가입 화면을 username, password를 입력받는 화면과 email을 입력받는 화면으로 분리하여 email 인증 기능 구현
+* sessionAttributes, ModelAttribute를 활용하여 구현
+* sessionAttributes는 보통 vo 객체를 서버 메모리에 저장한 후 form 화면과 연동한다. 반드시 ModelAttribute가 동반되어 구현되어야 한다.
+* sessionAttributes에 등록된 ModelAttribute 객체는 서버 메모리에 데이터를 보관하고 있다가 form:form을 통해서 서버로 전달되는 param vo 객체를 받고,
+form:form에서 누락된 input 항목들이 있으면 메모리에 보관된 ModelAttribute vo에서 param vo 데이터를 완성하여 사용할 수 있도록 만들어준다

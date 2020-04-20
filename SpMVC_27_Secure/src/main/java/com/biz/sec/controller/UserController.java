@@ -108,7 +108,7 @@ public class UserController {
 		model.addAttribute("BODY", "MYPAGE");
 		model.addAttribute("loginVO", loginVO);
 		
-		return "home";
+		return "user/mypage";
 	}
 	
 	@RequestMapping(value = "/mypage", method=RequestMethod.POST)

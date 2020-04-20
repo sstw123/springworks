@@ -1,5 +1,6 @@
 package com.biz.sec.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.biz.sec.domain.AuthorityVO;
 import com.biz.sec.domain.UserDetailsVO;
 import com.biz.sec.persistence.AuthoritiesDao;
 import com.biz.sec.persistence.UserDao;
+import com.biz.sec.utils.PbeEncryptor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,12 +32,14 @@ public class UserService {
 	private final PasswordEncoder pwEncoder;
 	private final UserDao userDao;
 	private final AuthoritiesDao authDao;
+	private final MailSendService mailSvc;
 	
-	public UserService(PasswordEncoder pwEncoder, UserDao userDao, AuthoritiesDao authDao) {
+	public UserService(PasswordEncoder pwEncoder, UserDao userDao, AuthoritiesDao authDao, MailSendService mailSvc) {
 		super();
 		this.pwEncoder = pwEncoder;
 		this.userDao = userDao;
 		this.authDao = authDao;
+		this.mailSvc = mailSvc;
 		
 		String create_user_table = "CREATE TABLE IF NOT EXISTS tbl_users ( " + 
 				" id BIGINT PRIMARY KEY AUTO_INCREMENT, " + 
@@ -90,7 +94,7 @@ public class UserService {
 		
 		int ret = userDao.insert(userVO);
 		
-		List<AuthorityVO> authList = new ArrayList();
+		List<AuthorityVO> authList = new ArrayList<>();
 		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
 		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
 		authDao.insert(authList);
@@ -212,6 +216,61 @@ public class UserService {
 	@Transactional
 	public List<UserDetailsVO> selectAll() {
 		return userDao.selectAll();
+	}
+	
+	/**
+	 * @since 2020-04-20
+	 * @author me
+	 * 새로운 회원가입 메소드(userVO로 가입, 기존은 아이디와 패스워드로 가입)
+	 * email 인증을 거쳐 가입할 것이므로 userVO를 파라미터로 받아서 enabled를 false로 만들고
+	 * role 정보는 업데이트하지 않는다
+	 * 이후 이메일 인증이 오면 enabled와 role 정보를 설정한다
+	 * @param userVO
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 */
+	// 두 개 이상의 쿼리 => @Transactional
+	@Transactional
+	public int insert(UserDetailsVO userVO) {
+		// 이메일 인증 전, 활성화 되지 않은 사용자로 세팅하기
+		userVO.setEnabled(false);
+		userVO.setAuthorities(null);
+		
+		String encPW = pwEncoder.encode(userVO.getPassword());
+		userVO.setPassword(encPW);
+		
+		try {
+			mailSvc.join_send(userVO);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//String ret = mailSvc.join_send(userVO);
+		
+		//int ret = userDao.insert(userVO);
+		return 0;
+	}
+	
+	@Transactional
+	public boolean email_valid(String username, String email) {
+		String plainUsername = PbeEncryptor.decrypt(username);
+		UserDetailsVO userVO = userDao.findByUserName(plainUsername);
+		
+		String plainEmail = PbeEncryptor.decrypt(username);
+		if(plainEmail.equalsIgnoreCase(userVO.getEmail())) {
+			userVO.setEnabled(true);
+			userDao.updateInfo(userVO);
+			
+			List<AuthorityVO> authList = new ArrayList<>();
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
+			authDao.insert(authList);
+			
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 
 }

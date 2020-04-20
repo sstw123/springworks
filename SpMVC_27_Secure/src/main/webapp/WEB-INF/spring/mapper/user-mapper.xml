@@ -63,11 +63,17 @@
 		INSERT INTO `tbl_users` (
 			`user_name`,
 			`user_pass`,
-			`enabled`
+			`enabled`,
+			email,
+			phone,
+			address
 		) VALUES (
 			#{username},
 			#{password},
-			true
+			#{enabled},
+			#{email},
+			#{phone},
+			#{address}
 		);
 	</insert>
 	
@@ -78,14 +84,14 @@
 		`email` = #{email},
 		`phone` = #{phone},
 		`address` = #{address}
-		WHERE `user_name` = #{username};
+		WHERE `user_name` = #{username}
 	</update>
 	
 	<update id="updatePW">
 		UPDATE `tbl_users`
 		SET
 		`user_pass` = #{password}
-		WHERE `user_name` = #{username};
+		WHERE `user_name` = #{username}
 	</update>
 	
 </mapper>

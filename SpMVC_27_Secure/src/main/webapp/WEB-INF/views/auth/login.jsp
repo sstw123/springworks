@@ -15,21 +15,13 @@
 			--color-text-label: #18181b;
 		}
 		
-		* {
-			margin: 0;
-			padding: 0;
-		}
-		
-		body {
-			width: 420px;
-			height: 445px;
-			margin: 0 auto;
-		}
-		
 		form {
 			display: flex;
 			flex-direction: column;
+			width: 420px;
+			height: 445px;
 			margin: 0 auto;
+			margin-top: 60px;
 			
 		}
 		form h2 {
@@ -73,12 +65,13 @@
 	<script>
 		$(function() {
 			$(document).on("click", "button.join", function() {
-				document.location.href = "${rootPath}/user/join"
+				document.location.href = "${rootPath}/join"
 			})
 		})
 	</script>
 </head>
 <body>
+	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	<!-- Spring Security는 보통 Spring Form 태그와 연계하여 사용한다 -->
 	<form:form class="login_form" action="${rootPath}/login" method="post" autocomplete="off">
 		<h2>로그인</h2>

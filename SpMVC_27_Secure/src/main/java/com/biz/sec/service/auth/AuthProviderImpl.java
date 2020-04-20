@@ -31,7 +31,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		
-		// spring form:form에서 전송한 메시지는 authentication에 담겨져서 여기로 온다
+		// spring에서 로그인 페이지로 설정한 페이지의 form에서 전송한 메시지는 authentication에 담겨져서 여기로 온다
 		
 		// authentication으로부터 로그인 폼에서 보낸 username과 password 추출
 		String username = authentication.getPrincipal().toString();
@@ -43,9 +43,9 @@ public class AuthProviderImpl implements AuthenticationProvider {
 			throw new BadCredentialsException("비밀번호 오류");
 		}
 		
-		// enabled가 false = username이 정지된 아이디일 경우
+		// enabled가 false 상태인 아이디일 경우
 		if(!userDetails.isEnabled()) {
-			throw new BadCredentialsException("사용 정지된 ID 입니다");
+			throw new BadCredentialsException("이메일 인증을 완료해주세요");
 		}
 		
 		// UserDetailsService에서 보내준 사용자 정보를 Controller로 보내기

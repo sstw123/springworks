@@ -15,24 +15,13 @@
 			--color-text-label: #18181b;
 		}
 		
-		* {
-			margin: 0;
-			padding: 0;
-		}
-		
-		body {
-			width: 420px;
-			height: 445px;
-			margin: 0 auto;
-		}
-		
 		form {
 			display: flex;
 			flex-direction: column;
-			width: 95%;
-			height: 95%;
+			width: 420px;
+			height: 445px;
 			margin: 0 auto;
-			
+			margin-top: 60px;
 		}
 		form h2 {
 			align-self: center;
@@ -136,21 +125,22 @@
 	</script>
 </head>
 <body>
-	<form:form class="join-form" action="${rootPath}/user/join" method="post" autocomplete="off">
+	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	<form:form class="join-form" action="${rootPath}/join/email" method="post" autocomplete="off">
 		<h2>회원가입</h2>
 		<!--
 		<input name="${_csrf.parameterName}" value="${_csrf.token}">
-		 -->
+		-->
+		
+		<div id="m_username" class="message">
+		</div>
 		 
 		<div class="form_item_label">
 			<label for="username">ID</label>
 		</div>
 		
-		<div id="m_username" class="message">
-		</div>
-		
 		<div class="form_item">
-			<input id="username" name="username" />
+			<input id="username" name="username"/>
 		</div>
 		
 		<div class="form_item_label">
@@ -158,7 +148,7 @@
 		</div>
 		
 		<div class="form_item">
-			<input id="password" name="password" type="password" >
+			<input id="password" name="password" type="password" />
 		</div>
 		
 		<div class="form_item_label">
