@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MailSendService {
 	
 	private final JavaMailSender javaMailSender;
-	private final String from_email = "sianblone@gmail.com";
+	private final String from_email = "slice20@naver.com";
 	
 	public MailSendService(@Qualifier("naverMailHandler") JavaMailSender javaMailSender) {
 		super();

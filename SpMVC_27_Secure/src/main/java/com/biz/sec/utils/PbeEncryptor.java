@@ -7,8 +7,8 @@ public class PbeEncryptor {
 	
 	static {
 		pbeEnc = new StandardPBEStringEncryptor();
-		// 암호화를 하기 위한 salt값 : BIZ.COM 환경변수 이용
-		String salt = System.getenv("BIZ.COM");
+		// 암호화를 하기 위한 salt값 : ENV_PASS 환경변수 이용
+		String salt = System.getenv("ENV_PASS");
 		pbeEnc.setPassword(salt);
 		// 알고리즘 설정
 		pbeEnc.setAlgorithm("PBEWithMD5AndDES");

@@ -13,7 +13,7 @@
 	<!-- 서버, 컴퓨터에 설정된 환경변수 값을 읽어서 salt로 사용할 수 있도록 만들어주는 클래스 -->
 	<bean id="envConfig" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
 		<property name="algorithm" value="PBEWithMD5AndDES" />
-		<property name="passwordEnvName" value="BIZ.COM" />
+		<property name="passwordEnvName" value="ENV_PASS" />
 	</bean>
 	
 	<!-- jasypt의 Standard..Encryptor 클래스가 db.connection.properties 파일의 암호화된 문자열을 읽어서 복호화한 후 -->
