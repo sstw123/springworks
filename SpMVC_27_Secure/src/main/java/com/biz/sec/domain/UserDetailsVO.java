@@ -15,7 +15,7 @@ import lombok.ToString;
 /** Spring Security와 연동하여 회원정보를 관리하기 위한 UserDetailsVO는 일반적으로 단독으로 작성하지 않고
  UserDetails라는 인터페이스를 implements하여 작성한다
  
- @update 2020-04-10
+ @since 2020-04-10
  User 클래스를 extends 하여 만들었던 UserVO를
  UserDetails 인터페이스를 implements 한 UserDetailsVO로 변경
  

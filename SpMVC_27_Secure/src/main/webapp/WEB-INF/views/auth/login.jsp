@@ -8,14 +8,9 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		:root {
-			--bg-color-input: rgba(0, 0, 0, 0.05);
-			--border-width-input: 2px;
-			--border-color-input: rgba(0, 0, 0, 0.05);
-			--color-text-label: #18181b;
-		}
 		
-		form {
+		
+		.login_form {
 			display: flex;
 			flex-direction: column;
 			width: 420px;
@@ -24,7 +19,7 @@
 			margin-top: 60px;
 			
 		}
-		form h2 {
+		.login_form h2 {
 			align-self: center;
 		}
 		
@@ -41,7 +36,7 @@
 			/* border: var(--border-width-input) solid var(--border-color-input); */
 			border: none;
 			line-height: 1.5;
-			padding: 0.5rem 1rem;
+			margin-bottom: 10px;
 		}
 		.btn_box {
 			display: flex;
@@ -52,11 +47,12 @@
 			margin: 20px;
 			padding: 10px;
 			border: none;
-			background-color: silver;
+			background-color: var(--bg-color-button);
+			color: var(--color-button);
 			cursor: pointer;
 		}
 		.btn_box button:hover {
-			background-color: rgba(0, 0, 0, 0.4);
+			background-color: var(--bg-color-button-hover);
 		}
 		
 		

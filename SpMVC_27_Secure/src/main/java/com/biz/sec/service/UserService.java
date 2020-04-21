@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,9 +74,8 @@ public class UserService {
 	 * 
 	 * 회원가입 시 비밀번호를 암호화한 뒤 DB에 insert하기
 	 * 
-	 * @update 2020-04-10
-	 * Map<String, String> 타입의 VO 데이터를
-	 * UserVO 타입으로 변경
+	 * @since 2020-04-10
+	 * Map 타입의 VO 데이터를 UserVO 타입으로 변경
 	 */
 	
 	// @Transactional
@@ -227,7 +227,6 @@ public class UserService {
 	 * 이후 이메일 인증이 오면 enabled와 role 정보를 설정한다
 	 * @param userVO
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 */
 	// 두 개 이상의 쿼리 => @Transactional
 	@Transactional
@@ -245,10 +244,9 @@ public class UserService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//String ret = mailSvc.join_send(userVO);
 		
-		//int ret = userDao.insert(userVO);
-		return 0;
+		int ret = userDao.insert(userVO);
+		return ret;
 	}
 	
 	@Transactional
@@ -271,6 +269,54 @@ public class UserService {
 			return false;
 		}
 		
+	}
+
+	/**
+	 * @since 2020-04-21
+	 * 회원정보를 받아서 DB에 저장하고
+	 * 회원정보를 활성화할 수 있도록 하기 위해
+	 * 인증정보를 생성한 후
+	 * Controller로 Return
+	 * @param userVO
+	 * @return
+	 */
+	public String insert_getToken(UserDetailsVO userVO) {
+		// DB에 저장
+		userVO.setEnabled(false);
+		String encPassword = pwEncoder.encode(userVO.getPassword());
+		userVO.setPassword(encPassword);
+		int ret = userDao.insert(userVO);
+		
+		// UUID : 989bbfdd-ed54-430c-a20a-c348614e84be
+		// - 로 나누어진 부분중 처음 부분을 전부 대문자로 만들기
+		String email_token = UUID.randomUUID().toString().split("-")[0].toUpperCase();
+		
+		//Email 보내기
+		mailSvc.email_auth(userVO, email_token);
+		
+		// UUID 암호화
+		String enc_email_token = PbeEncryptor.encrypt(email_token);
+		return enc_email_token;
+	}
+
+	@Transactional
+	public boolean email_token_ok(String username, String secret_key, String secret_value) {
+		boolean bKey = PbeEncryptor.decrypt(secret_key).equalsIgnoreCase(secret_value);
+		if(bKey) {
+			String strUsername = PbeEncryptor.decrypt(username);
+			UserDetailsVO userVO = userDao.findByUserName(strUsername);
+			
+			userVO.setEnabled(true);
+			userDao.updateInfo(userVO);
+			authDao.delete(userVO.getUsername());
+			
+			List<AuthorityVO> authList = new ArrayList<>();
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
+			authDao.insert(authList);
+		}
+		
+		return bKey;
 	}
 
 }

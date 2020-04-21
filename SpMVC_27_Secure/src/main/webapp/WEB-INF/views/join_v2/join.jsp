@@ -8,14 +8,7 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		:root {
-			--bg-color-input: rgba(0, 0, 0, 0.05);
-			--border-width-input: 2px;
-			--border-color-input: rgba(0, 0, 0, 0.05);
-			--color-text-label: #18181b;
-		}
-		
-		form {
+		.join-form {
 			display: flex;
 			flex-direction: column;
 			width: 420px;
@@ -23,11 +16,13 @@
 			margin: 0 auto;
 			margin-top: 60px;
 		}
-		form h2 {
+		.join-form h2 {
 			align-self: center;
 		}
-		
-		.form_item_label {
+		.form_item {
+			margin-bottom: 10px;
+		}
+		.form_item label {
 			color: var(--color-text-label);
 			font-weight: 700;
 		}
@@ -39,25 +34,24 @@
 			/* border: var(--border-width-input) solid var(--border-color-input); */
 			border: none;
 			line-height: 1.5;
-			padding: 0.5rem 1rem;
 		}
 		.btn_box {
 			display: flex;
 			justify-content: center;
 		}
 		.btn_box button {
+			width: 80%;
 			margin: 20px;
 			padding: 10px;
 			border: none;
-			background-color: silver;
+			background-color: var(--bg-color-button);
+			color: var(--color-button);
 			cursor: pointer;
 		}
 		.btn_box button:hover {
-			background-color: rgba(0, 0, 0, 0.4);
+			background-color: var(--bg-color-button-hover);
 		}
-		
 		.message {
-			background-color: inherit;
 			font-weight: bold;
 			font-size: 1rem;
 		}
@@ -95,11 +89,6 @@
 			// 아이디 중복 확인
 			$(document).on("blur", "#username", function() {
 				let username = $(this).val()
-				if(username == "") {
-					$("#m_username").text("아이디는 반드시 입력해야합니다")
-					$("#username").focus()
-					return false
-				}
 				
 				$.ajax({
 					url : "${rootPath}/user/idcheck",
@@ -109,7 +98,6 @@
 						if(result) {
 							$("#m_username").text("이미 사용중인 ID입니다")
 							$("#m_username").css("color", "red")
-							$("#username").focus()
 						} else {
 							$("#m_username").text("사용 가능한 ID입니다")
 							$("#m_username").css("color", "lightgreen")
@@ -126,24 +114,22 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
-	<form:form class="join-form" action="${rootPath}/join/email" method="post" autocomplete="off">
+	<form:form class="join-form" action="${rootPath}/join/join_next" method="post" autocomplete="off">
 		<h2>회원가입</h2>
 		<!--
 		<input name="${_csrf.parameterName}" value="${_csrf.token}">
 		-->
 		
-		<div id="m_username" class="message">
-		</div>
-		 
-		<div class="form_item_label">
+		<div class="form_item">
 			<label for="username">ID</label>
 		</div>
 		
 		<div class="form_item">
 			<input id="username" name="username"/>
+			<span id="m_username" class="message"></span>
 		</div>
 		
-		<div class="form_item_label">
+		<div class="form_item">
 			<label for="password">비밀번호</label><br/>
 		</div>
 		
@@ -151,7 +137,7 @@
 			<input id="password" name="password" type="password" />
 		</div>
 		
-		<div class="form_item_label">
+		<div class="form_item">
 			<label for="re_password">비밀번호 확인</label><br/>
 		</div>
 		

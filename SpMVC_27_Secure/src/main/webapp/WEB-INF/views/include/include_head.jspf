@@ -3,3 +3,29 @@
 <meta name="viewport" content="width=device-width, initian-scale=1">
 <title>JSP 페이지</title>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<style>
+	:root {
+		--bg-color-input: rgba(0, 0, 0, 0.05);
+		--bg-color-button: #6495ED;
+		--bg-color-button-hover: #1E90FF;
+		--color-button: white;
+		--border-width-input: 2px;
+		--border-color-input: rgba(0, 0, 0, 0.05);
+		--color-text-label: #18181b;
+	}
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+	
+	body {
+		margin-top: 150px;
+		height: 2000px;
+	}
+	input {
+		padding: 0.5rem 1rem;
+		min-width: 300px;
+		font-size: 0.9rem;
+	}
+</style>

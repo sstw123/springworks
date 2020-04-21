@@ -28,7 +28,7 @@ public class GmailEnc {
 		String password= scanner.nextLine();
 		
 		String encUserName = pbe.encrypt(username);
-		String encPassword = pbe.encrypt(username);
+		String encPassword = pbe.encrypt(password);
 		
 		String saveFile = "./src/main/webapp/WEB-INF/spring/properties/gmail.connection.properties";
 		

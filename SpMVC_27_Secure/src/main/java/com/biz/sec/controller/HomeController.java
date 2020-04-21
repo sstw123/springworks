@@ -1,7 +1,5 @@
 package com.biz.sec.controller;
 
-import java.security.Principal;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.access.annotation.Secured;
@@ -22,14 +20,6 @@ public class HomeController {
 		return "home";
 	}
 	
-	
-	
-	/**
-	 * Controller의 메소드에서 HttpServletRequest 클래스로부터 인증(로그인)정보를 추출하여 세부 항목을 보는 방법
-	 * @param id
-	 * @param req
-	 * @return
-	 */
 	// security:intercept-url을 Annotation을 이용해서 설정하기
 	// @Secured(value={"ROLE1", "ROLE2"}) 문자열 배열 이용
 	//@Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
@@ -38,6 +28,12 @@ public class HomeController {
 		return "auth/auth_view";
 	}
 	
+	/**
+	 * Controller의 메소드에서 HttpServletRequest 클래스로부터 인증(로그인)정보를 추출하여 세부 항목을 보는 방법
+	 * @param id
+	 * @param req
+	 * @return
+	 */
 	@Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
 	@ResponseBody
 	@RequestMapping(value = "/auth/{id}", method = RequestMethod.GET)

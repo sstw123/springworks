@@ -6,16 +6,23 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
+		h2 {
+			text-align: center;
+		}
 		#body {
-			position: fixed;
-			top: 60px;
-			left: 0;
-			width: 100%;
-			display: flex;
+			width: 800px;
+			display: flex; 
+			margin: 0 auto;
 		}
 		
 		#body nav {
 			flex: 1;
+			border: 1px solid blue;
+			margin: 5px;
+		}
+		
+		#body article {
+			flex: 3;
 			border: 1px solid blue;
 			margin: 5px;
 		}
@@ -25,13 +32,9 @@
 		}
 		
 		#body nav a {
-			display: inline-block;
-			padding: 5px 10px;
+			display: block;
 			text-decoration: none;
 			color: black;
-			background-color: #aabbcc;
-			width: 150px;
-			margin-left: 10px;
 		}
 		
 		#body nav a:hover {
@@ -39,11 +42,7 @@
 			background-color: #ccaaee;
 		}
 		
-		#body article {
-			flex: 3;
-			border: 1px solid blue;
-			margin: 5px;
-		}
+		
 	</style>
 	<script>
 		$(function() {
@@ -81,9 +80,9 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	<h2>관리자 페이지</h2>
 	<section id="body">
 		<nav>
-			<h3>관리자 페이지</h3>
 			<ul>
 				<li><a href="javascript:void(0)" id="user_list">유저 목록</a></li>
 				<li><a href="#">메뉴1</a></li>

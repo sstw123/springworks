@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MailSendService {
 	
 	private final JavaMailSender javaMailSender;
-	private final String from_email = "slice20@naver.com";
+	private final String from_email = "sianblone@gmail.com";
 	
-	public MailSendService(@Qualifier("naverMailHandler") JavaMailSender javaMailSender) {
+	public MailSendService(@Qualifier("gMailHandler") JavaMailSender javaMailSender) {
 		super();
 		this.javaMailSender = javaMailSender;
 	}
@@ -36,10 +36,11 @@ public class MailSendService {
 		this.sendMail(to_email, subject, content);
 	}
 	
-	public void sendMail(String to_email, String subject, String content) {
+	public boolean sendMail(String to_email, String subject, String content) {
 		
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper mHelper = new MimeMessageHelper(message, "UTF-8");
+		boolean ret = false;
 		
 		try {
 			mHelper.setFrom(from_email);
@@ -49,11 +50,12 @@ public class MailSendService {
 			mHelper.setText(content, true);
 			
 			javaMailSender.send(message);
+			ret = true;
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return ret;
 	}
 	/**
 	 * 회원가입된 사용자에게 인증 email 전송
@@ -89,10 +91,39 @@ public class MailSendService {
 		String to_email = email;
 		String subject = "회원가입 인증메일";
 		String content = send_message;
-		this.sendMail(to_email, subject, send_message);
+		
+		boolean ret = this.sendMail(to_email, subject, content);
 		
 		return false;
-		//return send_message;
+	}
+
+	/**
+	 * @since 2020-04-21
+	 * 이메일 인증을 위한 token 정보를 email로 전송하기
+	 * @param email_token
+	 */
+	public void email_auth(UserDetailsVO userVO, String email_token) {
+		// TODO Auto-generated method stub
+		StringBuilder email_content = new StringBuilder();
+		email_content.append("<style>");
+		email_content.append(".email_token {");
+		email_content.append("border: 1px solid blue;");
+		email_content.append("background-color: green;");
+		email_content.append("color: white;");
+		email_content.append("font-weight: bold;");
+		email_content.append("}");
+		email_content.append(".welcome {");
+		email_content.append("font-size: large;");
+		email_content.append("}");
+		email_content.append("</style>");
+		email_content.append("<p class='welcome'>회원가입을 완료하려면 인증코드를 입력해주세요</p>");
+		email_content.append("<div class='email_token'>");
+		email_content.append(email_token);
+		email_content.append("</div>");
+		
+		String subject = "회원가입 인증메일";
+		
+		this.sendMail(userVO.getEmail(), subject, email_content.toString());
 	}
 
 }

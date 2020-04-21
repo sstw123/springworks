@@ -4,17 +4,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}"/>
 <style>
-	* {
-		box-sizing: border-box;
-		margin: 0;
-		padding: 0;
-	}
-	
-	body {
-		margin-top: 60px;
-		height: 2000px;
-	}
-	
 	#navbar {
 		display: flex;
 		background-color : #333;
@@ -70,18 +59,18 @@
 </script>
 
 <nav id="navbar">
-	<a href="/">HOME</a>
-	<a href="#">성적처리</a>
-	<a href="#">독서록 관리</a>
+	<a href="${rootPath}/">HOME</a>
+	<a href="#">Menu1</a>
+	<a href="#">Menu2</a>
 	
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="${rootPath}/admin">관리자</a>
-	</sec:authorize>
 	<sec:authorize access="isAnonymous()">
 		<a href="${rootPath}/user/login" class="margin-left">로그인</a>
 	</sec:authorize>
 	<sec:authorize access="isAuthenticated()">
 		<a href="javascript:void(0)" id="logout" class="margin-left">로그아웃</a>
 		<a href="${rootPath}/user/mypage">MY PAGE</a>
+	</sec:authorize>
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<a href="${rootPath}/admin">관리자</a>
 	</sec:authorize>
 </nav>
