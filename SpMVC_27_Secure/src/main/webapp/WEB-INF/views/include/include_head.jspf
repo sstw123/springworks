@@ -5,13 +5,17 @@
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <style>
 	:root {
-		--bg-color-input: rgba(0, 0, 0, 0.05);
-		--bg-color-button: #6495ED;
-		--bg-color-button-hover: #1E90FF;
-		--color-button: white;
-		--border-width-input: 2px;
-		--border-color-input: rgba(0, 0, 0, 0.05);
-		--color-text-label: #18181b;
+		--input-bg-color: rgba(0, 0, 0, 0.05);
+		--input-border-width: 2px;
+		--input-border-color: rgba(0, 0, 0, 0.05);
+		
+		--button-bg-color: #1E90FF;
+		--button-hover-bg-color: #6495ED;
+		--button-color: white;
+		
+		--label-text-color: #18181b;
+		--color-danger: #DC3545;
+		--color-success: #28A745;
 	}
 	* {
 		box-sizing: border-box;
@@ -20,12 +24,15 @@
 	}
 	
 	body {
-		margin-top: 150px;
+		margin-top: 120px;
 		height: 2000px;
+	}
+	h2 {
+		text-align: center;
+		padding-bottom: 20px;
 	}
 	input {
 		padding: 0.5rem 1rem;
-		min-width: 300px;
 		font-size: 0.9rem;
 	}
 </style>

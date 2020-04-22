@@ -19,10 +19,10 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	<h3>Email 인증</h3>
 	<section class="email_body">
-		<h3>Email 인증</h3>
 		<div>회원가입을 완료하려면 Email 인증을 해야합니다</div>
-		<form:form action="${rootPath}/join/emailauth" modelAttribute="userVO">
+		<form:form action="${rootPath}/join/emailauth" method="POST" modelAttribute="userVO" autocomplete="off">
 			<form:input type="email" path="email" placeholder="Email 입력"/>
 			<c:choose>
 				<c:when test="${empty userVO.email}">

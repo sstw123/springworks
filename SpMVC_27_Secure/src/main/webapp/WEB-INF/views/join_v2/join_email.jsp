@@ -7,9 +7,6 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		h2 {
-			padding: 20px;
-		}
 		.email_body {
 			width: 80%;
 			margin: 120px auto;
@@ -21,12 +18,12 @@
 		.send_mail {
 			padding: 0.5rem 1rem;
 			border: none;
-			background-color: rgba(0, 0, 0, 0.8);
+			background-color: var(--button-bg-color);
 			cursor: pointer;
 			color: white;
 		}
 		.send_mail:hover {
-			background-color: rgba(0, 0, 0, 0.6);
+			background-color: var(--button-hover-bg-color);
 		}
 		#secret {
 			display: none;
@@ -72,10 +69,10 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	<h2>Email 인증</h2>
 	<section class="email_body">
-		<h2>Email 인증</h2>
 		<p>회원가입을 진행하려면 Email 인증을 완료해야합니다</p><br/>
-		<form:form action="${rootPath}/join/join_last" modelAttribute="userVO">
+		<form:form action="${rootPath}/join/join-s2" method="POST" modelAttribute="userVO" autocomplete="off">
 			<form:input type="email" path="email" placeholder="Email 입력"/>
 			<c:choose>
 				<c:when test="${JOIN == true}">

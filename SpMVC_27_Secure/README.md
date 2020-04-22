@@ -80,3 +80,45 @@
 * sessionAttributes는 보통 vo 객체를 서버 메모리에 저장한 후 form 화면과 연동한다. 반드시 ModelAttribute가 동반되어 구현되어야 한다.
 * sessionAttributes에 등록된 ModelAttribute 객체는 서버 메모리에 데이터를 보관하고 있다가 form:form을 통해서 서버로 전달되는 param vo 객체를 받고,
 form:form에서 누락된 input 항목들이 있으면 메모리에 보관된 ModelAttribute vo에서 param vo 데이터를 완성하여 사용할 수 있도록 만들어준다
+
+## 트랜잭션 : @Transactional
+* MyBatis와 common-dbcp 환경에서 context.xml에 <tx:annotation-driven/> 설정을 해주면 @Transaction을 구현할 수 있다
+* MyBatis 환경에서 실제 Dao interface와 mapper.xml 등을 연동하여 DB와 query를 주고 받을 때는 SqlSessionTemplate 클래스를 통해서 사용한다
+* 만약 context.xml에 DataSourceTransactionManager를 설정하게 되면 SqlSessionTemplate를 설정해주지 않아도 내부적으로 알아서 만들어주기 때문에 굳이 설정하지 않아도 된다
+* 만약 context.xml에 <tx:annotation-driven/> 항목이 없고, class나 method에 @Transactional 설정이 없으면 DataSourceTransactionManager는 SqlSessionTemplate와 같은 역할을 하게된다
+* <tx:annotation-driven/>을 설정했는데 @Transactional을 설정한 method에서 transaction이 적용되지 않을 때가 있다 이때는 <tx:annotation-driven/> 코드 위쪽에 <context:annotation-config/>를 설정해주어야 한다
+
+### @Transactional의 옵션
+#### isolation
+* 현재 transaction이 작동되는 과정에서 다른 transaction등이 접근할 수 있는 수준 설정하기
+* READ_UNCOMMITED : level 0, 트랜잭션 처리 중 또는 commit이 완료되기 전에 다른 트랜잭션이 읽기를 수행할 수 있다
+* READ_COMMITED : level 1, 트랜잭션이 commit 완료된 후에만 다른 트랜잭션이 읽을 수 있다
+* REPEATABLE_READ : level 2, 트랜잭션이 진행되는 동안 SELECT 문장이 사용된 TABLE에 Lock 걸기.
+SELECT가 실행되거나 실행될 예정인 DB(Table)에는 CUD를 수행할 수 없도록 하며 다른 트랜잭션에서 제한적으로 SELECT가 가능하다
+다수의 트랜잭션이 SELECT를 수행할 때 일관된 무결성이 보장된 데이터를 가져갈 수 있도록 보장
+* SERIALIZABLE : level 3, 완벽한 일관성있는 SELECT 보장
+
+#### propagation : 전파 옵션, 현재 트랜잭션이 시작되었음을 다른 트랜잭션에 어떻게 알릴 것인지 설정
+* REQUIRED : 부모 트랜잭션이 실행되는 과정에서 또 자식(세부적인) 트랜잭션을 실행할 수 있도록 허용하며
+이미 자식 트랜잭션이 실행되고 있으면 새로 생성 금지
+* REQUIRED_NEW : REQUIRED와 비슷하지만, 자식 트랜잭션이 이미 실행되고 있어도 무조건 새로 생성
+
+#### readOnly : 트랜잭션을 읽기 전용으로 설정하기, 기본값 = false
+* readonly로 설정하면 SELECT만 가능하다
+
+#### rollbackFor : rollback 조건 설정, 기본값 = Exception.class
+* 특정한 예외(Exception)가 발생했을 때만 rollback 되도록 설정할 때 추가
+
+#### noRollbackFor : rollback 조건 무시 설정, 기본값 = null
+* rollbackFor와 반대되는 개념, 특정한 예외에서는 rollback 무시
+
+#### timeout : 기본값 = -1 (timeout rollback 금지)
+* DB와 연결하여 transaction이 실행되는 시간이 과도하게 지연될 경우 rollback 하도록 설정
+
+### Transaction 사용 시 주의사항
+#### List Insert 수행 시 주의사항
+* 트랜잭션 걸린 서비스에서 다음과 같은 코드 절대 사용 금지
+for(DataVO vo : dataList) {
+	dao.insert(vo)
+}
+* mapper에서 <foreach>를 사용해서 처리해야 한다

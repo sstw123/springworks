@@ -6,9 +6,6 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		h2 {
-			text-align: center;
-		}
 		#body {
 			width: 800px;
 			display: flex; 

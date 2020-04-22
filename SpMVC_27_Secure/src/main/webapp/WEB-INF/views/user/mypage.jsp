@@ -11,28 +11,39 @@
 			display: block;
 			width: 50%;
 			margin: 10px auto;
-			background-color: rgba(0,0,0,0.55);
+			border: 1px solid rgba(0,0,0,0.55);
 			border-radius: 15px;
-			color: white;
+			color: black;
 			box-shadow:0 1px 0 #cfcfcf;
 			padding: 20px;
 		}
-		.label {
-			display: inline-block;
-			width: 30%;
-			min-width: 200px;
+		.mypage-div {
+			display: flex;
+		}
+		.mypage-label {
+			flex: 1;
 			text-align: right;
+			align-self: center;
 			padding: 10px;
 		}
-		.inline-block {
-			display: inline-block;
+		.mypage-content {
+			flex: 3;
+			align-self: center;
 			padding: 10px;
+		}
+		.mypage-content input {
+			width: 70%;
 		}
 		#pw_change {
-			padding: 5px 10px;
+			padding: 0.5rem 1rem;
 			border: none;
-			background-color: rgba(255, 255, 255, 0.85);
+			background-color: var(--button-bg-color);
+			color: white;
 			cursor: pointer;
+			font-size: 0.9rem;
+		}
+		#pw_change:hover {
+			opacity: 0.8;
 		}
 		#btn_exit, #btn_edit {
 			display: block;
@@ -51,7 +62,7 @@
 		}
 		#btn_edit {
 			margin-left: auto;
-			background-color: CornflowerBlue;
+			background-color: var(--button-bg-color);
 		}
 		
 	</style>
@@ -71,38 +82,39 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	<h2>My Page</h2>
 	<form:form class="mypage_form" action="${rootPath}/user/mypage" autocomplete="off">
 		<div class="mypage-div">
-			<span class="label">아이디</span>
-			<div class="inline-block">
+			<span class="mypage-label">아이디</span>
+			<div class="mypage-content">
 				${loginVO.username}
 			</div>
 		</div>
 		
 		<div class="mypage-div">
-			<span class="label">비밀번호</span>
-			<div class="inline-block">
+			<span class="mypage-label">비밀번호</span>
+			<div class="mypage-content">
 				<button id="pw_change" type="button">비밀번호 변경</button>
 			</div>
 		</div>
 		
 		<div class="mypage-div">
-			<span class="label">이메일</span>
-			<div class="inline-block">
+			<span class="mypage-label">이메일</span>
+			<div class="mypage-content">
 				<input id="email" name="email" value="${loginVO.email}" />
 			</div>
 		</div>
 		
 		<div class="mypage-div">
-			<span class="label">핸드폰</span>
-			<div class="inline-block">
+			<span class="mypage-label">핸드폰</span>
+			<div class="mypage-content">
 				<input id="phone" name="phone" value="${loginVO.phone}" />
 			</div>
 		</div>
 		
 		<div class="mypage-div">
-			<span class="label">주소</span>
-			<div class="inline-block">
+			<span class="mypage-label">주소</span>
+			<div class="mypage-content">
 				<input id="address" name="address" value="${loginVO.address}" />
 			</div>
 		</div>

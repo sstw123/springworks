@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.biz.sec.domain.UserDetailsVO;
+import com.biz.sec.persistence.UserDao;
 import com.biz.sec.utils.PbeEncryptor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 public class MailSendService {
 	
 	private final JavaMailSender javaMailSender;
+	private final UserDao userDao;
 	private final String from_email = "sianblone@gmail.com";
 	
-	public MailSendService(@Qualifier("gMailHandler") JavaMailSender javaMailSender) {
+	public MailSendService(@Qualifier("gMailHandler") JavaMailSender javaMailSender, UserDao userDao) {
 		super();
 		this.javaMailSender = javaMailSender;
+		this.userDao = userDao;
 	}
 	
 	public void sendMail() {
@@ -124,6 +127,24 @@ public class MailSendService {
 		String subject = "회원가입 인증메일";
 		
 		this.sendMail(userVO.getEmail(), subject, email_content.toString());
+	}
+
+	public void email_setPW(String username) {
+		UserDetailsVO userVO = userDao.findByUserName(username);
+		String enc_username = PbeEncryptor.encrypt(userVO.getUsername());
+		
+		String email_content =
+				"<p>비밀번호 재설정을 요청했습니다</p>"
+				+ "<p>본인이 맞으면 하단의 비밀번호 재설정 링크를 클릭하세요</p>"
+				+ "<a href='localhost:8080/sec/user/find-pw?link="
+				+ enc_username
+				+ "'>"
+				+ enc_username
+				+ "</a>"
+				;
+		
+		String subject = "비밀번호 재설정 메일";
+		this.sendMail(userVO.getEmail(), subject, email_content);
 	}
 
 }

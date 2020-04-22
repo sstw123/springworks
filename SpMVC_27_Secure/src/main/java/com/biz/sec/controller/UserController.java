@@ -1,14 +1,16 @@
 package com.biz.sec.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.biz.sec.domain.UserDetailsVO;
@@ -111,8 +113,13 @@ public class UserController {
 		return "user/mypage";
 	}
 	
+	/**
+	 * mypage에서 저장을 눌렀을 때 form에 입력된 데이터가 userVO에 담겨서 온다
+	 * @param userVO
+	 * @return
+	 */
 	@RequestMapping(value = "/mypage", method=RequestMethod.POST)
-	public String mypage(UserDetailsVO userVO, String[] auth) {
+	public String mypage(UserDetailsVO userVO) {
 		
 		/*
 		 * 아래 코드는 Security Session 정보가 저장된 메모리(Principal)에 직접 접근하여 수정하는 방법이다
@@ -130,6 +137,50 @@ public class UserController {
 		int ret= userSvc.updateInfo(userVO);
 		
 		return "redirect:/user/mypage";
+	}
+	
+	@RequestMapping(value="/find-id", method=RequestMethod.GET)
+	public String findId() {
+		return "user/find_id_pw";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/find-id", method=RequestMethod.POST)
+	public List<String> findId(UserDetailsVO userVO) {
+		List<UserDetailsVO> userList = userSvc.findId(userVO);
+		List<String> usernameList = new ArrayList<>();
+		for(UserDetailsVO vo : userList) {
+			// 앞의 2글자만 보이고 남은 글자 * 만들기
+			String username = vo.getUsername();
+			String first = "";
+			String after = "";
+			
+			if(username.length() <= 1) {
+				first = username;
+			} else if(username.length() > 1){
+				first = username.substring(0,2);
+				for(int i = 0 ; i < vo.getUsername().substring(2).length() ; i++) {
+					after += "*";
+				} 
+			}
+			
+			usernameList.add(first + after);
+		}
+		
+		return usernameList;
+	}
+	
+	@RequestMapping(value="/find-pw", method=RequestMethod.GET)
+	public String findPW(@RequestParam("link") String enc_username, Model model) {
+		model.addAttribute("ENC",enc_username);
+		return "user/find_pw";
+	}
+	
+	@RequestMapping(value="/find-pw", method=RequestMethod.POST)
+	public String findPW(UserDetailsVO userVO) {
+		// userVO에는 username, password만 담겨있다
+		int ret = userSvc.setPW(userVO);
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/mypage1", method=RequestMethod.GET)

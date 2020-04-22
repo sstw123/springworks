@@ -68,7 +68,7 @@ public class JoinController {
 	 * @param userVO
 	 * @return
 	 */
-	@RequestMapping(value="/join_next", method=RequestMethod.POST)
+	@RequestMapping(value="/join-s1", method=RequestMethod.POST)
 	public String join_next(@ModelAttribute("userVO") UserDetailsVO userVO) {
 		return "join_v2/join_email";
 	}
@@ -86,7 +86,7 @@ public class JoinController {
 	 * @param userVO
 	 * @return
 	 */
-	@RequestMapping(value="/join_last", method=RequestMethod.POST)
+	@RequestMapping(value="/join-s2", method=RequestMethod.POST)
 	public String join_last(@ModelAttribute("userVO") UserDetailsVO userVO, Model model) {
 		String email_token = userSvc.insert_getToken(userVO);
 		
@@ -136,7 +136,7 @@ public class JoinController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value="/emailauth", method=RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/emailauth", method=RequestMethod.POST)
 	public String email_auth(@ModelAttribute(value = "userVO") UserDetailsVO userVO, Model model, SessionStatus session) {
 		int ret = userSvc.insert(userVO);
 		//session.setComplete();

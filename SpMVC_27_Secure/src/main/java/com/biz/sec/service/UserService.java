@@ -101,19 +101,22 @@ public class UserService {
 		
 		return ret;
 	}
-
+	
+	@Transactional
 	public UserDetailsVO findByUserName(String username) {
 		return userDao.findByUserName(username);
 	}
 	
+	@Transactional
 	public UserDetailsVO findByUsernameAuthorities(String username) {
 		return userDao.findByUsernameAuthorities(username);
 	}
-
+	
 	public UserDetailsVO findById(long id) {
 		return userDao.findById(id);
 	}
 	
+	@Transactional
 	public boolean pw_check(String password) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		String loginPW = userDao.findByUserName(username).getPassword();
@@ -175,6 +178,7 @@ public class UserService {
 		return ret;
 	}
 	
+	@Transactional
 	public int pw_change(String password) {
 		// 패스워드에 아무것도 입력하지 않았다면 아무 일도 하지 않음
 		if(password.isEmpty()) {
@@ -317,6 +321,27 @@ public class UserService {
 		}
 		
 		return bKey;
+	}
+
+	public List<UserDetailsVO> findId(UserDetailsVO userVO) {
+		List<UserDetailsVO> userList = null;
+		// form에서 전송된 값이 email밖에 없을 경우 = ID 찾기
+		if(userVO.getUsername() == null || userVO.getUsername().isEmpty()) {
+			userList = userDao.findByEmail(userVO.getEmail());
+		} else {
+			// form에서 전송된 값이 username과 email일 경우 = PW 재설정
+			mailSvc.email_setPW(userVO.getUsername());
+		}
+		return userList;
+	}
+
+	public int setPW(UserDetailsVO userVO) {
+		// userVO에는 username, password만 담겨있다
+		// 패스워드 암호화
+		String encPW = PbeEncryptor.encrypt(userVO.getPassword());
+		userVO.setPassword(encPW);
+		// DB에 새로운 비밀번호 저장
+		return userDao.updatePW(userVO);
 	}
 
 }
