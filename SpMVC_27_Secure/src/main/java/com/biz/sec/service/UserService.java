@@ -30,14 +30,14 @@ public class UserService {
 	//private final로 선언하면
 	//@Autowired 또는 @RequiredArgsConstructor를 이용해 bean에 설정된 id와 객체이름을 똑같이 설정하여 bean을 불러올 수 있다
 	//@Autowired
-	private final PasswordEncoder pwEncoder;
+	private final PasswordEncoder bcryptEncoder;
 	private final UserDao userDao;
 	private final AuthoritiesDao authDao;
 	private final MailSendService mailSvc;
 	
-	public UserService(PasswordEncoder pwEncoder, UserDao userDao, AuthoritiesDao authDao, MailSendService mailSvc) {
+	public UserService(PasswordEncoder bcryptEncoder, UserDao userDao, AuthoritiesDao authDao, MailSendService mailSvc) {
 		super();
-		this.pwEncoder = pwEncoder;
+		this.bcryptEncoder = bcryptEncoder;
 		this.userDao = userDao;
 		this.authDao = authDao;
 		this.mailSvc = mailSvc;
@@ -85,7 +85,7 @@ public class UserService {
 	public int insert(String username, String password) {
 		
 		// 회원가입 form에서 전달받은 password 값을 암호화 시키는 과정
-		String encPW = pwEncoder.encode(password);
+		String encPW = bcryptEncoder.encode(password);
 		
 		UserDetailsVO userVO = UserDetailsVO.builder()
 							.username(username)
@@ -121,7 +121,7 @@ public class UserService {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		String loginPW = userDao.findByUserName(username).getPassword();
 		// 현재 로그인한 사용자의 암호화된 비밀번호와 입력된 password와 비교
-		boolean ret = pwEncoder.matches(password, loginPW);
+		boolean ret = bcryptEncoder.matches(password, loginPW);
 		
 		return ret;
 	}
@@ -189,7 +189,7 @@ public class UserService {
 		// DB에서 사용자 이름으로 VO 정보 가져오기
 		UserDetailsVO userVO = userDao.findByUserName(username);
 		// userVO에 비밀번호 암호화해서 저장하기
-		userVO.setPassword(pwEncoder.encode(password));
+		userVO.setPassword(bcryptEncoder.encode(password));
 		
 		// DB에 username 기준으로 정보 update하기
 		return this.updatePW(userVO);
@@ -239,7 +239,7 @@ public class UserService {
 		userVO.setEnabled(false);
 		userVO.setAuthorities(null);
 		
-		String encPW = pwEncoder.encode(userVO.getPassword());
+		String encPW = bcryptEncoder.encode(userVO.getPassword());
 		userVO.setPassword(encPW);
 		
 		try {
@@ -277,19 +277,19 @@ public class UserService {
 
 	/**
 	 * @since 2020-04-21
-	 * 회원정보를 받아서 DB에 저장하고
-	 * 회원정보를 활성화할 수 있도록 하기 위해
-	 * 인증정보를 생성한 후
-	 * Controller로 Return
+	 * 회원정보를 받아서 DB에 저장하고 회원정보를 활성화할 수 있도록 하기 위해
+	 * 인증정보를 생성한 후 Controller로 return하는 메소드
 	 * @param userVO
 	 * @return
 	 */
 	public String insert_getToken(UserDetailsVO userVO) {
+		/* DB 저장 코드는 더 나은 방법을 찾기 위해 임시로 제거
 		// DB에 저장
 		userVO.setEnabled(false);
-		String encPassword = pwEncoder.encode(userVO.getPassword());
+		String encPassword = bcryptEncoder.encode(userVO.getPassword());
 		userVO.setPassword(encPassword);
 		int ret = userDao.insert(userVO);
+		*/
 		
 		// UUID : 989bbfdd-ed54-430c-a20a-c348614e84be
 		// - 로 나누어진 부분중 처음 부분을 전부 대문자로 만들기
@@ -302,18 +302,45 @@ public class UserService {
 		String enc_email_token = PbeEncryptor.encrypt(email_token);
 		return enc_email_token;
 	}
-
+	
 	@Transactional
-	public boolean email_token_ok(String username, String secret_key, String secret_value) {
+	public boolean email_token_insert(UserDetailsVO userVO, String secret_key, String secret_value) {
+		// secret_key : email 인증키를 암호화한 값을 복호화한 값
+		// secret_value : 이메일 인증키
+		// 두개를 대조해여 boolean값 리턴
 		boolean bKey = PbeEncryptor.decrypt(secret_key).equalsIgnoreCase(secret_value);
 		if(bKey) {
-			String strUsername = PbeEncryptor.decrypt(username);
-			UserDetailsVO userVO = userDao.findByUserName(strUsername);
+			// 정확한 인증키를 입력했다면
+			userVO.setEnabled(true);// 계정 활성화
+			// bean에 설정한 Spring Secure의 bcryptEncoder로 암호화한 뒤 DB 저장
+			userVO.setPassword(bcryptEncoder.encode(userVO.getPassword()));
+			userDao.insert(userVO);
 			
-			userVO.setEnabled(true);
-			userDao.updateInfo(userVO);
-			authDao.delete(userVO.getUsername());
+			// 권한 DB insert
+			List<AuthorityVO> authList = new ArrayList<>();
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
+			authDao.insert(authList);
+		}
+		return bKey;
+	}
+
+	@Transactional
+	public boolean email_token_update(String username, String secret_key, String secret_value) {
+		// secret_key : email 인증키를 암호화한 값을 복호화한 값
+		// secret_value : 이메일 인증키
+		// 두개를 대조해여 boolean값 리턴
+		boolean bKey = PbeEncryptor.decrypt(secret_key).equalsIgnoreCase(secret_value);
+		if(bKey) {
+			// 정확한 인증키를 입력했다면
+			String strUsername = PbeEncryptor.decrypt(username);// 암호화 된 id 복호화
+			UserDetailsVO userVO = userDao.findByUserName(strUsername);// 아이디로 DB에서 VO 가져오기
 			
+			userVO.setEnabled(true);// 계정 활성화
+			userDao.updateInfo(userVO);// 활성화된 유저정보 업데이트
+			
+			// 기존 권한 삭제 후 새로운 권한 insert
+			authDao.delete(userVO.getUsername());			
 			List<AuthorityVO> authList = new ArrayList<>();
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
@@ -326,13 +353,30 @@ public class UserService {
 	public List<UserDetailsVO> findId(UserDetailsVO userVO) {
 		List<UserDetailsVO> userList = null;
 		// form에서 전송된 값이 email밖에 없을 경우 = ID 찾기
-		if(userVO.getUsername() == null || userVO.getUsername().isEmpty()) {
-			userList = userDao.findByEmail(userVO.getEmail());
-		} else {
-			// form에서 전송된 값이 username과 email일 경우 = PW 재설정
-			mailSvc.email_setPW(userVO.getUsername());
-		}
+		userList = userDao.findByEmail(userVO.getEmail());
+		
 		return userList;
+	}
+	
+	public byte findPW(UserDetailsVO userVO) {
+		UserDetailsVO dbUserVO = userDao.findByUserName(userVO.getUsername());
+		byte res = 3;
+		if(dbUserVO.getEmail().equals(userVO.getEmail()) ) {
+			// db에 저장된 username의 email과 form에서 입력한 email이 같으면 비밀번호 재설정 메일 보내기
+			boolean bRes = false;
+			try {
+				bRes = mailSvc.email_setPW(userVO.getUsername());
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// 성공적으로 보냈으면 1 리턴, 메일 보내기 실패시 2 리턴
+			res = (byte) (bRes ? 1 : 2);
+		}
+		
+		// db에 저장된 username의 email과 form에서 입력한 email이 다르면 3 리턴
+		return res;
 	}
 
 	public int setPW(UserDetailsVO userVO) {

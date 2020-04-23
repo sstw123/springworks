@@ -90,9 +90,15 @@ public class JoinController {
 	public String join_last(@ModelAttribute("userVO") UserDetailsVO userVO, Model model) {
 		String email_token = userSvc.insert_getToken(userVO);
 		
-		model.addAttribute("username", PbeEncryptor.encrypt(userVO.getUsername()));
+		//model.addAttribute("username", PbeEncryptor.encrypt(userVO.getUsername()));
 		model.addAttribute("MY_EMAIL_SECRET", email_token);
-		model.addAttribute("JOIN", true);
+		model.addAttribute("JOIN_S2", true);
+		return "join_v2/join_email";
+	}
+	
+	@RequestMapping(value="/join-s2-test", method=RequestMethod.GET)
+	public String join() {
+		
 		return "join_v2/join_email";
 	}
 	
@@ -105,9 +111,14 @@ public class JoinController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/email_token_check", method=RequestMethod.POST)
-	public boolean email_token_check(@RequestParam("secret_id") String username, @RequestParam("secret_key")String secret_key, @RequestParam("secret_value")String secret_value) {
+	public boolean email_token_check(
+			//@RequestParam("secret_id") String username,
+			@ModelAttribute("userVO") UserDetailsVO userVO,
+			@RequestParam("secret_key")String secret_key,
+			@RequestParam("secret_value")String secret_value) {
 		
-		boolean ret = userSvc.email_token_ok(username, secret_key, secret_value);
+		boolean ret = userSvc.email_token_insert(userVO, secret_key, secret_value);
+		//boolean ret = userSvc.email_token_update(username, secret_key, secret_value);
 		
 		return ret;
 	}

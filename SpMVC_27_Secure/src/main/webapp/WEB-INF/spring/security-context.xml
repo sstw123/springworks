@@ -26,7 +26,7 @@
 	<!-- Controller, Service가 아닌 최초 인증과정에서 사용할 bean -->
 	<!-- 생성자 첫번째 매개변수에 암호화 반복 횟수 설정. 기본값은 4이므로 4일 경우는 생략해도 된다. 해커 입장에선 4번을 풀어야 한다. -->
 	<!-- 횟수가 커질 수록 암호화 정도가 깊어지지만 성능이 하락한다 -->
-	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+	<bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 		<constructor-arg index="0" value="4" />
 	</bean>
 	

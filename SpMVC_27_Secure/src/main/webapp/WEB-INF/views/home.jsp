@@ -7,5 +7,6 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
+	<h2>Spring Security + Email Project</h2>
 </body>
 </html>

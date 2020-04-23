@@ -119,7 +119,6 @@
 			</div>
 		</div>
 		<div class="flex">
-			<button id="btn_exit" type="button">회원탈퇴</button>
 			<button id="btn_edit">수정</button>
 		</div>
 	</form:form>

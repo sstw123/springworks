@@ -9,20 +9,26 @@
 	<style>
 		.email_body {
 			width: 80%;
-			margin: 120px auto;
+			margin: 0 auto;
 			display: flex;
 			flex-flow: column;
 			justify-content: center;
 			align-items: center;
 		}
-		.send_mail {
+		#email_form div {
+			text-align: center;
+		}
+		#email_form p {
+			padding: 0.8rem 0;
+		}
+		.btn_email {
 			padding: 0.5rem 1rem;
 			border: none;
 			background-color: var(--button-bg-color);
 			cursor: pointer;
 			color: white;
 		}
-		.send_mail:hover {
+		.btn_email:hover {
 			background-color: var(--button-hover-bg-color);
 		}
 		#secret {
@@ -31,13 +37,13 @@
 	</style>
 	<script>
 		$(function() {
-			$(document).on("click", "#btn_email_ok", function() {
+			$(document).on("click", "#btn_email_auth", function() {
 				let secret_key = $("#secret").text()
-				let secret_value = $("#email_ok").val()
+				let secret_value = $("#email_auth").val()
 				
 				if(secret_value == "") {
 					alert("인증코드를 입력한 후 인증버튼을 클릭하세요")
-					$("#email_ok").focus()
+					$("#email_auth").focus()
 					return false
 				}
 				
@@ -46,7 +52,7 @@
 					method : "POST",
 					data : {
 						"${_csrf.parameterName}" : "${_csrf.token}",
-						secret_id : "${username}",
+						//secret_id : "${username}",
 						secret_key : secret_key,
 						secret_value : secret_value
 					},
@@ -61,8 +67,6 @@
 						alert("서버 통신 오류")
 					}
 				})
-				
-				$("#secret").css("display", "inline")
 			})
 		})
 	</script>
@@ -72,23 +76,29 @@
 	<h2>Email 인증</h2>
 	<section class="email_body">
 		<p>회원가입을 진행하려면 Email 인증을 완료해야합니다</p><br/>
-		<form:form action="${rootPath}/join/join-s2" method="POST" modelAttribute="userVO" autocomplete="off">
-			<form:input type="email" path="email" placeholder="Email 입력"/>
+		<form:form id="email_form" action="${rootPath}/join/join-s2" method="POST" modelAttribute="userVO" autocomplete="off">
 			<c:choose>
-				<c:when test="${JOIN == true}">
-					<button class="send_mail">인증메일 재발송</button>
-					<p>Email로 발송된 인증코드를 아래 칸에 입력 후 입증 버튼을 클릭하세요</p>
-					<div>
-						<span id="secret">${MY_EMAIL_SECRET}</span>
-						<input id="email_ok"/>
-						<button type="button" id="btn_email_ok">인증하기</button>
+				<c:when test="${JOIN_S2 != true}">
+					<div class="email_form_item">
+						<form:input type="email" path="email" placeholder="Email 입력"/>
+						<button id="btn_send_mail" class="btn_email">인증메일 발송</button>
 					</div>
 				</c:when>
-				<c:when test="${JOIN != true}">
-					<button class="send_mail">인증메일 발송</button>
+				<c:when test="${JOIN_S2 == true}">
+					<div>
+						<form:input type="email" path="email" placeholder="Email 입력"/>
+						<button id="btn_send_mail" class="btn_email">인증메일 재발송</button>
+					</div>
+					<p>Email로 발송된 인증코드를 아래 칸에 입력 후 인증 버튼을 클릭하세요</p>
+					<div class="email_form_item">
+						<span id="secret">${MY_EMAIL_SECRET}</span>
+						<input id="email_auth"/>
+						<button id="btn_email_auth" class="btn_email" type="button">인증하기</button>
+					</div>
 				</c:when>
 			</c:choose>
 		</form:form>
+			
 	</section>
 </body>
 </html>

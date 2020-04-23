@@ -7,7 +7,7 @@
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<script>
 		$(function() {
-			alert("비밀번호를 다시 확인해주세요.")
+			alert("비밀번호를 정확히 입력하세요.")
 			document.location.replace("${rootPath}/user/pwcheck")
 		})
 	</script>

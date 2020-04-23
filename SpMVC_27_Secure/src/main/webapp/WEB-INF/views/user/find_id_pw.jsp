@@ -13,14 +13,24 @@
 			display: flex;
 			justify-content: center;
 			margin: 0 auto;
+			margin-top: 50px;
+		}
+		h3 {
+			text-align: center;
+		}
+		.form_item p {
+			padding: 0.5rem 0;
 		}
 		.result-id {
 			display: none;
 			padding: 10px;
 			background-color: rgba(0,0,0,0.3)
 		}
+		.result-header {
+			text-align: center;
+		}
 		.forms form {
-			margin: 0 50px;
+			padding: 0 50px;
 		}
 		.form_item {
 			margin-bottom: 10px;
@@ -54,10 +64,24 @@
 		.btn_box button:hover {
 			background-color: var(--button-hover-bg-color);
 		}
+		.forms form:first-child {
+			border-right: 2px solid gray;
+		}
 	</style>
 	<script>
 		$(function() {
-			$(document).on("click", "#btn-find-id", function() {
+			let enable_btn_find_pw = true
+			
+			function isEmail(email) {
+			  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,6})+$/;
+			  return regex.test(email);
+			}
+			
+			$("#find_id_form").submit(function(e) {
+				e.preventDefault()
+			})
+			
+			$(document).on("click", "#btn-find-id", function(e) {
 				let email = $("#id_email")
 				
 				if(email.val() == "") {
@@ -85,20 +109,52 @@
 			})
 			
 			$(document).on("click", "#btn-find-pw", function() {
-				let email = $("#pw_email")
 				let username = $("#pw_username")
+				let email = $("#pw_email")
 				
 				if(username.val() == "") {
 					alert("아이디를 입력하세요.")
 					username.focus()
 					return false
-				} else if (email.val() == "") {
-					alert("이메일을 입력하세요.")
+				} else if ( !isEmail(email.val()) ) {
+					alert("이메일을 정확히 입력하세요.")
 					email.focus()
 					return false
 				}
 				
-				$("#find_pw_form").submit()
+				if(enable_btn_find_pw) {
+					// 클릭 시 버튼 사용 true면 ajax 완료될 때까지 끄기
+					enable_btn_find_pw = false
+				} else {
+					// ajax 완료 전까지 버튼 기능 사용 불가
+					return false
+				}
+				
+				$.ajax({
+					url : "${rootPath}/user/find-pw",
+					type : "POST",
+					data : $("#find_pw_form").serialize(),
+					success : function(result) {
+						if(result == 1) {
+							alert("비밀번호 재설정 링크가 메일로 발송되었습니다.")
+							username.val("")
+							email.val("")
+							enable_btn_find_pw = true
+						} else if (result == 2) {
+							alert("메일 발송에 실패했습니다.\n다시 시도해주세요.")
+							enable_btn_find_pw = true
+						} else if (result == 3) {
+							alert("등록된 email이 다릅니다.\n정확히 입력해주세요.")
+							enable_btn_find_pw = true
+						} else {
+							alert("문제가 발생했습니다.\n다시 시도해주세요.")
+						}
+					},
+					error : function() {
+						alert("서버 통신 오류")
+						enable_btn_find_pw = true
+					}
+				})
 			})
 			
 		})
@@ -109,15 +165,18 @@
 	<h2>ID/PW 찾기</h2>
 	<section class="forms">
 		<form:form id="find_id_form" action="${rootPath}/user/find-id" method="POST" autocomplete="off">
+			<h3>ID 찾기</h3>
 			<div class="form_item">
 				<p>회원가입 시 등록한 메일을 입력하세요</p>
 			</div>
 			
+			<input type="hidden"/>
 			<div class="form_item">
-				<input type="email" id="id_email" name="email" placeholder="Email 입력"/>
+				<input id="id_email" name="email" type="email" placeholder="Email 입력"/>
 			</div>
 			
 			<div class="form_item result-id">
+				<p class="result-header">가입된 아이디</p>
 			</div>
 			
 			<div class="form_item btn_box">
@@ -125,9 +184,10 @@
 			</div>
 		</form:form>
 		
-		<form:form id="find_pw_form" action="${rootPath}/user/find-id" method="POST" autocomplete="off">
+		<form:form id="find_pw_form" action="${rootPath}/user/find-pw" method="POST" autocomplete="off">
+			<h3>비밀번호 찾기</h3>
 			<div class="form_item">
-				<p>ID와 회원가입 시 등록한 메일을 입력하세요</p>
+				<p>회원가입 시 등록한 ID와 메일을 입력하세요</p>
 			</div>
 			
 			<div class="form_item">
@@ -135,11 +195,11 @@
 			</div>
 			
 			<div class="form_item">
-				<input type="email" id="pw_email" name="email" placeholder="Email 입력"/>
+				<input id="pw_email" name="email" type="email" placeholder="Email 입력"/>
 			</div>
 			
 			<div class="form_item btn_box">
-				<button id="btn-find-pw" type="button">PW 찾기</button>
+				<button id="btn-find-pw" type="button">비밀번호 찾기</button>
 			</div>
 		</form:form>
 	</section>

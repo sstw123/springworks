@@ -47,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		// UserDetailsVO userDetails = new UserDetailsVO();
 		UserDetailsVO userDetails = userDao.findByUserName(username);
 		if(userDetails == null) {
-			throw new UsernameNotFoundException("Username이 없습니다");
+			throw new UsernameNotFoundException("등록되지 않은 사용자입니다");
 		}
 		
 		

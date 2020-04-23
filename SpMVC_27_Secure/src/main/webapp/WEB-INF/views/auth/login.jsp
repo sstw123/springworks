@@ -14,7 +14,12 @@
 			width: 420px;
 			height: 445px;
 			margin: 0 auto;
-			margin-top: 60px;
+		}
+		#message {
+			display: block;
+			margin: 0px 0px 10px 0px;
+			font-weight: bold;
+			color: var(--color-danger)
 		}
 		.form_item {
 			margin-bottom: 10px;
@@ -68,7 +73,7 @@
 	<form:form class="login_form" action="${rootPath}/login" method="post" autocomplete="off">
 		<div>
 			<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
-				<span>${SPRING_SECURITY_LAST_EXCEPTION.message}</span>
+				<span id="message">${SPRING_SECURITY_LAST_EXCEPTION.message}</span>
 			</c:if>
 		</div>
 		
@@ -90,7 +95,7 @@
 		
 		<div class="form_item btn_box">
 			<button id="btn-login">로그인</button>
-			<button id="btn-find" type="button">ID/PW 찾기</button>
+			<button id="btn-find" type="button">ID/비밀번호 찾기</button>
 			<button id="btn-join" type="button">회원가입</button>
 		</div>
 	</form:form>

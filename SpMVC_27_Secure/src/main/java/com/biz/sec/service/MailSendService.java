@@ -31,12 +31,12 @@ public class MailSendService {
 		this.userDao = userDao;
 	}
 	
-	public void sendMail() {
+	public boolean sendMail() {
 		
 		String to_email = "sianblone@gmail.com";
 		String subject = "제목";
 		String content = "안녕하세요";
-		this.sendMail(to_email, subject, content);
+		return this.sendMail(to_email, subject, content);
 	}
 	
 	public boolean sendMail(String to_email, String subject, String content) {
@@ -105,7 +105,7 @@ public class MailSendService {
 	 * 이메일 인증을 위한 token 정보를 email로 전송하기
 	 * @param email_token
 	 */
-	public void email_auth(UserDetailsVO userVO, String email_token) {
+	public boolean email_auth(UserDetailsVO userVO, String email_token) {
 		// TODO Auto-generated method stub
 		StringBuilder email_content = new StringBuilder();
 		email_content.append("<style>");
@@ -126,25 +126,25 @@ public class MailSendService {
 		
 		String subject = "회원가입 인증메일";
 		
-		this.sendMail(userVO.getEmail(), subject, email_content.toString());
+		return this.sendMail(userVO.getEmail(), subject, email_content.toString());
 	}
 
-	public void email_setPW(String username) {
+	public boolean email_setPW(String username) throws UnsupportedEncodingException {
 		UserDetailsVO userVO = userDao.findByUserName(username);
 		String enc_username = PbeEncryptor.encrypt(userVO.getUsername());
 		
 		String email_content =
-				"<p>비밀번호 재설정을 요청했습니다</p>"
+				"<p>OOO 사이트에서 비밀번호 재설정을 요청했습니다</p>"
 				+ "<p>본인이 맞으면 하단의 비밀번호 재설정 링크를 클릭하세요</p>"
-				+ "<a href='localhost:8080/sec/user/find-pw?link="
-				+ enc_username
+				+ "<a href='localhost:8080/sec/user/set-pw?link="
+				+ URLEncoder.encode(enc_username, "UTF-8")
 				+ "'>"
-				+ enc_username
+				+ "http://localhost:8080/sec/user/set-pw?link=" + URLEncoder.encode(enc_username, "UTF-8")
 				+ "</a>"
 				;
 		
 		String subject = "비밀번호 재설정 메일";
-		this.sendMail(userVO.getEmail(), subject, email_content);
+		return this.sendMail(userVO.getEmail(), subject, email_content);
 	}
 
 }

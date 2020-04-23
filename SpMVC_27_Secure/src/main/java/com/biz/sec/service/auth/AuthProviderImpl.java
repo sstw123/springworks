@@ -40,12 +40,12 @@ public class AuthProviderImpl implements AuthenticationProvider {
 		// Service -> Dao를 통해서 DB로부터 사용자 정보 가져오기
 		UserDetailsVO userDetails = (UserDetailsVO) userDetailsSvc.loadUserByUsername(username);
 		if( !passwordEncoder.matches(password, userDetails.getPassword()) ) {
-			throw new BadCredentialsException("비밀번호 오류");
+			throw new BadCredentialsException("비밀번호를 정확히 입력하세요");
 		}
 		
 		// enabled가 false 상태인 아이디일 경우
 		if(!userDetails.isEnabled()) {
-			throw new BadCredentialsException("이메일 인증을 완료해주세요");
+			throw new BadCredentialsException("이메일 인증을 완료해야 합니다");
 		}
 		
 		// UserDetailsService에서 보내준 사용자 정보를 Controller로 보내기

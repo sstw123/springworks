@@ -84,15 +84,15 @@ public class UserController {
 		return page;
 	}
 	
+	@ResponseBody
 	@RequestMapping(value="/pwchange", method=RequestMethod.POST)
-	public String pw_change(String password, String re_password) {
-		if(password.isEmpty() || re_password.isEmpty() || password != re_password) {
-			return "user/pw_change_false";
+	public boolean pw_change(@RequestParam("password")String password, @RequestParam("re_password")String re_password) {
+		if(password.isEmpty() || re_password.isEmpty() || !password.equals(re_password)) {
+			return false;
 		}
 		
 		userSvc.pw_change(password);
-		
-		return "redirect:/";
+		return true;
 	}
 	
 	@ResponseBody
@@ -170,14 +170,22 @@ public class UserController {
 		return usernameList;
 	}
 	
-	@RequestMapping(value="/find-pw", method=RequestMethod.GET)
-	public String findPW(@RequestParam("link") String enc_username, Model model) {
-		model.addAttribute("ENC",enc_username);
-		return "user/find_pw";
+	@ResponseBody
+	@RequestMapping(value="/find-pw", method=RequestMethod.POST)
+	public byte findPW(UserDetailsVO userVO) {
+		// userVO에는 username, password만 담겨있다
+		byte ret = userSvc.findPW(userVO);
+		return ret;
 	}
 	
-	@RequestMapping(value="/find-pw", method=RequestMethod.POST)
-	public String findPW(UserDetailsVO userVO) {
+	@RequestMapping(value="/set-pw", method=RequestMethod.GET)
+	public String setPW(@RequestParam("link") String enc_username, Model model) {
+		model.addAttribute("ENC",enc_username);
+		return "user/set_pw";
+	}
+	
+	@RequestMapping(value="/set-pw", method=RequestMethod.POST)
+	public String setPW(UserDetailsVO userVO) {
 		// userVO에는 username, password만 담겨있다
 		int ret = userSvc.setPW(userVO);
 		return "redirect:/";
