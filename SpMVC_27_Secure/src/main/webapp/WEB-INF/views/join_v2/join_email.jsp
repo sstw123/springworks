@@ -37,15 +37,28 @@
 	</style>
 	<script>
 		$(function() {
+			let enable_btn_email = true
+			
+			function toggle_btn(button) {
+				if(button) {
+					button = false
+				} else {
+					// ajax 완료 전까지 버튼 기능 사용 불가
+					return false
+				}
+			}
+			
 			$(document).on("click", "#btn_email_auth", function() {
 				let secret_key = $("#secret").text()
 				let secret_value = $("#email_auth").val()
 				
 				if(secret_value == "") {
-					alert("인증코드를 입력한 후 인증버튼을 클릭하세요")
+					alert("인증코드를 입력하세요.")
 					$("#email_auth").focus()
 					return false
 				}
+				
+				toggle_btn(enable_btn_email)
 				
 				$.ajax({
 					url : "${rootPath}/join/email_token_check",
@@ -60,7 +73,7 @@
 						if(result) {
 							document.location.href = "${rootPath}/user/login"
 						} else {
-							alert("문제가 발생했습니다\n다시 시도해주세요")
+							alert("문제가 발생했습니다.\n다시 시도해주세요.")
 						}
 					},
 					error : function() {

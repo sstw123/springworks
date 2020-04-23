@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
-public class GmailEnc {
+public class EncMySQL {
 	
 	public static void main(String[] args) {
 		
@@ -21,19 +21,19 @@ public class GmailEnc {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.print("Gmail Username >> ");
+		System.out.print("MySQL Username >> ");
 		String username = scanner.nextLine();
 		
-		System.out.print("Gmail Password >> ");
+		System.out.print("MySQL Password >> ");
 		String password= scanner.nextLine();
 		
 		String encUserName = pbe.encrypt(username);
 		String encPassword = pbe.encrypt(password);
 		
-		String saveFile = "./src/main/webapp/WEB-INF/spring/properties/gmail.connection.properties";
+		String saveFile = "./src/main/webapp/WEB-INF/spring/properties/db.connection.properties";
 		
-		String saveUserName = String.format("gmail.username=ENC(%s)", encUserName);
-		String savePassword = String.format("gmail.password=ENC(%s)", encPassword);
+		String saveUserName = String.format("mysql.username=ENC(%s)", encUserName);
+		String savePassword = String.format("mysql.password=ENC(%s)", encPassword);
 		
 		try {
 			PrintWriter pw = new PrintWriter(saveFile);
@@ -48,7 +48,7 @@ public class GmailEnc {
 		
 		
 		scanner.close();
-		System.out.println("gmail.connection.properties 저장 완료!");
+		System.out.println("db.connection.properties 저장 완료!");
 		
 		
 	}

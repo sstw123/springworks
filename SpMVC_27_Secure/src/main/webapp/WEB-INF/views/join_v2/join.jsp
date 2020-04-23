@@ -56,6 +56,15 @@
 	</style>
 	<script>
 		$(function() {
+			function regId(username) {
+				let regex = /^[a-zA-Z0-9]{4,12}$/
+				return regex.test(username)
+			}
+			
+			$("#username").on("keyup", function() {
+				$(this).val( $(this).val().replace(/[^a-zA-Z0-9]/g, "") )
+			})
+			
 			$(document).on("click", "#btn-join", function() {
 				let username = $("#username")
 				let password = $("#password")
@@ -63,6 +72,10 @@
 				
 				if(username.val() == "") {
 					alert("아이디를 입력하세요.")
+					username.focus()
+					return false
+				} else if ( !regId(username.val()) ) {
+					alert("아이디는 4~12자의 영문 대소문자와 숫자로만 입력하세요.")
 					username.focus()
 					return false
 				} else if (password.val() == "") {
@@ -74,7 +87,7 @@
 					re_password.focus()
 					return false
 				} else if (password.val() != re_password.val()) {
-					alert("비밀번호가 다릅니다.\n다시 입력하세요.")
+					alert("비밀번호가 다릅니다.\n다시 확인해주세요.")
 					re_password.focus()
 					return false
 				}
@@ -87,28 +100,34 @@
 			$(document).on("blur", "#username", function() {
 				let username = $(this).val()
 				
+				if( !regId(username) ) {
+					$("#m_username").text("* 아이디는 4~12자의 영문 대소문자와 숫자로만 입력하세요")
+					$("#m_username").css("color", "var(--color-danger)")
+					$(".message").css("display", "block")
+					return false
+				}
+				
 				$.ajax({
 					url : "${rootPath}/user/idcheck",
 					type : "GET",
 					data : {username : username},
 					success : function(result) {
 						if(result) {
-							$(".message").css("display", "block")
 							$("#m_username").text("* 이미 사용중인 ID입니다")
 							$("#m_username").css("color", "var(--color-danger)")
-						} else {
 							$(".message").css("display", "block")
+						} else {
 							$("#m_username").text("* 사용 가능한 ID입니다")
 							$("#m_username").css("color", "var(--color-success)")
+							$(".message").css("display", "block")
 						}
 					},
 					error : function() {
-						$(".message").css("display", "block")
 						$("#m_username").text("* 서버 통신 오류")
 						$("#m_username").css("color", "var(--color-danger)")
+						$(".message").css("display", "block")
 					}
 				})
-				
 			})
 		})
 	</script>

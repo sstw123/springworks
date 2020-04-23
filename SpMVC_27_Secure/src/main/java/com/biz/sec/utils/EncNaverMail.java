@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
-public class NaverMailEnc {
+public class EncNaverMail {
 	
 	public static void main(String[] args) {
 		

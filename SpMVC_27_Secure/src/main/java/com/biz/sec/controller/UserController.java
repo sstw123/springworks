@@ -148,23 +148,29 @@ public class UserController {
 	@RequestMapping(value="/find-id", method=RequestMethod.POST)
 	public List<String> findId(UserDetailsVO userVO) {
 		List<UserDetailsVO> userList = userSvc.findId(userVO);
-		List<String> usernameList = new ArrayList<>();
-		for(UserDetailsVO vo : userList) {
-			// 앞의 2글자만 보이고 남은 글자 * 만들기
-			String username = vo.getUsername();
-			String first = "";
-			String after = "";
+		List<String> usernameList = null;
+		if(userList == null || userList.size() < 1) {
+			// 이메일로 검색한 결과가 없으면 null 반환
+		} else {
+			// 이메일로 검색한 결과가 있으면 usernameList에 아이디 저장
+			usernameList = new ArrayList<>();
 			
-			if(username.length() <= 1) {
-				first = username;
-			} else if(username.length() > 1){
-				first = username.substring(0,2);
-				for(int i = 0 ; i < vo.getUsername().substring(2).length() ; i++) {
-					after += "*";
-				} 
+			for(UserDetailsVO vo : userList) {
+				// 앞의 2글자만 보이고 남은 글자 * 만들기
+				String username = vo.getUsername();
+				String first = "";
+				String after = "";
+				
+				if(username.length() <= 1) {
+					first = username;
+				} else if(username.length() > 1){
+					first = username.substring(0,2);
+					for(int i = 0 ; i < vo.getUsername().substring(2).length() ; i++) {
+						after += "*";
+					} 
+				}
+				usernameList.add(first + after);
 			}
-			
-			usernameList.add(first + after);
 		}
 		
 		return usernameList;

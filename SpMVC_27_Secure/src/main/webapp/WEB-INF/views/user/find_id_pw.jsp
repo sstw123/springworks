@@ -70,12 +70,24 @@
 	</style>
 	<script>
 		$(function() {
+			let enable_btn_find_id = true
 			let enable_btn_find_pw = true
 			
+			function toggle_btn(button) {
+				if(button) {
+					button = false
+				} else {
+					// ajax 완료 전까지 버튼 기능 사용 불가
+					return false
+				}
+			}
+			
 			function isEmail(email) {
-			  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,6})+$/;
+			  let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{1,6})+$/;
 			  return regex.test(email);
 			}
+			
+			// ----------------------------------------------------------
 			
 			$("#find_id_form").submit(function(e) {
 				e.preventDefault()
@@ -87,20 +99,34 @@
 				if(email.val() == "") {
 					alert("이메일을 입력하세요.")
 					email.focus()
+					$(".result-id").css("display", "none")
+					return false
+				} else if( !isEmail(email.val()) ) {
+					alert("이메일을 정확히 입력하세요.")
+					email.focus()
+					$(".result-id").css("display", "none")
 					return false
 				}
+				
+				// 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
+				toggle_btn(enable_btn_find_id)
 				
 				$.ajax({
 					url : "${rootPath}/user/find-id",
 					type : "POST",
 					data : $("#find_id_form").serialize(),
 					success : function(result) {
-						if(result != null) {
+						if(result == "") {
+							// 백엔드에서 null을 jsp와 렌더링하면 ""를 받게된다
+							// result가 비어있으면
+							alert("해당 이메일로 가입된 아이디가 없습니다.")
+						} else {
+							// result가 들어있으면
 							$(".result-id").css("display", "block")
+							result.forEach(function(username){
+								$(".result-id").append("<p>" + username + "</p>")
+							})
 						}
-						result.forEach(function(username){
-							$(".result-id").append("<p>" + username + "</p>")
-						})
 					},
 					error : function() {
 						alert("서버 통신 오류")
@@ -122,13 +148,8 @@
 					return false
 				}
 				
-				if(enable_btn_find_pw) {
-					// 클릭 시 버튼 사용 true면 ajax 완료될 때까지 끄기
-					enable_btn_find_pw = false
-				} else {
-					// ajax 완료 전까지 버튼 기능 사용 불가
-					return false
-				}
+				// 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
+				toggle_btn(enable_btn_find_pw)
 				
 				$.ajax({
 					url : "${rootPath}/user/find-pw",
@@ -144,6 +165,9 @@
 							alert("메일 발송에 실패했습니다.\n다시 시도해주세요.")
 							enable_btn_find_pw = true
 						} else if (result == 3) {
+							alert("등록되지 않은 아이디입니다.")
+							enable_btn_find_pw = true
+						} else if (result == 4) {
 							alert("등록된 email이 다릅니다.\n정확히 입력해주세요.")
 							enable_btn_find_pw = true
 						} else {

@@ -283,14 +283,6 @@ public class UserService {
 	 * @return
 	 */
 	public String insert_getToken(UserDetailsVO userVO) {
-		/* DB 저장 코드는 더 나은 방법을 찾기 위해 임시로 제거
-		// DB에 저장
-		userVO.setEnabled(false);
-		String encPassword = bcryptEncoder.encode(userVO.getPassword());
-		userVO.setPassword(encPassword);
-		int ret = userDao.insert(userVO);
-		*/
-		
 		// UUID : 989bbfdd-ed54-430c-a20a-c348614e84be
 		// - 로 나누어진 부분중 처음 부분을 전부 대문자로 만들기
 		String email_token = UUID.randomUUID().toString().split("-")[0].toUpperCase();
@@ -352,7 +344,6 @@ public class UserService {
 
 	public List<UserDetailsVO> findId(UserDetailsVO userVO) {
 		List<UserDetailsVO> userList = null;
-		// form에서 전송된 값이 email밖에 없을 경우 = ID 찾기
 		userList = userDao.findByEmail(userVO.getEmail());
 		
 		return userList;
@@ -360,22 +351,28 @@ public class UserService {
 	
 	public byte findPW(UserDetailsVO userVO) {
 		UserDetailsVO dbUserVO = userDao.findByUserName(userVO.getUsername());
-		byte res = 3;
-		if(dbUserVO.getEmail().equals(userVO.getEmail()) ) {
-			// db에 저장된 username의 email과 form에서 입력한 email이 같으면 비밀번호 재설정 메일 보내기
-			boolean bRes = false;
-			try {
-				bRes = mailSvc.email_setPW(userVO.getUsername());
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		byte res = 4;
+		if(dbUserVO == null) {
+			// DB에 아이디가 없으면 3 리턴
+			res = 3;
+		} else {
+		
+			if(dbUserVO.getEmail().equals(userVO.getEmail()) ) {
+				// db에 저장된 username의 email과 form에서 입력한 email이 같으면 비밀번호 재설정 메일 보내기
+				boolean bRes = false;
+				try {
+					bRes = mailSvc.email_setPW(userVO.getUsername());
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				// 성공적으로 보냈으면 1 리턴, 메일 보내기 실패시 2 리턴
+				res = (byte) (bRes ? 1 : 2);
 			}
-			
-			// 성공적으로 보냈으면 1 리턴, 메일 보내기 실패시 2 리턴
-			res = (byte) (bRes ? 1 : 2);
 		}
 		
-		// db에 저장된 username의 email과 form에서 입력한 email이 다르면 3 리턴
+		// db에 저장된 username의 email과 form에서 입력한 email이 다르면 4 리턴
 		return res;
 	}
 
