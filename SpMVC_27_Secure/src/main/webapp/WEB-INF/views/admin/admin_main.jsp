@@ -13,14 +13,10 @@
 		}
 		
 		#body nav {
-			flex: 1;
-			border: 1px solid blue;
-			margin: 5px;
-		}
-		
-		#body article {
-			flex: 3;
-			border: 1px solid blue;
+			width: 20%;
+			text-align: center;
+			border-right: 1px solid gray;
+			padding: 20px 0;
 			margin: 5px;
 		}
 		
@@ -32,11 +28,17 @@
 			display: block;
 			text-decoration: none;
 			color: black;
+			padding: 0.5rem 1rem;
 		}
 		
 		#body nav a:hover {
-			color: white;
-			background-color: #ccaaee;
+			background-color: #eee;
+			color: black;
+		}
+		
+		#body article {
+			width: 60%;
+			margin-left: 1rem;
 		}
 		
 		
@@ -60,14 +62,17 @@
 			$(document).on("click", "#btn_edit", function() {
 				let formdata = $("form").serialize()
 				formdata += "&username=" + $("#btn_edit").attr("data-id")
-				alert(formdata)
 				$.post("${rootPath}/admin/user_detail_view", formdata, function(result) {
 					$("#admin_content").html(result)
+					alert("변경사항이 저장되었습니다.")
 				})
 			})
 			
-			$(document).on("click","#auth_append",function(){
-				let auth_input = $("<input/>", {"class":"auth","name":"auth"})
+			$(document).on("click","#btn_add_auth",function(){
+				let auth_input = "<div class='new_auth_item'>"
+								+ "<label class='label'>새 권한</label>"
+								+ "<input class='data' name='auth'/>"
+								+ "</div>"
 				//auth_input.append($("<p/>", {"text":"제거","class":"auth_delete"}))
 				$("div#auth_box").append(auth_input)
 			})
@@ -81,9 +86,9 @@
 	<section id="body">
 		<nav>
 			<ul>
-				<li><a href="javascript:void(0)" id="user_list">유저 목록</a></li>
-				<li><a href="#">메뉴1</a></li>
-				<li><a href="#">메뉴2</a></li>
+				<li><a href="javascript:void(0)" id="user_list">유저목록</a></li>
+				<li><a href="#">Menu1</a></li>
+				<li><a href="#">Menu2</a></li>
 			</ul>
 		</nav>
 		<article id="admin_content">

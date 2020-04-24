@@ -35,4 +35,16 @@
 		padding: 0.5rem 1rem;
 		font-size: 0.9rem;
 	}
+	button {
+		cursor: pointer;
+		padding: 0.5rem 1rem;
+		font-size: 0.9rem;
+		border: none;
+		background-color: var(--button-bg-color);
+		color: white;
+	}
+	
+	button:hover {
+		opacity: 0.8;
+	}
 </style>

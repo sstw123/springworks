@@ -64,44 +64,6 @@ public class UserService {
 		userDao.create_table(create_auth_table);
 	}
 
-	/**
-	 * @since 2020-04-09
-	 * @author 나
-	 * 
-	 * @param username
-	 * @param password
-	 * @return
-	 * 
-	 * 회원가입 시 비밀번호를 암호화한 뒤 DB에 insert하기
-	 * 
-	 * @since 2020-04-10
-	 * Map 타입의 VO 데이터를 UserVO 타입으로 변경
-	 */
-	
-	// @Transactional
-	// 여러 쿼리를 한번에 실행할 때 하나라도 오류가 나면
-	// 여러 쿼리가 들어있는 메소드 실행 전 상태로 롤백
-	@Transactional
-	public int insert(String username, String password) {
-		
-		// 회원가입 form에서 전달받은 password 값을 암호화 시키는 과정
-		String encPW = bcryptEncoder.encode(password);
-		
-		UserDetailsVO userVO = UserDetailsVO.builder()
-							.username(username)
-							.password(encPW)
-							.build();
-		
-		int ret = userDao.insert(userVO);
-		
-		List<AuthorityVO> authList = new ArrayList<>();
-		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
-		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
-		authDao.insert(authList);
-		
-		return ret;
-	}
-	
 	@Transactional
 	public UserDetailsVO findByUserName(String username) {
 		return userDao.findByUserName(username);
@@ -222,37 +184,6 @@ public class UserService {
 		return userDao.selectAll();
 	}
 	
-	/**
-	 * @since 2020-04-20
-	 * @author me
-	 * 새로운 회원가입 메소드(userVO로 가입, 기존은 아이디와 패스워드로 가입)
-	 * email 인증을 거쳐 가입할 것이므로 userVO를 파라미터로 받아서 enabled를 false로 만들고
-	 * role 정보는 업데이트하지 않는다
-	 * 이후 이메일 인증이 오면 enabled와 role 정보를 설정한다
-	 * @param userVO
-	 * @return
-	 */
-	// 두 개 이상의 쿼리 => @Transactional
-	@Transactional
-	public int insert(UserDetailsVO userVO) {
-		// 이메일 인증 전, 활성화 되지 않은 사용자로 세팅하기
-		userVO.setEnabled(false);
-		userVO.setAuthorities(null);
-		
-		String encPW = bcryptEncoder.encode(userVO.getPassword());
-		userVO.setPassword(encPW);
-		
-		try {
-			mailSvc.join_send(userVO);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		int ret = userDao.insert(userVO);
-		return ret;
-	}
-	
 	@Transactional
 	public boolean email_valid(String username, String email) {
 		String plainUsername = PbeEncryptor.decrypt(username);
@@ -308,7 +239,8 @@ public class UserService {
 			userVO.setPassword(bcryptEncoder.encode(userVO.getPassword()));
 			userDao.insert(userVO);
 			
-			// 권한 DB insert
+			// 기존 권한 삭제 후 DB insert
+			authDao.delete(userVO.getUsername());
 			List<AuthorityVO> authList = new ArrayList<>();
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
@@ -332,7 +264,7 @@ public class UserService {
 			userDao.updateInfo(userVO);// 활성화된 유저정보 업데이트
 			
 			// 기존 권한 삭제 후 새로운 권한 insert
-			authDao.delete(userVO.getUsername());			
+			authDao.delete(userVO.getUsername());	
 			List<AuthorityVO> authList = new ArrayList<>();
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
@@ -351,12 +283,12 @@ public class UserService {
 	
 	public byte findPW(UserDetailsVO userVO) {
 		UserDetailsVO dbUserVO = userDao.findByUserName(userVO.getUsername());
-		byte res = 4;
+		byte res = 0;
 		if(dbUserVO == null) {
-			// DB에 아이디가 없으면 3 리턴
-			res = 3;
+			// DB에 아이디가 없으면 1 리턴
+			res = 1;
 		} else {
-		
+			// DB에 아이디가 있는 경우
 			if(dbUserVO.getEmail().equals(userVO.getEmail()) ) {
 				// db에 저장된 username의 email과 form에서 입력한 email이 같으면 비밀번호 재설정 메일 보내기
 				boolean bRes = false;
@@ -367,12 +299,14 @@ public class UserService {
 					e.printStackTrace();
 				}
 				
-				// 성공적으로 보냈으면 1 리턴, 메일 보내기 실패시 2 리턴
-				res = (byte) (bRes ? 1 : 2);
+				// 성공적으로 보냈으면 3 리턴, 메일 보내기 실패시 4 리턴
+				res = (byte) (bRes ? 3 : 4);
+			} else {
+				// db에 저장된 username의 email과 form에서 입력한 email이 다르면 2 리턴
+				res = 2;
 			}
 		}
 		
-		// db에 저장된 username의 email과 form에서 입력한 email이 다르면 4 리턴
 		return res;
 	}
 
@@ -383,6 +317,75 @@ public class UserService {
 		userVO.setPassword(encPW);
 		// DB에 새로운 비밀번호 저장
 		return userDao.updatePW(userVO);
+	}
+	
+	/**
+	 * @since 2020-04-20
+	 * @author me
+	 * 새로운 회원가입 메소드(userVO로 가입, 기존은 아이디와 패스워드로 가입)
+	 * email 인증을 거쳐 가입할 것이므로 userVO를 파라미터로 받아서 enabled를 false로 만들고
+	 * role 정보는 업데이트하지 않는다
+	 * 이후 이메일 인증이 오면 enabled와 role 정보를 설정한다
+	 * @param userVO
+	 * @return
+	 */
+	// 두 개 이상의 쿼리 => @Transactional
+	@Transactional
+	public int insert(UserDetailsVO userVO) {
+		// 이메일 인증 전, 활성화 되지 않은 사용자로 세팅하기
+		userVO.setEnabled(false);
+		userVO.setAuthorities(null);
+		
+		String encPW = bcryptEncoder.encode(userVO.getPassword());
+		userVO.setPassword(encPW);
+		
+		try {
+			mailSvc.join_send(userVO);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int ret = userDao.insert(userVO);
+		return ret;
+	}
+	
+	/**
+	 * @since 2020-04-09
+	 * @author 나
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 * 
+	 * 회원가입 시 비밀번호를 암호화한 뒤 DB에 insert하기
+	 * 
+	 * @since 2020-04-10
+	 * Map 타입의 VO 데이터를 UserVO 타입으로 변경
+	 */
+	
+	// @Transactional
+	// 여러 쿼리를 한번에 실행할 때 하나라도 오류가 나면
+	// 여러 쿼리가 들어있는 메소드 실행 전 상태로 롤백
+	@Transactional
+	public int insert(String username, String password) {
+		
+		// 회원가입 form에서 전달받은 password 값을 암호화 시키는 과정
+		String encPW = bcryptEncoder.encode(password);
+		
+		UserDetailsVO userVO = UserDetailsVO.builder()
+							.username(username)
+							.password(encPW)
+							.build();
+		
+		int ret = userDao.insert(userVO);
+		
+		List<AuthorityVO> authList = new ArrayList<>();
+		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+		authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
+		authDao.insert(authList);
+		
+		return ret;
 	}
 
 }

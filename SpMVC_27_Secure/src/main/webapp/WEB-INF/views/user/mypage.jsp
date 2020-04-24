@@ -34,24 +34,10 @@
 		.mypage-content input {
 			width: 70%;
 		}
-		#pw_change {
-			padding: 0.5rem 1rem;
-			border: none;
-			background-color: var(--button-bg-color);
-			color: white;
-			cursor: pointer;
-			font-size: 0.9rem;
-		}
-		#pw_change:hover {
-			opacity: 0.8;
-		}
 		#btn_exit, #btn_edit {
 			display: block;
 			width: 100px;
 			padding: 10px;
-			border: none;
-			color: white;
-			font-size: large;
 			margin-top: 20px;
 		}
 		.flex {
@@ -62,7 +48,6 @@
 		}
 		#btn_edit {
 			margin-left: auto;
-			background-color: var(--button-bg-color);
 		}
 		
 	</style>
@@ -74,7 +59,7 @@
 				}
 			})
 			
-			$(document).on("click", "#pw_change", function() {
+			$(document).on("click", "#btn_pw_change", function() {
 				document.location.href = "${rootPath}/user/pwcheck"
 			})
 		})
@@ -82,7 +67,7 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
-	<h2>My Page</h2>
+	<h2>마이페이지</h2>
 	<form:form class="mypage_form" action="${rootPath}/user/mypage" autocomplete="off">
 		<div class="mypage-div">
 			<span class="mypage-label">아이디</span>
@@ -94,7 +79,7 @@
 		<div class="mypage-div">
 			<span class="mypage-label">비밀번호</span>
 			<div class="mypage-content">
-				<button id="pw_change" type="button">비밀번호 변경</button>
+				<button id="btn_pw_change" type="button">비밀번호 변경</button>
 			</div>
 		</div>
 		

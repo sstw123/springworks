@@ -65,10 +65,11 @@
 	
 	<sec:authorize access="isAnonymous()">
 		<a href="${rootPath}/user/login" class="margin-left">로그인</a>
+		<a href="${rootPath}/join">회원가입</a>
 	</sec:authorize>
 	<sec:authorize access="isAuthenticated()">
 		<a href="javascript:void(0)" id="logout" class="margin-left">로그아웃</a>
-		<a href="${rootPath}/user/mypage">MY PAGE</a>
+		<a href="${rootPath}/user/mypage">마이페이지</a>
 	</sec:authorize>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="${rootPath}/admin">관리자</a>

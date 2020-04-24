@@ -16,8 +16,9 @@
 	
 	th, td {
 		border-bottom: 1px solid gray;
+		overflow: hidden;
 		white-space: nowrap;
-		padding: 5px;
+		padding: 8px 12px;
 		text-align: center;
 	}
 </style>

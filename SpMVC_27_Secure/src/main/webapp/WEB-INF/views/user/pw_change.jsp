@@ -83,7 +83,7 @@
 	<h2>비밀번호 변경</h2>
 	<form:form id="pw_change_form" action="${rootPath}/user/pwchange" autocomplete="off">
 		<div class="label">
-			<label for="password"><b>새 비밀번호</b></label>
+			<label for="password">새 비밀번호</label>
 		</div>
 		
 		<div>
@@ -91,7 +91,7 @@
 		</div>
 		
 		<div class="label">
-			<label for="re_password"><b>새 비밀번호 확인</b></label>
+			<label for="re_password">새 비밀번호 확인</label>
 		</div>
 		
 		<div>

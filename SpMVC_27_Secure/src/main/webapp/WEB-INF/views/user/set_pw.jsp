@@ -7,15 +7,17 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		.find_pw_box {
-			width: 80%;
-			margin: 120px auto;
-			display: flex;
-			flex-flow: column;
-			justify-content: center;
-			align-items: center;
+		#find_form {
+			width: 420px;
+			height: 445px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		.label {
+			padding: 0.5rem 0px;
 		}
 		#btn_confirm {
+			margin: 0.8rem;
 			padding: 0.5rem 1rem;
 			border: none;
 			background-color: var(--button-bg-color);
@@ -28,7 +30,7 @@
 	</style>
 	<script>
 		$(function() {
-			$(document).on("click", "#btn-confirm", function() {
+			$(document).on("click", "#btn_confirm", function() {
 				let password = $("#password")
 				let re_password = $("#re_password")
 				
@@ -46,7 +48,7 @@
 					return false
 				}
 				
-				$("#find-form").submit()
+				$("#find_form").submit()
 			})
 		})
 	</script>
@@ -54,14 +56,26 @@
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	<h2>비밀번호 재설정</h2>
-	<section class="find_pw_box">
+	<form:form id="find_form" action="${rootPath}/user/set-pw" modelAttribute="userVO" autocomplete="off">
 		<p>새로운 비밀번호를 입력하세요</p><br/>
-		<form:form id="find-form" action="${rootPath}/user/find-pw" method="POST" modelAttribute="userVO" autocomplete="off">
-			<input type="hidden" name="username" value="${ENC}"/>
-			<input type="password" id="password" name="password"/>
-			<input type="password" id="re_password" name="re_password"/>
-			<button type="button" id="btn-confirm">확인</button>
-		</form:form>
-	</section>
+		<input type="hidden" name="username" value="${ENC}"/>
+		<div class="label">
+			<label for="password">새 비밀번호</label>
+		</div>
+		
+		<div>
+			<input id="password" name="password" type="password"/>
+		</div>
+		
+		<div class="label">
+			<label for="re_password">새 비밀번호 확인</label>
+		</div>
+		
+		<div>
+			<input id="re_password" name="re_password" type="password"/>
+		</div>
+		
+		<button id="btn_confirm" type="button">확인</button>
+	</form:form>
 </body>
 </html>
