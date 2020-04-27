@@ -5,18 +5,28 @@ import java.util.Scanner;
 public class Main {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		int a = scan.nextInt();
-		int b = a;
-		int c = 0;
-		int i = 0;
 		
-		do {
-			c = (b / 10 + b % 10);
-			b = ((b % 10) * 10) + (c % 10);
-			i++;
-		} while (a != b);
-		
-		System.out.println(i);
+		int n = scan.nextInt();
+		for(int i = 1 ; i <= n * 2; i++) {
+			String str = "";
+			
+			if (n == 1) {
+				str = "*";
+				System.out.println(str);
+				break;
+			} else if(i % 2 == 1) {
+				str = "*";
+				for(int j = 0 ; j < (n-1)/2 ; j++) {
+					str += " *";
+				}
+			} else if(i % 2 == 0) {
+				for(int j = 0 ; j < n/2 ; j++) {
+					str += " *";
+				}
+			}
+			
+			System.out.println(str);
+		}
 		
 		scan.close();
 	}
