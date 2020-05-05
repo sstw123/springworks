@@ -232,6 +232,7 @@ public class UserService {
 		// secret_value : 이메일 인증키
 		// 두개를 대조해여 boolean값 리턴
 		boolean bKey = PbeEncryptor.decrypt(secret_key).equalsIgnoreCase(secret_value);
+		boolean isSuccess = false;
 		if(bKey) {
 			// 정확한 인증키를 입력했다면
 			userVO.setEnabled(true);// 계정 활성화
@@ -245,8 +246,10 @@ public class UserService {
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
 			authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("USER").build());
 			authDao.insert(authList);
+			
+			isSuccess = true;
 		}
-		return bKey;
+		return isSuccess;
 	}
 
 	@Transactional

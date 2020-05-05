@@ -90,7 +90,6 @@ public class JoinController {
 	public String join_last(@ModelAttribute("userVO") UserDetailsVO userVO, Model model) {
 		String email_token = userSvc.insert_getToken(userVO);
 		
-		//model.addAttribute("username", PbeEncryptor.encrypt(userVO.getUsername()));
 		model.addAttribute("MY_EMAIL_SECRET", email_token);
 		model.addAttribute("JOIN_S2", true);
 		return "join_v2/join_email";
@@ -115,12 +114,15 @@ public class JoinController {
 			//@RequestParam("secret_id") String username,
 			@ModelAttribute("userVO") UserDetailsVO userVO,
 			@RequestParam("secret_key")String secret_key,
-			@RequestParam("secret_value")String secret_value) {
+			@RequestParam("secret_value")String secret_value,
+			SessionStatus status) {
 		
-		boolean ret = userSvc.email_token_insert(userVO, secret_key, secret_value);
-		//boolean ret = userSvc.email_token_update(username, secret_key, secret_value);
+		boolean isSuccess = userSvc.email_token_insert(userVO, secret_key, secret_value);
+		if(isSuccess) {
+			status.setComplete();
+		}
 		
-		return ret;
+		return isSuccess;
 	}
 	
 	/**

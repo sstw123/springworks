@@ -160,7 +160,7 @@
 							alert("등록되지 않은 아이디입니다.")
 							enable_btn_find_pw = true
 						} else if (result == 2) {
-							alert("등록된 email이 다릅니다.\n정확히 입력해주세요.")
+							alert("등록된 이메일이 다릅니다.\n정확히 입력하세요.")
 							enable_btn_find_pw = true
 						} else if (result == 3) {
 							alert("비밀번호 재설정 링크가 메일로 발송되었습니다.")
@@ -168,7 +168,7 @@
 							email.val("")
 							enable_btn_find_pw = true
 						} else if (result == 4) {
-							alert("메일 발송에 실패했습니다.\n다시 시도해주세요.")
+							alert("메일 발송이 실패했습니다.\n다시 시도해주세요.")
 							enable_btn_find_pw = true
 						} else {
 							alert("문제가 발생했습니다.\n다시 시도해주세요.")
