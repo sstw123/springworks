@@ -1,4 +1,4 @@
-package com.biz.sec.service.auth;
+package com.biz.shop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,29 +11,24 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.biz.sec.domain.UserDetailsVO;
+import com.biz.shop.model.UserDetailsVO;
 
-public class AuthProviderImpl implements AuthenticationProvider {
+public class AuthenticationProviderImpl implements AuthenticationProvider {
 	
+	// UserDetailsService는 반드시 @Qualifier를 이용해 선언해주어야 한다
 	@Autowired
 	@Qualifier("userDetailsServiceImpl")
 	private UserDetailsService userDetailsSvc;
 	
-	/**
-	 * secutiry-context에 bean으로 등록되어 있는 passwordEncoder
-	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	/**
-	 * spring security를 커스터마이징할 때 로그인을 제어하기 위한 코드를 작성하는 중요한 메소드 
-	 */
+
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		
-		// spring에서 로그인 페이지로 설정한 페이지의 form에서 전송한 메시지는 authentication에 담겨져서 여기로 온다
+		// spring에서 로그인 페이지로 설정한 페이지의 form에서 전송한 메시지는 authentication에 저장되어 여기로 온다
 		
 		// authentication으로부터 로그인 폼에서 보낸 username과 password 추출
+		// 아이디 = principal, 비밀번호 = credentials에 담겨져서 온다
 		String username = authentication.getPrincipal().toString();
 		String password = authentication.getCredentials().toString();
 		
@@ -43,8 +38,8 @@ public class AuthProviderImpl implements AuthenticationProvider {
 			throw new BadCredentialsException("비밀번호를 정확히 입력하세요");
 		}
 		
-		// enabled가 false 상태인 아이디일 경우
-		if(!userDetails.isEnabled()) {
+		// 사용자 권한이 ROLE_UNAUTH 상태라면
+		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_UNAUTH"))) {
 			throw new BadCredentialsException("이메일 인증을 완료해야 합니다");
 		}
 		
@@ -59,6 +54,4 @@ public class AuthProviderImpl implements AuthenticationProvider {
 		return true;
 	}
 	
-	
-
 }

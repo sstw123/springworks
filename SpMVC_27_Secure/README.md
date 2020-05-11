@@ -118,7 +118,7 @@ SELECT가 실행되거나 실행될 예정인 DB(Table)에는 CUD를 수행할 �
 ### Transaction 사용 시 주의사항
 #### List Insert 수행 시 주의사항
 * 트랜잭션 걸린 서비스에서 다음과 같은 코드 절대 사용 금지
-for(DataVO vo : dataList) {
+`for(DataVO vo : dataList) {
 	dao.insert(vo)
-}
+}`
 * mapper에서 <foreach>를 사용해서 처리해야 한다
