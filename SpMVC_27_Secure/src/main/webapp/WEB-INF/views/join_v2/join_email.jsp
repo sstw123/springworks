@@ -71,6 +71,7 @@
 					},
 					success : function(result) {
 						if(result) {
+							alert("회원가입을 환영합니다!")
 							document.location.href = "${rootPath}/user/login"
 						} else {
 							alert("문제가 발생했습니다.\n다시 시도해주세요.")

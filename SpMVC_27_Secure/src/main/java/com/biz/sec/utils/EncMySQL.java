@@ -17,8 +17,6 @@ public class EncMySQL {
 		pbe.setAlgorithm("PBEWithMD5AndDES");
 		pbe.setPassword(envList.get("ENV_PASS"));
 		
-		System.out.println(envList.get("ENV_PASS"));
-		
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("MySQL Username >> ");

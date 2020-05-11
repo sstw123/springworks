@@ -11,6 +11,11 @@
 * 회원가입 이메일 인증
 * 비밀번호 분실 이메일 인증 후 재설정
 
+### 시작하기
+* 윈도우 환경변수에 ENV_PASS로 salt 값 설정해주기
+* 또는 Spring 프로젝트 우클릭 -> Run As -> Run Configurations에 들어가서 Apache Tomcat -> Tomcat v9.0 Server at localhost / Java Application -> EncGmail / EncMySQL / EncNaver의 Environment에 각각 ENV_PASS 변수명으로 salt값 설정해주기
+* 위의 설정을 마친 뒤 utils 패키지의 EncMySQL, EncGmail, EncNaver 클래스로 MySQL, Gmail 아이디, 앱 비밀번호를 입력한 뒤 properties 생성하기 (현재 Gmail SMTP를 이용하기 때문에 Naver는 사용하지 않으나 properties는 필요하기에 아무 값이나 입력해서 생성해놓기)
+
 ### Spring Security Dependencies
 * Spring Security Core
 * Spring Security Web
