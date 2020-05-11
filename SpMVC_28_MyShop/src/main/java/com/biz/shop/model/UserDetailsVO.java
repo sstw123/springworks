@@ -20,6 +20,8 @@ import lombok.ToString;
 @Builder
 public class UserDetailsVO implements UserDetails{
 	
+	private static final long serialVersionUID = -2326256706527714266L;
+	
 	private long id;
 	private String username;
 	private String password;

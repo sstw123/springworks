@@ -50,7 +50,7 @@
 			#{enabled},
 			#{email},
 			#{phone},
-			#{address}
+			#{age}
 		)
 	</insert>
 	

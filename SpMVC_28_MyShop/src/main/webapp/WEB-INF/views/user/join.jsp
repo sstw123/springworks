@@ -108,7 +108,7 @@
 							alert("가입을 환영합니다!\n이메일로 발송된 인증 링크를 클릭해주세요.")
 							document.location.href = "${rootPath}/"
 						} else {
-							alert("문제가 발생했습니다.\n다시 시도해주세요.")
+							alert("이미 사용중인 ID입니다.")
 						}
 						
 					},
@@ -190,11 +190,11 @@
 		
 		<div class="form_item">
 			<label for="email">이메일</label><br/>
-			<span id="m_email">* 해당 이메일로 인증 링크가 발송됩니다.</span>
 		</div>
 		
 		<div class="form_item">
 			<input id="email" name="email" type="email"/>
+			<span id="m_email">* 해당 이메일로 인증 링크가 발송됩니다.</span>
 		</div>
 		
 		<div class="form_item">

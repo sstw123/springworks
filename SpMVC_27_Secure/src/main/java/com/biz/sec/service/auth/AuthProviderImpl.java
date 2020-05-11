@@ -23,7 +23,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
 	 * secutiry-context에 bean으로 등록되어 있는 passwordEncoder
 	 */
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private PasswordEncoder bcryptEncoder;
 	
 	/**
 	 * spring security를 커스터마이징할 때 로그인을 제어하기 위한 코드를 작성하는 중요한 메소드 
@@ -39,7 +39,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
 		
 		// Service -> Dao를 통해서 DB로부터 사용자 정보 가져오기
 		UserDetailsVO userDetails = (UserDetailsVO) userDetailsSvc.loadUserByUsername(username);
-		if( !passwordEncoder.matches(password, userDetails.getPassword()) ) {
+		if( !bcryptEncoder.matches(password, userDetails.getPassword()) ) {
 			throw new BadCredentialsException("비밀번호를 정확히 입력하세요");
 		}
 		

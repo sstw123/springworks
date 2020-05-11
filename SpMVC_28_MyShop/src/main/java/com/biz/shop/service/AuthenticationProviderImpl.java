@@ -2,17 +2,22 @@ package com.biz.shop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.biz.shop.dao.AuthoritiesDao;
+import com.biz.shop.model.AuthorityVO;
 import com.biz.shop.model.UserDetailsVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AuthenticationProviderImpl implements AuthenticationProvider {
 	
 	// UserDetailsService는 반드시 @Qualifier를 이용해 선언해주어야 한다
@@ -21,7 +26,10 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 	private UserDetailsService userDetailsSvc;
 	
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private PasswordEncoder bcryptEncoder;
+	
+	@Autowired
+	private AuthoritiesDao authDao;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -34,13 +42,13 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 		
 		// Service -> Dao를 통해서 DB로부터 사용자 정보 가져오기
 		UserDetailsVO userDetails = (UserDetailsVO) userDetailsSvc.loadUserByUsername(username);
-		if( !passwordEncoder.matches(password, userDetails.getPassword()) ) {
+		if( !bcryptEncoder.matches(password, userDetails.getPassword()) ) {
 			throw new BadCredentialsException("비밀번호를 정확히 입력하세요");
 		}
 		
 		// 사용자 권한이 ROLE_UNAUTH 상태라면
-		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_UNAUTH"))) {
-			throw new BadCredentialsException("이메일 인증을 완료해야 합니다");
+		if(authDao.findByUsername(username).stream().filter(o -> o.getAuthority().equals("ROLE_UNAUTH")).findFirst().isPresent()) {
+			throw new AuthorizationServiceException("이메일 인증을 완료해야 합니다");
 		}
 		
 		// UserDetailsService에서 보내준 사용자 정보를 Controller로 보내기

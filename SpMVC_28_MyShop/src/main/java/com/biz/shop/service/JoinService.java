@@ -39,8 +39,16 @@ public class JoinService {
 	@Transactional
 	public int insert(UserDetailsVO userVO) {
 		// 이미 DB에 있는 아이디면 아무 일도 하지 않음
-		if(userSvc.findByUsername(userVO.getUsername()) == null) {
+		if(userSvc.findByUsername(userVO.getUsername()) != null) {
 			return 0;
+		}
+
+		// 메일 보내기 실패 시 아무 일도 하지 않음
+		try {
+			mailSvc.send_join_auth_link(userVO);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		// 이메일 인증 전, 활성화 되지 않은 사용자로 세팅하기
@@ -48,13 +56,6 @@ public class JoinService {
 		// 비밀번호 암호화하기
 		String encPW = bcryptEncoder.encode(userVO.getPassword());
 		userVO.setPassword(encPW);
-		
-		try {
-			mailSvc.send_join_auth_link(userVO);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		int ret = userDao.insert(userVO);
 		

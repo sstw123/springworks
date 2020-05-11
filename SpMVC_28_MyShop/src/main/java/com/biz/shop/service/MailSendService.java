@@ -23,7 +23,7 @@ public class MailSendService {
 	
 	private final JavaMailSender javaMailSender;
 	private final UserDao userDao;
-	private final String from_email = "a@gmail.com";
+	//private final String from_email = "sianblone@gmail.com";
 	
 	public MailSendService(@Qualifier("gMailHandler") JavaMailSender javaMailSender, UserDao userDao) {
 		super();
@@ -32,13 +32,13 @@ public class MailSendService {
 	}
 	
 	public boolean sendMail(String to_email, String subject, String content) {
+		boolean ret = false;
 		
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper mHelper = new MimeMessageHelper(message, "UTF-8");
-		boolean ret = false;
 		
 		try {
-			mHelper.setFrom(from_email);
+			//mHelper.setFrom(from_email);
 			mHelper.setTo(to_email);
 			mHelper.setSubject(subject);
 			// setText의 2번째 매개변수 true : HTML 태그 적용
@@ -69,8 +69,8 @@ public class MailSendService {
 		String encEmail = PbeEncryptor.encrypt(email);
 
 		StringBuilder email_message = new StringBuilder();
-		email_message.append("<p>회원가입을 환영합니다!");
-		email_message.append("이메일 인증 링크를 클릭해주세요!</p>");
+		email_message.append("<p>회원가입을 환영합니다!<p>");
+		email_message.append("<p>하단의 이메일 인증 링크를 클릭하세요.</p>");
 		email_message.append("<a href='%s'>링크</a>");
 
 		// JASYPT를 사용하여 username과 email을 암호화하면 슬래시(/)가 포함되어있어 URL에 사용하기 힘들다
