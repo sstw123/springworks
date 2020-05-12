@@ -32,34 +32,6 @@ public class UserController {
 		return "auth/login";
 	}
 	
-	// mypage 비밀번호 변경 시 먼저 비밀번호 검사 화면 보여주기
-	@RequestMapping(value="/pwcheck", method=RequestMethod.GET)
-	public String pw_check() {
-		return "user/pw_check";
-	}
-	
-	// 비밀번호 검사
-	@RequestMapping(value="/pwcheck", method=RequestMethod.POST)
-	public String pw_check(String password) {
-		boolean ret = userSvc.pw_check(password);
-		
-		String page = "";
-		if(ret) {
-			page = "user/pw_change";
-		} else {
-			page = "user/pw_check_false";
-		}
-		return page;
-	}
-	
-	// 새로운 비밀번호로 변경
-	@ResponseBody
-	@RequestMapping(value="/pwchange", method=RequestMethod.POST)
-	public boolean pw_change(@RequestParam("password")String password, @RequestParam("re_password")String re_password) {
-		userSvc.pw_change(password, re_password);
-		return true;
-	}
-	
 	@RequestMapping(value = "/mypage", method=RequestMethod.GET)
 	public String mypage(Principal principal, Model model) {
 		UsernamePasswordAuthenticationToken upaToken = (UsernamePasswordAuthenticationToken) principal;
@@ -95,6 +67,50 @@ public class UserController {
 		int ret= userSvc.updateInfo(userVO);
 		
 		return "redirect:/user/mypage";
+	}
+	
+	// mypage 비밀번호 변경 시 먼저 비밀번호 검사 화면 보여주기
+	@RequestMapping(value="/pwcheck", method=RequestMethod.GET)
+	public String pw_check() {
+		return "user/pw_check";
+	}
+	
+	// 비밀번호 검사
+	@RequestMapping(value="/pwcheck", method=RequestMethod.POST)
+	public String pw_check(String password) {
+		boolean ret = userSvc.pw_check(password);
+		
+		String page = "";
+		if(ret) {
+			page = "user/pw_change";
+		} else {
+			page = "user/pw_check_false";
+		}
+		return page;
+	}
+	
+	// 새로운 비밀번호로 변경
+	@ResponseBody
+	@RequestMapping(value="/pwchange", method=RequestMethod.POST)
+	public boolean pw_change(@RequestParam("password")String password, @RequestParam("re_password")String re_password) {
+		userSvc.pw_change(password, re_password);
+		return true;
+	}
+	
+	// 이메일 변경 인증코드 발송
+	@ResponseBody
+	@RequestMapping(value="/change-email", method=RequestMethod.POST)
+	public String change_email(@RequestParam("email")String email) {
+		String ret = userSvc.change_email(email);
+		return ret;
+	}
+	
+	// 이메일 인증코드 검증
+	@ResponseBody
+	@RequestMapping(value="/change-email-auth", method=RequestMethod.POST)
+	public boolean change_email_auth(@RequestParam("enc_auth_code")String enc_auth_code, @RequestParam("auth_code")String auth_code) {
+		boolean ret = userSvc.change_email_auth(enc_auth_code, auth_code);
+		return ret;
 	}
 	
 	// 아이디 찾기 화면

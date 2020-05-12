@@ -2,6 +2,7 @@ package com.biz.shop.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -106,6 +107,18 @@ public class MailSendService {
 		
 		String subject = "비밀번호 재설정 메일";
 		return this.sendMail(userVO.getEmail(), subject, email_content);
+	}
+
+	public boolean send_auth_code(String to_email, String email_token) {
+		
+		StringBuilder email_content = new StringBuilder();
+		email_content.append("<p>회원가입을 완료하려면 인증코드를 입력해주세요</p>");
+		email_content.append("<p>" + email_token + "</p>");
+		
+		String subject = "이메일 변경 인증코드";
+		
+		boolean ret = this.sendMail(to_email, subject, email_content.toString());
+		return ret;
 	}
 
 }

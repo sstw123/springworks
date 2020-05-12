@@ -118,11 +118,7 @@
 			
 		<security:intercept-url
 			pattern="/user/mypage"
-			access="hasAnyRole('ADMIN','USER')" />
-			
-		<security:intercept-url
-			pattern="/user/password"
-			access="hasAnyRole('ADMIN','USER')" />
+			access="isAuthenticated()" />
 			
 		<security:intercept-url
 			pattern="/user/**"

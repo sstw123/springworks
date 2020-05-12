@@ -30,15 +30,9 @@
 	</style>
 	<script>
 		$(function () {
-			$("#password").focus()
-			
 			let enable_btn_pw_change = true
 			
-			// ajax 완료 전까지 버튼 기능 사용 불가
-			function toggle_btn(button) {
-				if(button) button = false
-				else return false
-			}
+			$("#password").focus()
 			
 			// ----------------------------------------------------------
 			
@@ -64,8 +58,8 @@
 				}
 				
 				// 유효성 검사 통과 시
-				// 서버 부하를 줄이기 위해 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
-				toggle_btn(enable_btn_pw_change)
+				// 서버 부하를 줄이기 위해 ajax 완료될 때까지 버튼 기능 끄기
+				enable_btn_pw_change = false
 				
 				$.ajax({
 					url : "${rootPath}/user/pwchange",
@@ -91,7 +85,7 @@
 						alert("서버 통신 오류")
 					}
 				}).always(function() {
-					toggle_btn(enable_btn_pw_change)
+					enable_btn_pw_change = true
 				})
 			})
 		})

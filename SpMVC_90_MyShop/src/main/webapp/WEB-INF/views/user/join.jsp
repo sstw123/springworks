@@ -64,12 +64,6 @@
 		$(function() {
 			let enable_btn_join = true
 			
-			// ajax 완료 전까지 버튼 기능 사용 불가
-			function toggle_btn(button) {
-				if(button) button = false
-				else return false
-			}
-			
 			function isEmail(email) {
 				let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{1,6})+$/
 				return regex.test(email)
@@ -86,7 +80,7 @@
 				$(this).val( $(this).val().replace(/[^a-zA-Z0-9]/g, "") )
 			})
 			
-			$(document).on("click", "#btn-join", function() {
+			$(document).on("click", "#btn_join", function() {
 				if(!enable_btn_join) return false
 				
 				let username = $("#username")
@@ -120,14 +114,14 @@
 					email.focus()
 					return false
 				} else if( !isEmail(email.val()) ) {
-					alert("이메일을 정확히 입력하세요.")
+					alert("올바른 형식의 이메일이 아닙니다.")
 					email.focus()
 					return false
 				}
 				
 				// 유효성 검사 통과 시
-				// 서버 부하를 줄이기 위해 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
-				toggle_btn(enable_btn_join)
+				// 이메일 스팸 및 서버 부하를 줄이기 위해 ajax 완료될 때까지 버튼 기능 끄기
+				enable_btn_join = false
 				
 				$.ajax({
 					url : "${rootPath}/join/join",
@@ -146,7 +140,7 @@
 						alert("서버 통신 오류")
 					}
 				}).always(function() {
-					toggle_btn(enable_btn_join)
+					enable_btn_join = true
 				})
 			})
 			
@@ -246,7 +240,7 @@
 		</div>
 		
 		<div class="form_item btn_box">
-			<button id="btn-join" type="button">회원가입</button>
+			<button id="btn_join" type="button">회원가입</button>
 		</div>
 	</form:form>
 </body>

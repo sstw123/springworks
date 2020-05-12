@@ -73,15 +73,6 @@
 			let enable_btn_find_id = true
 			let enable_btn_find_pw = true
 			
-			function toggle_btn(button) {
-				if(button) {
-					button = false
-				} else {
-					// ajax 완료 전까지 버튼 기능 사용 불가
-					return false
-				}
-			}
-			
 			function isEmail(email) {
 				let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{1,6})+$/
 				return regex.test(email)
@@ -110,8 +101,9 @@
 					return false
 				}
 				
-				// 서버 부하를 줄이기 위해 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
-				toggle_btn(enable_btn_find_id)
+				// 유효성 검사 통과 시
+				// 서버 부하를 줄이기 위해 ajax 완료될 때까지 버튼 기능 끄기
+				enable_btn_find_id = false
 				
 				$.ajax({
 					url : "${rootPath}/user/find-id",
@@ -134,7 +126,7 @@
 						alert("서버 통신 오류")
 					}
 				}).always(function() {
-					toggle_btn(enable_btn_find_id)
+					enable_btn_find_id = true
 				})
 			})
 			
@@ -156,8 +148,8 @@
 				}
 				
 				// 유효성 검사 통과 시
-				// 서버 부하를 줄이기 위해 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
-				toggle_btn(enable_btn_find_pw)
+				// 서버 부하를 줄이기 위해 ajax 완료될 때까지 버튼 기능 끄기
+				enable_btn_find_pw = false
 				
 				$.ajax({
 					url : "${rootPath}/user/find-pw",
@@ -182,7 +174,7 @@
 						alert("서버 통신 오류")
 					}
 				}).always(function() {
-					toggle_btn(enable_btn_find_pw)
+					enable_btn_find_pw = true
 				})
 			})
 			

@@ -222,4 +222,24 @@ public class UserService {
 		return userDao.updatePW(userVO);
 	}
 
+	public String change_email(String email) {
+		// UUID : 989bbfdd-ed54-430c-a20a-c348614e84be 가장 앞부분 대문자로 만들기
+		String email_token = UUID.randomUUID().toString().split("-")[0].toUpperCase();
+		
+		boolean ret = mailSvc.send_auth_code(email, email_token);
+		// 메일 보내기 실패 시
+		if(!ret) return "fail";
+		
+		// 메일 보내기 성공 시
+		//	UUID 암호화
+		String enc_email_token = PbeEncryptor.encrypt(email_token);
+		return enc_email_token;
+	}
+
+	public boolean change_email_auth(String enc_auth_code, String auth_code) {
+		String dec_code = PbeEncryptor.decrypt(enc_auth_code);
+		if(dec_code.equals(auth_code)) return true;
+		return false;
+	}
+
 }
