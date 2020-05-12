@@ -58,25 +58,43 @@
 			margin-left: 10px;
 			font-weight: bold;
 			font-size: small;
-			color: gray;
 		}
 	</style>
 	<script>
 		$(function() {
+			let enable_btn_join = true
+			
+			// ajax 완료 전까지 버튼 기능 사용 불가
+			function toggle_btn(button) {
+				if(button) button = false
+				else return false
+			}
+			
+			function isEmail(email) {
+				let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{1,6})+$/
+				return regex.test(email)
+			}
+			
 			function regId(username) {
 				let regex = /^[a-zA-Z0-9]{4,12}$/
 				return regex.test(username)
 			}
+			
+			// ----------------------------------------------------------
 			
 			$("#username").on("keyup", function() {
 				$(this).val( $(this).val().replace(/[^a-zA-Z0-9]/g, "") )
 			})
 			
 			$(document).on("click", "#btn-join", function() {
+				if(!enable_btn_join) return false
+				
 				let username = $("#username")
 				let password = $("#password")
 				let re_password = $("#re_password")
+				let email = $("#email")
 				
+				// 유효성 검사
 				if(username.val() == "") {
 					alert("아이디를 입력하세요.")
 					username.focus()
@@ -97,7 +115,19 @@
 					alert("비밀번호가 다릅니다.\n다시 확인해주세요.")
 					re_password.focus()
 					return false
+				} else if(email.val() == "") {
+					alert("이메일을 입력하세요.")
+					email.focus()
+					return false
+				} else if( !isEmail(email.val()) ) {
+					alert("이메일을 정확히 입력하세요.")
+					email.focus()
+					return false
 				}
+				
+				// 유효성 검사 통과 시
+				// 서버 부하를 줄이기 위해 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
+				toggle_btn(enable_btn_join)
 				
 				$.ajax({
 					url : "${rootPath}/join/join",
@@ -105,7 +135,7 @@
 					data : $("#join-form").serialize(),
 					success : function(result) {
 						if(result > 0) {
-							alert("가입을 환영합니다!\n이메일로 발송된 인증 링크를 클릭해주세요.")
+							alert("가입을 환영합니다!\n이메일로 발송된 인증 링크를 클릭하세요.")
 							document.location.href = "${rootPath}/"
 						} else {
 							alert("이미 사용중인 ID입니다.")
@@ -115,6 +145,8 @@
 					error : function() {
 						alert("서버 통신 오류")
 					}
+				}).always(function() {
+					toggle_btn(enable_btn_join)
 				})
 			})
 			

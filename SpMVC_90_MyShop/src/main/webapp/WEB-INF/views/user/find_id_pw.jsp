@@ -94,6 +94,8 @@
 			})
 			
 			$(document).on("click", "#btn-find-id", function(e) {
+				if(!enable_btn_find_id) return false
+				
 				let email = $("#id_email")
 				
 				if(email.val() == "") {
@@ -131,13 +133,18 @@
 					error : function() {
 						alert("서버 통신 오류")
 					}
+				}).always(function() {
+					toggle_btn(enable_btn_find_id)
 				})
 			})
 			
 			$(document).on("click", "#btn-find-pw", function() {
+				if(!enable_btn_find_pw) return false
+				
 				let username = $("#pw_username")
 				let email = $("#pw_email")
 				
+				// 유효성 검사
 				if(username.val() == "") {
 					alert("아이디를 입력하세요.")
 					username.focus()
@@ -148,6 +155,7 @@
 					return false
 				}
 				
+				// 유효성 검사 통과 시
 				// 서버 부하를 줄이기 위해 버튼 클릭 시 ajax 완료될 때까지 기능 끄기
 				toggle_btn(enable_btn_find_pw)
 				
@@ -169,12 +177,12 @@
 						} else {
 							alert("문제가 발생했습니다.\n다시 시도해주세요.")
 						}
-						enable_btn_find_pw = true
 					},
 					error : function() {
 						alert("서버 통신 오류")
-						enable_btn_find_pw = true
 					}
+				}).always(function() {
+					toggle_btn(enable_btn_find_pw)
 				})
 			})
 			

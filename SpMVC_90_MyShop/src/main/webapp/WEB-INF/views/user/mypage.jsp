@@ -54,7 +54,7 @@
 	<script>
 		$(function() {
 			$(".mypage_form").submit(function() {
-				if(!confirm("이대로 수정하시겠습니까?")) {
+				if(!confirm("정말로 수정하시겠습니까?")) {
 					return false
 				}
 			})

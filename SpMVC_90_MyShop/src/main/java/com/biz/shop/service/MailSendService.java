@@ -23,7 +23,6 @@ public class MailSendService {
 	
 	private final JavaMailSender javaMailSender;
 	private final UserDao userDao;
-	//private final String from_email = "sianblone@gmail.com";
 	
 	public MailSendService(@Qualifier("gMailHandler") JavaMailSender javaMailSender, UserDao userDao) {
 		super();
@@ -38,7 +37,6 @@ public class MailSendService {
 		MimeMessageHelper mHelper = new MimeMessageHelper(message, "UTF-8");
 		
 		try {
-			//mHelper.setFrom(from_email);
 			mHelper.setTo(to_email);
 			mHelper.setSubject(subject);
 			// setText의 2번째 매개변수 true : HTML 태그 적용
