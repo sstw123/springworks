@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Spring Security 기반 회원가입 및 Email 인증 프로젝트 메인 컨트롤러
- * @since 2020-04-20
+ * @since 2020-05-11
  * @author sianblone
  */
 @Slf4j
@@ -63,12 +63,13 @@ public class JoinController {
 	 * @return
 	 */
 	@RequestMapping(value="/email-auth", method=RequestMethod.GET)
-	public String email_valid(UserDetailsVO userVO) {
-		boolean ret = joinSvc.email_link_auth(userVO.getUsername(), userVO.getEmail());
-		if (ret) {
-			return "redirect:/user/login";
+	public String email_valid(UserDetailsVO userVO, Model model) {
+		byte ret = joinSvc.email_link_auth(userVO.getUsername(), userVO.getEmail());
+		
+		if (ret == 1) {
+			model.addAttribute("EMAIL_AUTH", true);
+			return "redirect:/";
 		} else {
-			
 			return "user/email_auth_fail";
 		}
 	}

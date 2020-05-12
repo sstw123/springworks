@@ -7,7 +7,7 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		#pw_change_form {
+		#change_pw_form {
 			width: 420px;
 			height: 445px;
 			margin: 0 auto;
@@ -30,14 +30,14 @@
 	</style>
 	<script>
 		$(function () {
-			let enable_btn_pw_change = true
+			let enable_btn_change_pw = true
 			
 			$("#password").focus()
 			
 			// ----------------------------------------------------------
 			
 			$(document).on("click", "#btn_confirm", function() {
-				if(!enable_btn_pw_change) return false
+				if(!enable_btn_change_pw) return false
 				
 				let password = $("#password")
 				let re_password = $("#re_password")
@@ -59,10 +59,10 @@
 				
 				// 유효성 검사 통과 시
 				// 서버 부하를 줄이기 위해 ajax 완료될 때까지 버튼 기능 끄기
-				enable_btn_pw_change = false
+				enable_btn_change_pw = false
 				
 				$.ajax({
-					url : "${rootPath}/user/pwchange",
+					url : "${rootPath}/user/change-pw",
 					type : "POST",
 					data : {
 							"${_csrf.parameterName}" : "${_csrf.token}",
@@ -85,7 +85,7 @@
 						alert("서버 통신 오류")
 					}
 				}).always(function() {
-					enable_btn_pw_change = true
+					enable_btn_change_pw = true
 				})
 			})
 		})
@@ -94,7 +94,7 @@
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	<h2>비밀번호 변경</h2>
-	<form:form id="pw_change_form" action="${rootPath}/user/pwchange" autocomplete="off">
+	<form:form id="change_pw_form" autocomplete="off">
 		<div class="label">
 			<label for="password">새 비밀번호</label>
 		</div>

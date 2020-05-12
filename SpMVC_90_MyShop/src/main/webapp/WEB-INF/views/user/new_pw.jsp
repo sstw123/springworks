@@ -56,9 +56,8 @@
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	<h2>비밀번호 재설정</h2>
-	<form:form id="find_form" action="${rootPath}/user/new-pw" modelAttribute="userVO" autocomplete="off">
+	<form:form id="find_form" modelAttribute="userVO" autocomplete="off">
 		<p>새로운 비밀번호를 입력하세요</p><br/>
-		<input type="hidden" name="username" value="${ENC}"/>
 		<div class="label">
 			<label for="password">새 비밀번호</label>
 		</div>

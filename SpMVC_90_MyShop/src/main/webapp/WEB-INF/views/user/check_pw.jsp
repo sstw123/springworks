@@ -7,7 +7,7 @@
 <head>
 	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
-		#pwcheck_form {
+		#check_pw_form {
 			width: 420px;
 			height: 445px;
 			margin: 0 auto;
@@ -36,7 +36,7 @@
 <body>
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	<h2>비밀번호 확인</h2>
-	<form:form id="pwcheck_form" action="${rootPath}/user/pwcheck" autocomplete="off">
+	<form:form id="check_pw_form" action="${rootPath}/user/check-pw" autocomplete="off">
 		<div class="label">
 			<label for="password">현재 비밀번호를 입력하세요</label>
 		</div>

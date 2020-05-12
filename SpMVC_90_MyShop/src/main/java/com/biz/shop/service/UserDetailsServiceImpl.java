@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		UserDetailsVO userDetailsVO = userDao.findByUsername(username);
 		if(userDetailsVO == null) {
-			throw new UsernameNotFoundException("등록되지 않은 사용자입니다.");
+			return null;
 		}
 		
 		userDetailsVO.setAuthorities(this.getAuthoritiesCS(username));

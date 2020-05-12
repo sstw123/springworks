@@ -54,7 +54,7 @@
 		)
 	</insert>
 	
-	<update id="updateInfo">
+	<update id="update_user">
 		UPDATE `tbl_users`
 		SET
 		`enabled` = #{enabled},
@@ -64,7 +64,7 @@
 		WHERE `username` = #{username}
 	</update>
 	
-	<update id="updatePW">
+	<update id="update_pw">
 		UPDATE `tbl_users`
 		SET
 		`password` = #{password}

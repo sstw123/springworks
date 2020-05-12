@@ -85,8 +85,8 @@
 				}
 			})
 			
-			$(document).on("click", "#btn_pw_change", function() {
-				document.location.href = "${rootPath}/user/pwcheck"
+			$(document).on("click", "#btn_change_pw", function() {
+				document.location.href = "${rootPath}/user/check-pw"
 			})
 			
 			$(document).on("click", "#btn_send_email", function() {
@@ -154,10 +154,12 @@
 						auth_code : $("#auth_code").val()
 					},
 					success : function(result) {
-						if(result) {
-							
-						} else {
-							alert("올바르지 않은 인증코드입니다.")
+						if(result == 1 || result == 3) {
+							document.location.replace(document.location.href)
+						} else if(result == 7) {
+							alert("문제가 발생했습니다. 잠시 후 다시 시도하세요.")
+						} else if(result == 4) {
+							alert("인증코드가 일치하지 않습니다.")
 						}
 					},
 					error : function() {
@@ -186,7 +188,7 @@
 		<div class="mypage-div">
 			<span class="mypage-label">비밀번호</span>
 			<div class="mypage-content">
-				<button id="btn_pw_change" type="button">비밀번호 변경</button>
+				<button id="btn_change_pw" type="button">비밀번호 변경</button>
 			</div>
 		</div>
 		

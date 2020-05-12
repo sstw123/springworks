@@ -130,6 +130,7 @@
 		
 		<security:form-login
 			login-page="/user/login"
+			authentication-failure-url="/user/login?error=1"
 			login-processing-url=""
 			default-target-url=""
 			username-parameter="username"

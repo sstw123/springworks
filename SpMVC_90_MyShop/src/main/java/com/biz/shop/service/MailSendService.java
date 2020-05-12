@@ -52,7 +52,7 @@ public class MailSendService {
 		return ret;
 	}
 	/**
-	 * 회원가입된 사용자에게 인증 email 전송
+	 * 회원가입 한 사용자에게 인증 email 발송
 	 * username을 암호화시켜서 인증을 수행할 수 있는 링크를 email 본문에 작성하여 전송
 	 * @param userVO
 	 * @return
@@ -112,7 +112,7 @@ public class MailSendService {
 	public boolean send_auth_code(String to_email, String email_token) {
 		
 		StringBuilder email_content = new StringBuilder();
-		email_content.append("<p>회원가입을 완료하려면 인증코드를 입력해주세요</p>");
+		email_content.append("<p>회원가입을 완료하려면 인증코드를 입력하세요</p>");
 		email_content.append("<p>" + email_token + "</p>");
 		
 		String subject = "이메일 변경 인증코드";

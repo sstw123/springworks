@@ -7,24 +7,21 @@ import org.apache.ibatis.annotations.Select;
 import com.biz.shop.model.UserDetailsVO;
 
 public interface UserDao {
+	
+	public UserDetailsVO findByUsernameFromAuthorities(String username);
 
 	public List<UserDetailsVO> selectAll();
-	
 	public UserDetailsVO findById(long id);
+	public UserDetailsVO findByUsername(String username);
+	@Select("SELECT username FROM tbl_users WHERE email = #{email}")
+	public List<UserDetailsVO> findByEmail(String email);
 	
 	public void create_table(String create_table);
 	
-	public UserDetailsVO findByUsername(String username);
-	
-	public UserDetailsVO findByUsernameFromAuthorities(String username);
-	
 	public int insert(UserDetailsVO userVO);
+	public int update_user(UserDetailsVO userVO);
+	public int update_pw(UserDetailsVO userVO);
 	
-	public int updateInfo(UserDetailsVO userVO);
-
-	public int updatePW(UserDetailsVO userVO);
 	
-	@Select("SELECT username FROM tbl_users WHERE email = #{email}")
-	public List<UserDetailsVO> findByEmail(String email);
 
 }

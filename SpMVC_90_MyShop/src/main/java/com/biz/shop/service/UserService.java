@@ -2,14 +2,11 @@ package com.biz.shop.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -87,7 +84,7 @@ public class UserService {
 	
 	// 로그인 한 유저가 자기 정보 수정하기
 	@Transactional
-	public int updateInfo(UserDetailsVO userVO) {
+	public int update_user(UserDetailsVO userVO) {
 		Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsVO loginUserVO = (UserDetailsVO) oldAuth.getPrincipal();
 		
@@ -95,7 +92,7 @@ public class UserService {
 		loginUserVO.setPhone(userVO.getPhone());
 		loginUserVO.setAge(userVO.getAge());
 		
-		int ret = userDao.updateInfo(loginUserVO);
+		int ret = userDao.update_user(loginUserVO);
 		if(ret > 0) {
 			// 업데이트 성공시, 전역으로 쓰는 SecurityContextHolder에 새로운 Authentication 업데이트 시켜주기
 			Authentication newAuth = new UsernamePasswordAuthenticationToken(loginUserVO, oldAuth.getCredentials(), oldAuth.getAuthorities());
@@ -108,7 +105,7 @@ public class UserService {
 	// 관리자가 다른 유저 정보 수정하기
 	// 유저 정보, 설정한 권한 따로 받기
 	@Transactional
-	public int updateInfo(UserDetailsVO userVO, String[] arrAuth) {
+	public int update_user_from_admin(UserDetailsVO userVO, String[] arrAuth) {
 		UserDetailsVO dbUserVO = userDao.findByUsername(userVO.getUsername());
 		
 		dbUserVO.setEnabled(userVO.isEnabled());
@@ -116,7 +113,7 @@ public class UserService {
 		dbUserVO.setPhone(userVO.getPhone());
 		dbUserVO.setAge(userVO.getAge());
 		
-		int ret = userDao.updateInfo(dbUserVO);
+		int ret = userDao.update_user(dbUserVO);
 		
 		if(ret > 0) {
 			List<AuthorityVO> authList = new ArrayList<AuthorityVO>();
@@ -138,7 +135,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public boolean pw_check(String password) {
+	public boolean check_pw(String password) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		String loginPW = userDao.findByUsername(username).getPassword();
 		// 현재 로그인한 사용자의 암호화된 DB 비밀번호와 입력된 password와 비교
@@ -148,7 +145,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public int pw_change(String password, String re_password) {
+	public int change_pw(String password, String re_password) {
 		// 서버에서 유효성 검사
 		// 1. 비밀번호, 비밀번호 확인에 아무것도 입력하지 않은 경우
 		// 2. 비밀번호와 비밀번호 확인이 서로 다른 경우 아무 것도 하지 않음
@@ -164,17 +161,18 @@ public class UserService {
 		// 새로운 비밀번호 암호화하기
 		userVO.setPassword(bcryptEncoder.encode(password));
 		// DB에 username 기준으로 암호화 된 비밀번호 update하기
-		return userDao.updatePW(userVO);
+		return userDao.update_pw(userVO);
 	}
-
-	public List<UserDetailsVO> findId(UserDetailsVO userVO) {
+	
+	public List<UserDetailsVO> find_my_ids(UserDetailsVO userVO) {
 		List<UserDetailsVO> userList = null;
 		userList = userDao.findByEmail(userVO.getEmail());
 		
 		return userList;
 	}
 	
-	public byte findPW(UserDetailsVO userVO) {
+	@Transactional
+	public byte find_my_pw(UserDetailsVO userVO) {
 		UserDetailsVO dbUserVO = userDao.findByUsername(userVO.getUsername());
 		byte res = 0;
 		if(dbUserVO == null) {
@@ -204,42 +202,84 @@ public class UserService {
 		
 		return res;
 	}
-
-	public int new_pw(UserDetailsVO userVO, String re_password) {
+	
+	public int new_pw(String enc_username, String password, String re_password) {
 		// userVO에는 암호화된 username, password만 담겨있다
 		// 서버에서 유효성 검사
 		// 1. 비밀번호, 비밀번호 확인에 아무것도 입력하지 않은 경우
 		// 2. 비밀번호와 비밀번호 확인이 서로 다른 경우 아무 것도 하지 않음
-		if(userVO.getPassword().isEmpty() || re_password.isEmpty() || !userVO.getPassword().equals(re_password)) {
+		if(password.isEmpty() || re_password.isEmpty() || !password.equals(re_password)) {
 			return 0;
 		}
 		
-		// username 복호화
-		userVO.setUsername(PbeEncryptor.decrypt(userVO.getUsername()));
-		// 패스워드 암호화
-		userVO.setPassword(PbeEncryptor.encrypt(userVO.getPassword()));
+		// username 복호화, password 암호화해서 VO에 저장
+		UserDetailsVO userVO = UserDetailsVO.builder()
+							.username(PbeEncryptor.decrypt(enc_username))
+							.password(PbeEncryptor.encrypt(password))
+							.build();
+		
 		// DB에 새로운 비밀번호 저장
-		return userDao.updatePW(userVO);
+		return userDao.update_pw(userVO);
 	}
-
-	public String change_email(String email) {
+	
+	// 이메일 변경 메소드
+	public String change_email_step1(String email) {
+		String ret = "";
+		
 		// UUID : 989bbfdd-ed54-430c-a20a-c348614e84be 가장 앞부분 대문자로 만들기
 		String email_token = UUID.randomUUID().toString().split("-")[0].toUpperCase();
 		
-		boolean ret = mailSvc.send_auth_code(email, email_token);
+		boolean result = mailSvc.send_auth_code(email, email_token);
 		// 메일 보내기 실패 시
-		if(!ret) return "fail";
+		if(!result) ret = "fail";
 		
 		// 메일 보내기 성공 시
-		//	UUID 암호화
+		// UUID 암호화해서 Controller -> View로 보내기
 		String enc_email_token = PbeEncryptor.encrypt(email_token);
-		return enc_email_token;
+		ret = enc_email_token;
+		
+		return ret;
 	}
-
-	public boolean change_email_auth(String enc_auth_code, String auth_code) {
+	
+	// 메일로 발송된 링크 클릭 시 실행할 메소드
+	// 페이지의 암호화된 인증코드, 이메일로 발송된 인증코드를 비교하여
+	// 정확히 입력했을 경우 SecurityContextHolder에 있는 현재 로그인 된 사용자의 아이디로 DB를 조회
+	// 조회 결과로 받은 객체(VO)의 이메일을 세션에 들어있는 이메일로 변경 후 DB에 업데이트
+	// 결과를 DB 업데이트 성공, DB 업데이트 실패, 인증코드 불일치 3가지로 나누어 결과 return
+	@Transactional
+	public byte change_email_step2(String enc_auth_code, String auth_code, String email) {
+		byte ret = 0;
+		
+		// 페이지 인증코드 복호화
 		String dec_code = PbeEncryptor.decrypt(enc_auth_code);
-		if(dec_code.equals(auth_code)) return true;
-		return false;
+		// 인증코드를 정확히 입력했을 경우
+		if(dec_code.equals(auth_code)) {
+			String username = SecurityContextHolder.getContext().getAuthentication().getName();
+			UserDetailsVO userVO = userDao.findByUsername(username);
+			userVO.setEmail(email);
+			
+			int result = userDao.update_user(userVO);
+			if(result > 0) ret = 1; else ret = 7;
+			// DB update 성공 = 리턴 1, 실패 = 리턴 7
+			
+			// 현재 사용자의 권한이 ROLE_UNAUTH인 경우에만
+			if(ret == 1 && SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_UNAUTH")).findFirst().isPresent()) {
+				// 권한 테이블에서 username으로 검색한 튜플 전부 삭제 후 ROLE_USER 권한 새로 추가
+				result = authDao.delete(userVO.getUsername());
+				if(result > 0) ret++; else ret = 7;
+				List<AuthorityVO> authList = new ArrayList<>();
+				authList.add(AuthorityVO.builder().username(userVO.getUsername()).authority("ROLE_USER").build());
+				result = authDao.insert(authList);
+				// 현재 사용자의 권한이 ROLE_UNAUTH인 경우, 권한 테이블까지 DB update 전부 성공 = 리턴 3
+				// DB update 하나라도 실패 = 리턴 7
+				if(result > 0) ret++; else ret = 7;
+			}
+		} else {
+			// 정확하지 않은 인증코드 입력 = 리턴 4
+			ret = 4;
+		}
+		
+		return ret;
 	}
 
 }

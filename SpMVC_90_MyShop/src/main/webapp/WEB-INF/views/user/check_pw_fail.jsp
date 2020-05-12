@@ -8,7 +8,7 @@
 	<script>
 		$(function() {
 			alert("비밀번호를 정확히 입력하세요.")
-			document.location.replace("${rootPath}/user/pwcheck")
+			document.location.replace("${rootPath}/user/check-pw")
 		})
 	</script>
 </head>

@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.biz.shop.dao.AuthoritiesDao;
@@ -42,14 +44,20 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 		
 		// Service -> Dao를 통해서 DB로부터 사용자 정보 가져오기
 		UserDetailsVO userDetails = (UserDetailsVO) userDetailsSvc.loadUserByUsername(username);
-		if( !bcryptEncoder.matches(password, userDetails.getPassword()) ) {
-			throw new BadCredentialsException("비밀번호를 정확히 입력하세요");
+		if(userDetails == null) {
+			throw new UsernameNotFoundException("등록되지 않은 사용자입니다.");
 		}
 		
+		if( !bcryptEncoder.matches(password, userDetails.getPassword()) ) {
+			throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+		}
+		
+		/*
 		// 사용자 권한이 ROLE_UNAUTH 상태라면
 		if(authDao.findByUsername(username).stream().filter(o -> o.getAuthority().equals("ROLE_UNAUTH")).findFirst().isPresent()) {
-			throw new AuthorizationServiceException("이메일 인증을 완료해야 합니다");
+			throw new InsufficientAuthenticationException("이메일 인증을 완료해야 합니다.");
 		}
+		*/
 		
 		// UserDetailsService에서 보내준 사용자 정보를 Controller로 보내기
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

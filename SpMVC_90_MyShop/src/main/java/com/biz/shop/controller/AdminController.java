@@ -1,4 +1,4 @@
-package com.biz.sec.controller;
+package com.biz.shop.controller;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.biz.sec.domain.UserDetailsVO;
-import com.biz.sec.service.UserService;
+import com.biz.shop.model.UserDetailsVO;
+import com.biz.shop.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,19 +34,19 @@ public class AdminController {
 		return "admin/user_list";
 	}
 	
-	@RequestMapping(value="/user_detail_view/{username}", method=RequestMethod.GET)
+	@RequestMapping(value="/user_detail/{username}", method=RequestMethod.GET)
 	public String user_detail_view(@PathVariable("username")String username, Model model) {
-		UserDetailsVO userVO = userSvc.findByUserName(username);
+		UserDetailsVO userVO = userSvc.findByUsername(username);
 		model.addAttribute("USER_VO", userVO);
-		return "admin/user_detail_view";
+		return "admin/user_detail";
 	}
 	
-	@RequestMapping(value="/user_detail_view", method=RequestMethod.POST)
+	@RequestMapping(value="/user_detail", method=RequestMethod.POST)
 	public String mypage(UserDetailsVO userVO, String[] auth, Model model) {
+		System.out.println(userVO.toString());
+		int ret = userSvc.update_user_from_admin(userVO, auth);
 		
-		int ret = userSvc.updateInfo(userVO, auth);
-		
-		return "redirect:/admin/user_detail_view/" + userVO.getUsername();
+		return "redirect:/admin/user_detail/" + userVO.getUsername();
 	}
 
 }
