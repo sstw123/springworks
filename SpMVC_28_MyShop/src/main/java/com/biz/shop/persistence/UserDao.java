@@ -3,17 +3,19 @@ package com.biz.shop.persistence;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Select;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.apache.ibatis.annotations.SelectProvider;
 
 import com.biz.shop.domain.UserDetailsVO;
+import com.biz.shop.persistence.sql.UserSQL;
 
 public interface UserDao {
 	
-	@Select("SELECT * FROM tbl_users")
+	// @SelectProvider : SQL 클래스를 사용하여 작성된 동적 쿼리를 mapping
+	// value : sql문을 작성한 클래스명.class
+	// method : sql문을 작성한 메소드명
+	@SelectProvider(value = UserSQL.class, method = "selectAll")
 	public List<UserDetailsVO> selectAll();
-
-	public UserDetails findByUsername(String username);
 	
-	@Select("${create_table_query}")
-	public void create_table(String create_table_query);
+	@SelectProvider(value = UserSQL.class, method = "findByUsername")
+	public UserDetailsVO findByUsername(String username);
 }

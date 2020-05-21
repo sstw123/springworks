@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<%@ include file="/WEB-INF/views/include/include_head.jspf" %>
 	<style>
 		.login_form {
 			display: flex;
@@ -17,8 +18,12 @@
 		#message {
 			display: block;
 			margin: 0px 0px 10px 0px;
+			text-align: center;
 			font-weight: bold;
 			color: var(--color-danger)
+		}
+		#message:before {
+			content: "\200b";
 		}
 		.form_item {
 			margin-bottom: 10px;
@@ -55,24 +60,28 @@
 	</style>
 	<script>
 		$(function() {
-			$(document).on("click", "#btn-join", function() {
+			$(document).on("click", "#btn_join", function() {
 				document.location.href = "${rootPath}/join"
 			})
 			
-			$(document).on("click", "#btn-find", function() {
+			$(document).on("click", "#btn_find", function() {
 				document.location.href = "${rootPath}/user/find-id"
 			})
 		})
 	</script>
 </head>
 <body>
+	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	<!-- Spring Security는 보통 Spring Form 태그와 연계하여 사용한다 -->
 	<h2>로그인</h2>
 	<form:form class="login_form" action="${rootPath}/login" method="POST" autocomplete="off">
 		<div>
-			<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
-				<span id="message">${SPRING_SECURITY_LAST_EXCEPTION.message}</span>
-			</c:if>
+			<span id="message">
+				<c:if test="${not empty param['error']}">
+					<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+					<c:remove var = "SPRING_SECURITY_LAST_EXCEPTION" scope = "session" />
+				</c:if>
+			</span>
 		</div>
 		
 		<div class="form_item">
@@ -92,9 +101,9 @@
 		</div>
 		
 		<div class="form_item btn_box">
-			<button id="btn-login">로그인</button>
-			<button id="btn-find" type="button">ID/비밀번호 찾기</button>
-			<button id="btn-join" type="button">회원가입</button>
+			<button id="btn_login">로그인</button>
+			<button id="btn_find" type="button">ID/비밀번호 찾기</button>
+			<button id="btn_join" type="button">회원가입</button>
 		</div>
 	</form:form>
 </body>

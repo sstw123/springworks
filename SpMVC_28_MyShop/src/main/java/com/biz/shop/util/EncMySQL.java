@@ -37,8 +37,8 @@ public class EncMySQL {
 		ResourceLoader resLoader = new DefaultResourceLoader();
 		Resource res = resLoader.getResource("file:src/main/resources/db.connection2.properties");
 		
-		String saveUserName = String.format("mysql.username=ENC%s", encUserName);
-		String savePassword = String.format("mysql.password=ENC%s", encPassword);
+		String saveUserName = String.format("mysql.username=%s", encUserName);
+		String savePassword = String.format("mysql.password=%s", encPassword);
 		
 		try {
 			PrintWriter pw = new PrintWriter(res.getFile());

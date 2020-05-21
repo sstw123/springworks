@@ -22,6 +22,7 @@ public class UserDetailsVO implements UserDetails {
 
 	private static final long serialVersionUID = 3812867868171304547L;
 	
+	// 필수 항목 필드 변수
 	private long id;
 	private String username;
 	private String password;
@@ -31,6 +32,7 @@ public class UserDetailsVO implements UserDetails {
 	private boolean accountNonLocked;
 	private boolean credentialsNonExpired;
 	private Collection<? extends GrantedAuthority> authorities;
+	// -------------------
 	
 	private String nickname;
 	private String email;

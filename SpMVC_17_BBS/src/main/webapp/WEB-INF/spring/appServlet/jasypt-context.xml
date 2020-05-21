@@ -7,7 +7,7 @@
 		
 	<bean id="envConfig" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
 		<property name="algorithm" value="PBEWithMD5AndDES"/>
-		<property name="passwordEnvName" value="NAVER"/>
+		<property name="passwordEnvName" value="ENV_PASS"/>
 	</bean>
 	
 	<bean id="configEnc" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">

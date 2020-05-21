@@ -1,0 +1,26 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="rootPath" value="${pageContext.request.contextPath}" />
+<style>
+	li.nav-item {
+		border-bottom: 2px solid transparent;
+	}
+
+	li.nav-item:hover {
+		background-color: blue;
+		border-bottom: 2px solid red;
+	}
+	li.nav-item:hover a {
+		color: white;
+		font-weight: bold;
+	}
+</style>
+<nav class="container p-3">
+	<ul class="nav nav-pills flex-column">
+		<li class="nav-item"><a class="nav-link active" href="javascript:void(0)">관리자 홈</a></li>
+		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/product">상품정보 관리</a></li>
+		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/users">고객정보 관리</a></li>
+		<li class="nav-item"><a class="nav-link" href="${rootPath}/admin/orders">주문관리</a></li>
+		<li class="nav-item"><a class="nav-link" href="#">회계관리</a></li>
+	</ul>
+</nav>
