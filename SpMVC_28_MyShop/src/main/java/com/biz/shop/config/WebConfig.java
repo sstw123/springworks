@@ -35,6 +35,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 	}
 
 	// 한글 인코딩 필터
+	// Spring Security 적용 시 작동하지 않는다
 	@Override
 	protected Filter[] getServletFilters() {
 		CharacterEncodingFilter filter = new CharacterEncodingFilter();

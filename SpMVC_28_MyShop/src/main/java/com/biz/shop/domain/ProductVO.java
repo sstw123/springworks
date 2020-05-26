@@ -1,5 +1,7 @@
 package com.biz.shop.domain;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +28,12 @@ public class ProductVO {
 	
 	private boolean p_vat;//과세여부 true:과세, false:면세
 	private String p_file;// 대표이미지
+	
+	// 
+	private List<String> m_color_list;
+	private List<String> m_size_list;
+	
+	private List<String> p_color_list;
+	private List<ProductSizeVO> p_size_list;
 	
 }

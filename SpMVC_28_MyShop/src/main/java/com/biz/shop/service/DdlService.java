@@ -17,6 +17,9 @@ public class DdlService {
 		ddlDao.create_table(CreateTableSQL.create_tbl_file);
 		ddlDao.create_table(CreateTableSQL.create_tbl_product_size);
 		ddlDao.create_table(CreateTableSQL.create_tbl_product_color);
+		ddlDao.create_table(CreateTableSQL.create_tbl_options);
+		ddlDao.create_table(CreateTableSQL.delete_tbl_options);
+		ddlDao.create_table(CreateTableSQL.insert_tbl_options);
 	}
 
 }

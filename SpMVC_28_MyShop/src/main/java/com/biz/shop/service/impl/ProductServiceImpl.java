@@ -1,52 +1,56 @@
-package com.biz.shop.service;
+package com.biz.shop.service.impl;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.biz.shop.domain.ProductVO;
 import com.biz.shop.persistence.ProductDao;
+import com.biz.shop.service.FileUploadService;
+import com.biz.shop.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service("productServiceImpl")
 public class ProductServiceImpl implements ProductService {
 	
 	private final ProductDao productDao;
-	/*
-	private final DDL_Dao ddl_Dao;
+	private final FileUploadService fileSvc;
 	
-	public ProductServiceImpl(ProductDao proDao, DDL_Dao ddl_Dao) {
-		this.proDao = proDao;
-		this.ddl_Dao = ddl_Dao;
-		
-		ddl_Dao.create_table(CreateTableSQL.create_tbl_product);
-		ddl_Dao.create_table(CreateTableSQL.create_tbl_product_size);
-		ddl_Dao.create_table(CreateTableSQL.create_tbl_product_color);
-	}
-	*/
 	@Override
 	public List<ProductVO> selectAll() {
 		return productDao.selectAll();
 	}
-
+	
 	@Override
 	public ProductVO findByPCode(String p_code) {
 		return productDao.findByPCode(p_code);
 	}
-
+	
 	@Override
 	public List<ProductVO> findByPName(String p_name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
-	public int save(ProductVO productVO) {
+	public int save(ProductVO productVO, MultipartFile file) {
+		String p_code = productVO.getP_code();
 		int result = 0;
 		
-		if(productVO.getP_code() == null || productVO.getP_code().isEmpty()) {
+		// DB에서 상품코드로 조회한 정보 가져오기
+		ProductVO dbProductVO = productDao.findByPCode(p_code);
+		
+		if(dbProductVO == null) {
+			if(file != null) {
+				String saveName = fileSvc.fileUpload(file);
+				productVO.setP_file(saveName);
+			}
+			
 			result = productDao.insert(productVO);
 		} else {
 			result = productDao.update(productVO);

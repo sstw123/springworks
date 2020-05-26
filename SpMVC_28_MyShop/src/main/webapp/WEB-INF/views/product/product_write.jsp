@@ -3,6 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <c:set var="rootPath" value="${pageContext.request.contextPath}"/>
+<c:set var="baseURL" value="${pageContext.request.requestURI}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,6 +50,33 @@
 				
 				$("form").submit()
 			})
+			
+			$("#ajax_up").click(function() {
+				let formData = new FormData()
+				let file = $("#file")[0].files[0]
+				formData.append("file", file)
+				
+				alert(JSON.stringify(formData))
+				
+				$.ajax({
+					url: "${rootPath}/file/upload",
+					type: "POST",
+					processData: false,
+					contentType: false,
+					data: formData,
+					beforeSend: function(ajx) {
+						ajx.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+					},
+					success: function(result) {
+						alert(result)
+					},
+					error: function(error) {
+						alert("서버 통신 오류")
+					}
+				})
+				
+			})
+			
 		})		
 	</script>
 </head>
@@ -56,7 +84,7 @@
 	<%@ include file="/WEB-INF/views/include/include_nav.jspf" %>
 	
 	<section class="container body">
-		<form:form modelAttribute="productVO">
+		<form:form modelAttribute="productVO" enctype="multipart/form-data" action="?${_csrf.parameterName}=${_csrf.token}">
 			<fieldset>
 				<legend>상품정보 등록</legend>
 				
@@ -77,6 +105,11 @@
 				
 				<div class="form-group">
 					<form:input path="p_oprice" class="form-control" placeholder="판매가격" />
+				</div>
+				
+				<div class="form-group">
+					<input type="file" id="file" name="file" class="form-control" />
+					<button id="ajax_up" type="button">ajax 파일업</button>
 				</div>
 				
 				<div class="button-group">

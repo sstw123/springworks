@@ -52,5 +52,35 @@ public class CreateTableSQL {
 		+ " ON DELETE CASCADE "
 		+ " ) "
 	;
+	
+	
+	public static String create_tbl_options
+		= " CREATE TABLE IF NOT EXISTS tbl_options ( "
+		+ " o_seq BIGINT AUTO_INCREMENT PRIMARY KEY, "
+		+ " o_division VARCHAR(6) NOT NULL, "
+		+ " o_standard VARCHAR(6) NOT NULL, "
+		+ " o_name VARCHAR(20) NOT NULL "
+		+ " ) "
+	;
+	
+	public static String insert_tbl_options
+		= " INSERT INTO tbl_options (o_division, o_standard, o_name) "
+		+ " VALUES "
+		+ " ('SIZE', 'S', 'Small'), "
+		+ " ('SIZE', 'M', 'Middle'), "
+		+ " ('SIZE', 'L', 'Large'), "
+		+ " ('SIZE', 'XL', 'Extra Large'), "
+		+ " ('SIZE', '2XL', '2 Extra Large'), "
+		+ " ('SIZE', '3XL', '3 Extra Large'), "
+		+ " ('COLOR', 'WHITE', '화이트'), "
+		+ " ('COLOR', 'BLACK', '블랙'), "
+		+ " ('COLOR', 'BLUE', '블루'), "
+		+ " ('COLOR', 'RED', '레드'), "
+		+ " ('COLOR', 'IVORY', '아이보리'), "
+		+ " ('COLOR', 'GRAY', '그레이') "
+	;
+	
+	public static String delete_tbl_options
+		= " DELETE FROM tbl_options ";
 
 }

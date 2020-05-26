@@ -18,8 +18,8 @@ import org.springframework.web.servlet.view.JstlView;
 public class ServletConfig implements WebMvcConfigurer {
 	
 	// fileUpload를 하기 위한 설정
-	@Bean
-	public MultipartResolver multiResolver() {
+	@Bean(name="multipartResolver")
+	public MultipartResolver multipartResolver() {
 		MultipartResolver mr = new CommonsMultipartResolver();
 		((CommonsMultipartResolver) mr).setMaxUploadSize(20_000_000);
 		((CommonsMultipartResolver) mr).setMaxUploadSizePerFile(2_000_000);
@@ -44,8 +44,14 @@ public class ServletConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("/files/**").addResourceLocations("/files/");
 		registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+		registry.addResourceHandler("/upload/**").addResourceLocations("file:///c:/bizwork/upload/");
 		
 		WebMvcConfigurer.super.addResourceHandlers(registry);
+	}
+	
+	@Bean(name="filePath")
+	public String filePath() {
+		return "c:/bizwork/upload";
 	}
 	
 }

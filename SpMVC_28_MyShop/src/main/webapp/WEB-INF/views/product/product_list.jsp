@@ -11,7 +11,14 @@
 		
 	</style>
 	<script>
-		
+		$(function() {
+			
+			$(".p_list").click(function() {
+				let p_code = $(this).data("pcode")
+				document.location.href = "${rootPath}/product/detail/" + p_code
+			})
+			
+		})
 	</script>
 </head>
 <body>
@@ -37,7 +44,7 @@
 					</c:when>
 					<c:when test="${!empty proList}">
 						<c:forEach items="${proList}" var="P" varStatus="s">
-							<tr>
+							<tr class="p_list" data-pcode="${P.p_code}">
 								<td>${P.p_code}</td>
 								<td>${P.p_name}</td>
 								<td>${P.p_iprice}</td>

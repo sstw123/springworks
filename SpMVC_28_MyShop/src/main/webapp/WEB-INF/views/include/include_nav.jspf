@@ -60,7 +60,7 @@
 
 <nav id="navbar">
 	<a href="${rootPath}/">HOME</a>
-	<a href="#">Spring Shop</a>
+	<a href="${rootPath}/product">Spring Shop</a>
 	
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="${rootPath}/admin">관리자</a>
