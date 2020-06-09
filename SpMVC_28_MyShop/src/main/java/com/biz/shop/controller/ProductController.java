@@ -64,25 +64,23 @@ public class ProductController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/insert_size", method = RequestMethod.POST)
-	public String insert_size(ProductSizeVO proSizeVO) {
+	public Object insert_size(ProductSizeVO proSizeVO) {
 		log.debug("SIZE : {}", proSizeVO.getS_size());
 		log.debug("P_CODE : {}", proSizeVO.getP_code());
-		String result = "";
 		
 		int ret = proOptSvc.countProductSize(proSizeVO);
 		if(ret > 0) {
-			result = "false";
+			return "false";
 		} else {
 			int insertResult = proOptSvc.insert_size(proSizeVO);
-			if(insertResult > 0) result = "true";
-			else result = "false";
+			if(insertResult <= 0) return "false";
 		}
 		
-		return result;
+		return proSizeVO;
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/delete_size", method = RequestMethod.GET)
+	@RequestMapping(value = "/delete_size", method = RequestMethod.POST)
 	public String delete_size(ProductSizeVO proSizeVO) {
 		int ret = proOptSvc.delete_size(proSizeVO);
 		return "true";

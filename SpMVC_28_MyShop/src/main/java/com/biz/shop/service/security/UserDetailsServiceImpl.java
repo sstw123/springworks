@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.biz.shop.domain.AuthorityVO;
 import com.biz.shop.domain.UserDetailsVO;
@@ -58,6 +59,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	// tbl_users 테이블로부터 username, password, enabled 값을 가져와서 UserDetailsVO에 담기
 	// loadUserByUsername() method는 AuthenticationProvider에서 호출하여 로그인한 사용자 정보를 가져간다
+	@Transactional
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserDetailsVO userVO = userDao.findByUsername(username);

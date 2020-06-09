@@ -19,5 +19,8 @@ public class ProductColorVO {
 	private long s_seq;
 	private String c_color;
 	private int c_qty;
+	
+	// tbl_options 테이블과 조인하여 size 이름을 가져오기 위한 서버 변수
+	private String o_name;
 
 }

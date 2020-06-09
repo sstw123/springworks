@@ -10,15 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-
-//<tx:annotation-driven/>
-@EnableTransactionManagement
 
 //<mybatis-spring:scan base-package="com.biz.shop.persistence"/>
 @MapperScan("com.biz.shop.persistence")

@@ -60,20 +60,27 @@
 						alert("이미 등록된 사이즈입니다.")
 					} else {
 						$("#p_size_list").append(
-							$("<option/>", {value:size_standard, text:size_name})
+							$("<option/>", {
+									value: result.s_size,
+									text: size_name,
+									'data-id': result.s_seq
+								})
 						)
 					}
 				})
 			})
 			
 			$("button.size-delete").click(function() {
+				
+				let seq = $("#p_size_list option:selected").data("id")
+				
 				$.ajax({
 					url: "${rootPath}/product/delete_size",
 					type: "POST",
-					data: {p_code:"${PRODUCT_VO.p_code}", s_size:size_standard},
+					data: {s_seq : seq},
 					beforeSend: function(ajx) {
 						ajx.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
-					},
+					}
 				})
 				.done(function(result) {
 					$("#p_size_list option:selected").remove()
@@ -100,7 +107,7 @@
 			</div>
 			<div class="p_detail_box">
 				<div class="p_detail_label">대표 이미지</div>
-				<div class="p_detail_data"><img width="100" src="${rootPath}/upload/${PRODUCT_VO.p_file}"></div>
+				<div class="p_detail_data"><c:if test="${not empty PRODUCT_VO.p_file}"><img width="100" src="${rootPath}/upload/${PRODUCT_VO.p_file}"></c:if></div>
 			</div>
 			
 			<div class="p_detail_box">
@@ -122,7 +129,11 @@
 						<button type="button" class="btn btn-primary size-delete">▲ 삭제</button>
 						
 						<form:select path="p_size_list" class="form-control">
-							<form:options items="${PRODUCT_VO.p_size_list}" itemLabel="s_size" itemValue="s_size"/>
+							<c:forEach items="${PRODUCT_VO.p_size_list}" var="vo">
+								<form:option value="${vo.s_size}" data-id="${vo.s_seq}">
+									${vo.o_name}
+								</form:option>
+							</c:forEach>
 						</form:select>
 					</div>
 					<div class="p_detail_white">

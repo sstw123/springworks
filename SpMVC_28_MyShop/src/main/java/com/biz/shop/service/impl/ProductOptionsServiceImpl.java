@@ -3,6 +3,7 @@ package com.biz.shop.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.biz.shop.domain.ProductColorVO;
 import com.biz.shop.domain.ProductOptionsVO;
@@ -12,6 +13,7 @@ import com.biz.shop.service.ProductOptionsService;
 
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class ProductOptionsServiceImpl implements ProductOptionsService {

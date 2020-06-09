@@ -126,4 +126,4 @@ SELECT가 실행되거나 실행될 예정인 DB(Table)에는 CUD를 수행할 �
 `for(DataVO vo : dataList) {
 	dao.insert(vo)
 }`
-* mapper에서 <foreach>를 사용해서 처리해야 한다
+* mapper에서 `<foreach>`를 사용해서 처리해야 한다

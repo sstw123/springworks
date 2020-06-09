@@ -3,6 +3,7 @@ package com.biz.shop.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.biz.shop.domain.ProductVO;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional//@Transactional을 클래스에 선언 시 모든 메소드에 적용
 @RequiredArgsConstructor
 @Service("productServiceImpl")
 public class ProductServiceImpl implements ProductService {

@@ -27,7 +27,10 @@ public interface ProductDao {
 	@Select("SELECT * FROM tbl_product WHERE p_code = #{p_code}")
 	public ProductVO findByPCode(String p_code);
 	
-	@Select("SELECT * FROM tbl_product_size WHERE p_code = #{p_code}")
+	@Select("SELECT * FROM tbl_product_size "
+			+ " LEFT JOIN tbl_options "
+			+ " ON s_size = o_standard AND o_division = 'SIZE' "
+			+ " WHERE p_code = #{p_code}")
 	public ProductSizeVO getProductSize(String p_code);
 	
 	@Select("SELECT * FROM tbl_product WHERE p_name LIKE CONCAT('%', #{p_name}, '%')")
