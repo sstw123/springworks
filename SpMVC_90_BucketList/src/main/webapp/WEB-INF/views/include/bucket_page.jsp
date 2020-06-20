@@ -14,6 +14,6 @@
 		<button class="btn_add" type="submit">추가</button>
 	</form>
 	
-	<%@ include file="/WEB-INF/views/include/dropdown.jsp" %>
+	<%@ include file="/WEB-INF/views/include/context_menu.jsp" %>
 	<%@ include file="/WEB-INF/views/include/edit_modal.jsp" %>
 </article>

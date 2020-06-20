@@ -80,16 +80,18 @@ public class BucketService {
 		BucketDTO bucketDTO = bucketDao.findById(b_id);
 		int b_order = bucketDTO.getB_order();
 		
+		// bucketDao.orderChange(a, b) : a의 순서는 -1, b의 순서는 +1
+		// bucketDao.orderChange(3, 2) => 2, 3
 		if(order == 1 && b_order > 1) {
-			// ▲ 클릭시 현재 tr의 order값 전달 (클릭한 tr이 3번이라면 2번이랑 바꾸기)
-			// 만약 현재 tr의 b_order값이 가장 처음 데이터(=1)면 아무 행동 안함
+			// ▲ 클릭 시(order==1) 현재 tr의 b_order값이 처음 데이터(=1)면 아무 행동 안함
+			// 처음 데이터가 아닌 경우 이전 순서와 변경 (ex: 클릭한 tr이 3번이라면 2번이랑 바꾸기)
 			ret = bucketDao.orderChange(b_order, b_order-1);
 		} else if(order == -1 && count > 1 && b_order != max_b_order){
-			// ▼ 클릭시 현재 tr의 order+1값 전달 (클릭한 tr이 3번이라면 4번이랑 바꾸기)
-			// 전체 데이터 개수가 1 이하면 아무 행동 안함
-			// 만약 현재 tr의 b_order값이 가장 마지막 데이터(b_order 값 = maxOrder 값)라면 아무 행동 안함
+			// ▼ 클릭 시(order==-1) 전체 데이터 개수가 1 이하면 아무 행동 안함, 현재 tr의 b_order가 마지막 데이터(b_order == maxOrder)라면 아무 행동 안함
+			// 마지막 데이터가 아닌 경우 다음 순서와 변경 (ex: 클릭한 tr이 3번이라면 4번이랑 바꾸기)
 			ret = bucketDao.orderChange(b_order+1, b_order);
 		}
+		log.debug("b_id : " + b_id + ", Order : " + order + ", b_order : " + b_order);
 		
 		return ret;
 	}
