@@ -1,6 +1,6 @@
 @charset "UTF-8";
-/* dropdown css */
-.dropdown {
+/* context css */
+.context {
 	position: absolute;
 	border: 1px solid gray;
 	border-radius: 10px;
@@ -9,32 +9,32 @@
 	background-color: white;
 	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
 }
-.dropdown ul {
+.context ul {
 	list-style: none;
 }
-.dropdown li {
+.context li {
 	padding: 8px 0;
 }
-.dropdown li:hover {
+.context li:hover {
 	background-color: skyblue;
 	color: white;
 	cursor: pointer;
 }
-.dropdown > ul > li:first-child:hover {
+.context > ul > li:first-child:hover {
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 }
 /*
-.dropdown li:last-child:hover{
+.context li:last-child:hover{
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
 */
 
-.dropdown_inactive {
+.context_inactive {
 	display: none;
 }
-.dropdown_active {
+.context_active {
 	display: block;
 }
 

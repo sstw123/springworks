@@ -20,7 +20,7 @@
 			</c:when>
 			<c:when test="${!empty BUCKET_LIST}">
 				<c:forEach var="bucket" items="${BUCKET_LIST}" varStatus="status">
-					<tr data-id="${bucket.b_id}">
+					<tr class="use_context" data-id="${bucket.b_id}">
 						<td class="center">${bucket.b_order}</td>
 						<td class="b_content">${bucket.b_content}</td>
 						<c:choose>

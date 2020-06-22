@@ -1,4 +1,4 @@
-package com.biz.shop.service.security;
+package com.biz.shop.service.secure;
 
 import java.util.ArrayList;
 import java.util.Collection;
