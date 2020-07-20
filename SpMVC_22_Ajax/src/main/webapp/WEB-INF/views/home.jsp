@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initian-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>JSP 페이지</title>
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="${rootPath}/resources/js/ajax.js"></script>

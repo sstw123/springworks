@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initian-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>My Bucket List</title>
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Kalam:400,700|Noto+Sans+KR:400,500,700&display=swap" rel="stylesheet">

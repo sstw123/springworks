@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initian-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>☆☆☆ 나의 JSP 페이지 ☆☆☆</title>
 	<%/*
 		css나 js 파일을 만들고 jsp, html에서 import( include 또는 link 등)를 실행하여 사용할 경우

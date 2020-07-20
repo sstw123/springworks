@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewpport" content="width=device-width, initian-scale=1">
+	<meta name="viewpport" content="width=device-width, initial-scale=1">
 	<title>Home</title>
 	<link rel="stylesheet" href="${rootPath}/css/main.css?ver=123" type="text/css">
 </head>

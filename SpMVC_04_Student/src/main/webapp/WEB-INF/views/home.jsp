@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-<meta charset="UTF-8" name="viewport" content="width=device-width, initian-scale=1">
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 <title>☆☆☆ 나의 JSP 페이지 ☆☆☆</title>
 <style>
 /*
